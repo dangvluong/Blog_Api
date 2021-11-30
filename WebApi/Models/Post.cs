@@ -10,6 +10,11 @@ namespace WebApi.Models
         public string Title { get; set; }
         //public string ShortContent { get; set; }
         public string Content { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime DateCreated { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime DateModifier { get; set; }
+
         public bool isActive { get; set; }
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
@@ -17,6 +22,6 @@ namespace WebApi.Models
         public int AuthorId { get; set; }
         [ForeignKey("AuthorId")]
         public User Author { get; set; }
-
+        public List<Comment> Comments { get; set; }
     }
 }

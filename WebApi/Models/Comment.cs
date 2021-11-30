@@ -7,14 +7,15 @@ namespace WebApi.Models
     {
         [Key]
         public int Id { get; set; }
-        public string Content { get; set; }
+        [Required]
+        public string Content { get; set; }       
         public int AuthorId { get; set; }
         [ForeignKey("AuthorId")]
         public User Author { get; set; }
+
         public int PostId { get; set; }
         [ForeignKey("PostId")]
         public Post Post { get; set; }
-        public int CommentParent { get; set; }
-        public List<Comment> Comments { get; set; }
+        public int? CommentParent { get; set; }        
     }
 }
