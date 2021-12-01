@@ -1,0 +1,9 @@
+﻿@model List<WebApp.Models.Post>
+@if(Model.Count() > 0){
+    foreach(WebApp.Models.Post post in Model)
+    {
+       <h2>@post.Title</h2>
+       <p>@post.Content</p>
+    }
+
+}
