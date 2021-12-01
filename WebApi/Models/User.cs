@@ -18,7 +18,7 @@ namespace WebApi.Models
         public string Email { get; set; }
         [DataType(DataType.Date)]
         public DateTime DateCreate { get; set; }
-        public bool IsActive { get; set; }
-        public bool IsBanned { get; set; }
+        public bool IsActive { get; set; } = false;
+        public bool IsBanned { get; set; } = false;
     }
 }

@@ -15,8 +15,8 @@ namespace WebApi.Models
         [DataType(DataType.Date)]
         public DateTime DateModifier { get; set; }
 
-        public bool IsActive { get; set; }
-        public bool IsDeleted { get; set; }
+        public bool IsActive { get; set; } = false;
+        public bool IsDeleted { get; set; } = false;
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         public Category Category { get; set; }
