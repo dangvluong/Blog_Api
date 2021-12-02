@@ -1,0 +1,7 @@
+﻿@model Category
+<h2>@Model.Name</h2>
+<h3>Bạn có chắc muốn xoá danh mục này?</h3>
+<form method="post">
+    <input type="hidden" asp-for="Id"/>
+    <button>Xoá</button>
+</form>

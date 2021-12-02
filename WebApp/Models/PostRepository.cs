@@ -20,6 +20,7 @@ namespace WebApp.Models
                 catch
                 {
                     //Write to log
+                    return new List<Post>();
                 }
                 
                 
