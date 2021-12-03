@@ -5,8 +5,11 @@ namespace WebApp.Models
     public class Post
     {
         public int Id { get; set; }
+        [Required]
+        [Display(Name ="Tên bài viết")]
         public string Title { get; set; }
-        //public string ShortContent { get; set; }
+        public string Description { get; set; }
+        [Required]
         public string Content { get; set; }
         [DataType(DataType.Date)]
         public DateTime DateCreated { get; set; }

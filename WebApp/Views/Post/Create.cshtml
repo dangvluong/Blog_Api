@@ -1,0 +1,25 @@
+﻿@model Post
+<div class="container">
+    <div class="contact-grids">
+        <form method="post" class="signin-form">
+            <div class="input-grids">
+                <label asp-for="Title"></label>
+                <input type="text" class="contact-input" asp-for="Title" />
+            </div>
+            <div class="form-input">
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description"></textarea>
+            </div>
+            <div class="form-input">
+                <label asp-for="Content"></label>
+                <textarea asp-for="Content" rows="10"></textarea>                
+            </div>
+            <div>               
+                <select asp-for="CategoryId" asp-items="@ViewBag.categories">
+                    <option>Chọn danh mục</option>
+                </select>
+            </div>
+            <button class="btn btn-style btn-outline">Create</button>
+        </form>
+    </div>
+</div>

@@ -2,7 +2,7 @@
 
 namespace WebApp.Helper
 {
-    public class SiteHelper:IDisposable
+    public class SiteHelper : IDisposable
     {
         private CategoryRepository category;
         //private readonly Uri ApiServer = new Uri("https://localhost:7207/");
@@ -22,7 +22,7 @@ namespace WebApp.Helper
         {
             get
             {
-                if (category == null)
+                if (category is null)
                 {
                     category = new CategoryRepository(Client);
                 }
@@ -30,6 +30,19 @@ namespace WebApp.Helper
             }
 
         }
+        private PostRepository post;
+
+        public PostRepository Post
+        {
+            get
+            {
+                if (post is null)
+                    post = new PostRepository(Client);
+                return post;
+            }
+
+        }
+
 
         public void Dispose()
         {

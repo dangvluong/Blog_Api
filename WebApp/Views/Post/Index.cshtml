@@ -638,10 +638,39 @@
         </div>*@
 
 @model List<Post>
-@if(Model.Count() > 0){
-    foreach(Post post in Model)
-    {
-       <h2>@post.Title</h2>
-       <p>@post.Content</p>
-    }
+    <a asp-action="Create">Create</a>
+@if (Model.Count() > 0)
+{
+
+<table class="table table-borderless">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>IsActive</th>
+            <th>IsDeleted</th>
+            <th>CategoryId</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Post post in Model)
+        {
+            <tr>
+                <td>@post.Id</td>
+                <td>@post.Title</td>
+                <td>@post.Description</td>
+                <td>@post.IsActive</td>
+                <td>@post.IsDeleted</td>
+                <td>@post.CategoryId</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@post.Id">Details</a>
+                    <a asp-action="Edit" asp-route-id="@post.Id">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@post.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 }

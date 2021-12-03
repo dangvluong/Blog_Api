@@ -1,0 +1,15 @@
+﻿@model Post
+<div class="container">
+    <div class="contact-grids">
+        @Html.DisplayFor(m => m.Title)
+        @Html.DisplayFor(m => m.CategoryId)
+        @Html.DisplayFor(m => m.Description)
+        @Html.DisplayFor(m => m.Content)
+    </div>
+    <div>
+        <form method="post">
+            <input asp-for="Id" type="hidden"/>
+            <button class="btn btn-danger">Delete</button>
+        </form>
+    </div>
+</div>

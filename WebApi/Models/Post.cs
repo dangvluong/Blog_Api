@@ -7,13 +7,14 @@ namespace WebApi.Models
     {
         [Key]
         public int Id { get; set; }
+        [Required]
         public string Title { get; set; }
-        //public string ShortContent { get; set; }
+        public string Description { get; set; }
         public string Content { get; set; }
         [DataType(DataType.Date)]
         public DateTime DateCreated { get; set; }
         [DataType(DataType.Date)]
-        public DateTime DateModifier { get; set; }
+        public DateTime? DateModifier { get; set; }
 
         public bool IsActive { get; set; } = false;
         public bool IsDeleted { get; set; } = false;

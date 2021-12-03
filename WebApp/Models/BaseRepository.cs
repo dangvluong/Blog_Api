@@ -3,11 +3,12 @@
     public class BaseRepository
     {
         protected readonly Uri ApiServer = new Uri("https://localhost:7207/");
-        protected HttpClient _client;
+        protected HttpClient client;
         public BaseRepository(HttpClient client)
         {
-            _client = client;
-            _client.BaseAddress = ApiServer;
+            this.client = client;
+            if (client.BaseAddress is null)
+                client.BaseAddress = ApiServer;            
         }
     }
 }

@@ -47,33 +47,14 @@ namespace WebApi.Controllers
 
         // PUT: api/Post/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPost(int id, Post post)
+        [HttpPut]
+        public async Task<IActionResult> PutPost(Post post)
         {
-            if (id != post.Id)
-            {
+            if (!ModelState.IsValid)
                 return BadRequest();
-            }
-
-            _context.Entry(post).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PostExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            _context.Posts.Update(post);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
 
         // POST: api/Post
@@ -81,10 +62,13 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Post>> PostPost(Post post)
         {
-            _context.Posts.Add(post);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetPost", new { id = post.Id }, post);
+            if(ModelState.IsValid)
+            {
+                _context.Posts.Add(post);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction("GetPost", new { id = post.Id }, post);
+            }
+            return BadRequest();            
         }
 
         // DELETE: api/Post/5

@@ -10658,23 +10658,25 @@ h1.error-title {
   line-height: 28px; }
 
 .contact-grids input,
-.contact-grids textarea {
-  width: 100%;
-  color: #555;
-  background: #fff;
-  font-size: 17px;
-  line-height: 26px;
-  font-weight: normal;
-  font-style: normal;
-  border: none;
-  font-family: inherit;
-  padding: 15px;
-  border: none;
-  border: 1px solid #ddd;
-  outline: none;
-  border-radius: 0px;
-  margin-bottom: 16px;
-  border-radius: 4px; }
+.contact-grids textarea,
+.contact-grids select {
+    width: 100%;
+    color: #555;
+    background: #fff;
+    font-size: 17px;
+    line-height: 26px;
+    font-weight: normal;
+    font-style: normal;
+    border: none;
+    font-family: inherit;
+    padding: 15px;
+    border: none;
+    border: 1px solid #ddd;
+    outline: none;
+    border-radius: 0px;
+    margin-bottom: 16px;
+    border-radius: 4px;
+}
 
 .contact-grids textarea {
   height: 120px;
