@@ -35,10 +35,10 @@
                 return 1;
             return 0;
         }
-        public async Task<int> Edit(int id,Category category)
+        public async Task<int> Edit(Category category)
         {
             //client.BaseAddress = ApiServer;
-            HttpResponseMessage message = await client.PutAsJsonAsync<Category>($"/api/category/{id}", category);
+            HttpResponseMessage message = await client.PutAsJsonAsync<Category>($"/api/category", category);
             if (message.IsSuccessStatusCode)
                 return 1;
             return 0;

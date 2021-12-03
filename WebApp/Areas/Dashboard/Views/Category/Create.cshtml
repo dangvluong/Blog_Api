@@ -1,11 +1,17 @@
 ﻿@model Category
-<form method="post">
-    <div>
-        <label asp-for="Name"></label>
-        <input asp-for="Name" />
+<div class="container">
+    <div class="contact-grids">
+        <form method="post" class="signin-form">
+            <div class="input-grids">
+                <label asp-for="Name"></label>
+                <input type="text" class="contact-input" asp-for="Name" />
+            </div>            
+            <div>
+                <select asp-for="ParentCategoryId" asp-items="@ViewBag.categories">
+                    <option>Chọn danh mục</option>
+                </select>
+            </div>
+            <button class="btn btn-style btn-outline">Create</button>
+        </form>
     </div>
-    <div>
-        <button>Create</button>  
-    </div>
-
-</form>
+</div>

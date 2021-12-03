@@ -47,33 +47,14 @@ namespace WebApi.Controllers
 
         // PUT: api/Category/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(int id, Category category)
-        {
-            if (id != category.Id)
-            {
+        [HttpPut]
+        public async Task<IActionResult> PutCategory( Category category)
+        {           
+            if(!ModelState.IsValid)
                 return BadRequest();
-            }
-
-            _context.Entry(category).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CategoryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            _context.Categories.Update(category);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
 
         // POST: api/Category

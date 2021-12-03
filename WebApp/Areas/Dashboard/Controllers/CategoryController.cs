@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.Helper;
 using WebApp.Models;
 
@@ -26,8 +27,9 @@ namespace WebApp.Areas.Dashboard.Controllers
         }
 
         // GET: CategoryController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> CreateAsync()
         {
+            ViewBag.categories = new SelectList(await siteHelper.Category.GetCategories(), "Id", "Name");
             return View();
         }
 
@@ -47,7 +49,11 @@ namespace WebApp.Areas.Dashboard.Controllers
         // GET: CategoryController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
+            
             var category = await siteHelper.Category.GetCategoryById(id);
+            if (category == null)
+                return NotFound();
+            ViewBag.categories = new SelectList(await siteHelper.Category.GetCategories(), "Id", "Name");
             return View(category);
         }
 
@@ -60,7 +66,7 @@ namespace WebApp.Areas.Dashboard.Controllers
                 return BadRequest();
             if (!ModelState.IsValid)
                 return View();
-            await siteHelper.Category.Edit(id,category);
+            await siteHelper.Category.Edit(category);
             return RedirectToAction(nameof(Index));
         }
 

@@ -1,7 +1,12 @@
 ﻿@model Category
-<h2>@Model.Name</h2>
+<div class="container">
+    @Html.DisplayFor(category => category.Id)
+    @Html.DisplayFor(category => category.Name)
+    @Html.DisplayFor(category => category.ParentCategoryId)
+    @Html.DisplayFor(category => category.IsDeleted)
+</div>
 <h3>Bạn có chắc muốn xoá danh mục này?</h3>
 <form method="post">
-    <input type="hidden" asp-for="Id"/>
-    <button>Xoá</button>
+    <input type="hidden" asp-for="Id" />
+    <button class="btn btn-danger">Xoá</button>
 </form>
