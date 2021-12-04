@@ -1,0 +1,35 @@
+﻿@model RegisterModel
+<div class="container">
+    <div class="contact-grids">
+        <form method="post" class="signin-form">
+            <div asp-validation-summary="All"></div>
+            <div class="input-grids">
+                <label asp-for="Username"></label>
+                <input class="contact-input" asp-for="Username" />
+            </div>
+            <div class="input-grids">
+                <label asp-for="Password"></label>
+                <input class="contact-input" asp-for="Password" />
+            </div>
+            <div class="input-grids">
+                <label asp-for="FullName"></label>
+                <input class="contact-input" asp-for="FullName" />
+            </div>
+            <div class="input-grids">
+                <label asp-for="Email"></label>
+                <input class="contact-input" asp-for="Email" />
+            </div>
+            <div class="input-grids">
+                <label asp-for="DateOfBirth"></label>
+                <input class="contact-input" asp-for="DateOfBirth" />
+            </div>
+            <div>
+                <select asp-for="Gender">
+                    <option value="True">Nam</option>
+                    <option value="False">Nữ</option>
+                </select>
+            </div>
+            <button class="btn btn-style btn-outline">Register</button>
+        </form>
+    </div>
+</div>

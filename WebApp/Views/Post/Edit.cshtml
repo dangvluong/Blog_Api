@@ -2,8 +2,9 @@
 <div class="container">
     <div class="contact-grids">
         <form method="post" class="signin-form">
+            <div asp-validation-summary="All"></div>
             <input asp-for="AuthorId" />
-            <input asp-for="DateCreated" />            
+            <input asp-for="DateCreated" />
             <div class="input-grids">
                 <label asp-for="Title"></label>
                 <input type="text" class="contact-input" asp-for="Title" />

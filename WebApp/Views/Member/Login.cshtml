@@ -1,0 +1,22 @@
+﻿@model LoginModel
+<div class="container">
+    <div class="contact-grids">
+        <form method="post" class="signin-form">
+            <div asp-validation-summary="All"></div>
+            <div class="input-grids">
+                <label asp-for="Username"></label>
+                <input class="contact-input" asp-for="Username" />
+            </div>
+            <div class="input-grids">
+                <label asp-for="Password"></label>
+                <input class="contact-input" asp-for="Password" />
+            </div>
+            <div class="input-grids">
+                <label asp-for="Remember">Ghi nhớ đăng nhập</label>
+                <input asp-for="Remember" />
+            </div>
+
+            <button class="btn btn-style btn-outline">Login</button>
+        </form>
+    </div>
+</div>

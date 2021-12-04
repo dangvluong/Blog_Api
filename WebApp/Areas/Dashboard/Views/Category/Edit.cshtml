@@ -3,6 +3,7 @@
     <div class="contact-grids">
         <form method="post" class="signin-form">
             <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="All"></div>
             <div class="input-grids">
                 <label asp-for="Name"></label>
                 <input type="text" class="contact-input" asp-for="Name" />

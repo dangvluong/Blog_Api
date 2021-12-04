@@ -2,7 +2,7 @@ using WebApp.Helper;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMvc();
-builder.Services.AddTransient<SiteHelper>();
+builder.Services.AddTransient<SiteProvider>();
 
 var app = builder.Build();
 app.UseRouting();

@@ -8,7 +8,7 @@ namespace WebApp.Controllers
 {
     public class PostController : BaseController
     {
-        public PostController(SiteHelper siteHelper) : base(siteHelper)
+        public PostController(SiteProvider siteHelper) : base(siteHelper)
         {
         }
 

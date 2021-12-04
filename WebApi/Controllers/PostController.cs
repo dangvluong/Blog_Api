@@ -28,14 +28,14 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
         {
-            return await _context.Posts.ToListAsync();
+            return await context.Posts.ToListAsync();
         }
 
         // GET: api/Post/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Post>> GetPost(int id)
         {
-            var post = await _context.Posts.FindAsync(id);
+            var post = await context.Posts.FindAsync(id);
 
             if (post == null)
             {
@@ -52,8 +52,8 @@ namespace WebApi.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-            _context.Posts.Update(post);
-            await _context.SaveChangesAsync();
+            context.Posts.Update(post);
+            await context.SaveChangesAsync();
             return Ok();
         }
 
@@ -64,8 +64,8 @@ namespace WebApi.Controllers
         {
             if(ModelState.IsValid)
             {
-                _context.Posts.Add(post);
-                await _context.SaveChangesAsync();
+                context.Posts.Add(post);
+                await context.SaveChangesAsync();
                 return CreatedAtAction("GetPost", new { id = post.Id }, post);
             }
             return BadRequest();            
@@ -75,21 +75,21 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePost(int id)
         {
-            var post = await _context.Posts.FindAsync(id);
+            var post = await context.Posts.FindAsync(id);
             if (post == null)
             {
                 return NotFound();
             }
             post.IsDeleted = true;
             //_context.Posts.Remove(post);
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
             return NoContent();
         }
 
         private bool PostExists(int id)
         {
-            return _context.Posts.Any(e => e.Id == id);
+            return context.Posts.Any(e => e.Id == id);
         }
     }
 }

@@ -1,18 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApi.Models
+namespace WebApp.Models
 {
-    public class User
-    {
-        [Key]
+    public class Member
+    {       
         public int Id { get; set; }
         [Required]
-        [StringLength(32, MinimumLength =6)]
-        public string Username { get; set; }       
-        [Required]       
-        public byte[] Password { get; set; }
+        [StringLength(32, MinimumLength = 6)]
+        public string Username { get; set; }
+        //[Required]        
+        //public byte[] Password { get; set; }
         public bool Gender { get; set; }
-        public string FullName { get; set; }
         [Required]
         [EmailAddress]
         public string Email { get; set; }

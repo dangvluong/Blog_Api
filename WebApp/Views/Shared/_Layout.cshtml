@@ -26,14 +26,15 @@ Author URL: http://w3layouts.com
         <nav class="navbar navbar-expand-lg navbar-light fill px-lg-0 py-0 px-3">
             <div class="container">
                 <a class="navbar-brand" href="index.html">
-                    <span class="fa fa-pencil-square-o"></span> Design Blog</a>
-                <!-- if logo is image enable this   
-						<a class="navbar-brand" href="#index.html">
-							<img src="image-path" alt="Your logo" title="Your logo" style="height:35px;" />
-						</a> -->
+                    <span class="fa fa-pencil-square-o"></span> Design Blog
+                </a>
+                <!-- if logo is image enable this
+                        <a class="navbar-brand" href="#index.html">
+                            <img src="image-path" alt="Your logo" title="Your logo" style="height:35px;" />
+                        </a> -->
                 <button class="navbar-toggler collapsed" type="button" data-toggle="collapse"
-                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                    aria-label="Toggle navigation">
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                        aria-label="Toggle navigation">
                     <!-- <span class="navbar-toggler-icon"></span> -->
                     <span class="fa icon-expand fa-bars"></span>
                     <span class="fa icon-close fa-times"></span>
@@ -45,7 +46,7 @@ Author URL: http://w3layouts.com
                             <a class="nav-link" asp-controller="Post" asp-action="Index">Post</a>
                         </li>
                         <li class="nav-item active">
-                            <a class="nav-link" asp-area="Dashboard" asp-controller="Category" asp-action="Index" >Category</a>
+                            <a class="nav-link" asp-area="Dashboard" asp-controller="Category" asp-action="Index">Category</a>
                         </li>
                         <li class="nav-item dropdown @@category__active">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -71,7 +72,7 @@ Author URL: http://w3layouts.com
                                 <h3 class="hny-title two">Search here</h3>
                                 <form action="#" method="Get" class="search-box">
                                     <input type="search" placeholder="Search for blog posts" name="search"
-                                        required="required" autofocus="">
+                                           required="required" autofocus="">
                                     <button type="submit" class="btn">Search</button>
                                 </form>
                                 <a class="close" href="#close">×</a>
@@ -80,24 +81,33 @@ Author URL: http://w3layouts.com
                         <!-- /search popup -->
                     </div>
                     <!--//search-right-->
-
                     <!-- author -->
-                    <div class="header-author d-flex ml-lg-4 pl-2 mt-lg-0 mt-3">
-                        <a class="img-circle img-circle-sm" href="#author">
-                            <img src="~/images/author.jpg" class="img-fluid" alt="...">
-                        </a>
-                        <div class="align-self ml-3">
-                            <a href="#author">
-                                <h5>Alexander</h5>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="header-author d-flex ml-lg-4 pl-2 mt-lg-0 mt-3">
+                            <a class="img-circle img-circle-sm" href="#author">
+                                <img src="~/images/author.jpg" class="img-fluid" alt="...">
                             </a>
-                            <span>Blog Writer</span>
+                            <div class="align-self ml-3">
+                                <a href="#author">
+                                    <h5>Alexander</h5>
+                                </a>
+                                <span>Blog Writer</span>
+                            </div>
                         </div>
-                    </div>
+                    }
+                    else
+                    { <div class="header-author d-flex ml-lg-4 pl-2 mt-lg-0 mt-3">
+                            <a asp-action="Login" asp-controller="Member" class="btn btn-info mr-3">Login</a>
+                            <a asp-action="Register" asp-controller="Member" class="btn btn-primary">Register</a>
+                        </div>
+                    }
+
                     <!-- // author-->
                 </div>
 
                 <!-- toggle switch for light and dark theme -->
-                <div class="mobile-position">
+                <!--<div class="mobile-position">
                     <nav class="navigation">
                         <div class="theme-switch-wrapper">
                             <label class="theme-switch" for="checkbox">
@@ -109,7 +119,7 @@ Author URL: http://w3layouts.com
                             </label>
                         </div>
                     </nav>
-                </div>
+                </div>-->
                 <!-- //toggle switch for light and dark theme -->
             </div>
         </nav>
@@ -127,15 +137,18 @@ Author URL: http://w3layouts.com
         <div class="footer-content py-lg-5 py-4 text-center">
             <div class="container">
                 <div class="copy-right">
-                    <h6>© 2020 Design Blog . Made with <span class="fa fa-heart" aria-hidden="true"></span>, Designed by
+                    <h6>
+                        © 2020 Design Blog . Made with <span class="fa fa-heart" aria-hidden="true"></span>, Designed by
                         <a href="https://w3layouts.com">W3layouts</a>
                     </h6>
                 </div>
                 <ul class="author-icons mt-4">
-                    <li><a class="facebook" href="#url"><span class="fa fa-facebook" aria-hidden="true"></span></a>
+                    <li>
+                        <a class="facebook" href="#url"><span class="fa fa-facebook" aria-hidden="true"></span></a>
                     </li>
                     <li><a class="twitter" href="#url"><span class="fa fa-twitter" aria-hidden="true"></span></a></li>
-                    <li><a class="google" href="#url"><span class="fa fa-google-plus" aria-hidden="true"></span></a>
+                    <li>
+                        <a class="google" href="#url"><span class="fa fa-google-plus" aria-hidden="true"></span></a>
                     </li>
                     <li><a class="linkedin" href="#url"><span class="fa fa-linkedin" aria-hidden="true"></span></a></li>
                     <li><a class="github" href="#url"><span class="fa fa-github" aria-hidden="true"></span></a></li>
@@ -171,7 +184,6 @@ Author URL: http://w3layouts.com
         <!-- //move top -->
     </footer>
     <!-- //footer -->
-
     <!-- Template JavaScript -->
     <script src="~/js/theme-change.js"></script>
 

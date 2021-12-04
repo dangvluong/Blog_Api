@@ -28,14 +28,14 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
         {
-            return await _context.Categories.ToListAsync();
+            return await context.Categories.ToListAsync();
         }
 
         // GET: api/Category/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
+            var category = await context.Categories.FindAsync(id);
 
             if (category == null)
             {
@@ -52,8 +52,8 @@ namespace WebApi.Controllers
         {           
             if(!ModelState.IsValid)
                 return BadRequest();
-            _context.Categories.Update(category);
-            await _context.SaveChangesAsync();
+            context.Categories.Update(category);
+            await context.SaveChangesAsync();
             return Ok();
         }
 
@@ -62,8 +62,8 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
-            _context.Categories.Add(category);
-            await _context.SaveChangesAsync();
+            context.Categories.Add(category);
+            await context.SaveChangesAsync();
 
             return CreatedAtAction("GetCategory", new { id = category.Id }, category);
         }
@@ -72,21 +72,21 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
+            var category = await context.Categories.FindAsync(id);
             if (category == null)
             {
                 return NotFound();
             }
             category.IsDeleted = true;
             //_context.Categories.Remove(category);
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
             return NoContent();
         }
 
         private bool CategoryExists(int id)
         {
-            return _context.Categories.Any(e => e.Id == id);
+            return context.Categories.Any(e => e.Id == id);
         }
     }
 }

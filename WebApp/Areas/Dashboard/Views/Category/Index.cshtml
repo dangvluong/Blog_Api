@@ -7,6 +7,7 @@
             <tr>
                 <th>Id</th>
                 <th>Name</th>
+                <th>ParentCategoryId</th>
                 <th>IsDeleted</th>
                 <th></th>
             </tr>
@@ -17,6 +18,7 @@
                 <tr>
                     <td>@category.Id</td>
                     <td>@category.Name</td>
+                    <td>@category.ParentCategoryId</td>
                     <td>@category.IsDeleted</td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@category.Id">Edit</a>

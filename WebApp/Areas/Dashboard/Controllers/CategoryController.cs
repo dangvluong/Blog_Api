@@ -9,8 +9,8 @@ namespace WebApp.Areas.Dashboard.Controllers
     [Area("dashboard")]
     public class CategoryController : Controller
     {
-        SiteHelper siteHelper;
-        public CategoryController(SiteHelper siteHelper)
+        SiteProvider siteHelper;
+        public CategoryController(SiteProvider siteHelper)
         {
             this.siteHelper = siteHelper;
         }
