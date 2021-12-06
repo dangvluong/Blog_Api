@@ -11,15 +11,17 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : BaseController
+    public class MemberController : BaseController
     {
-        public UserController(AppDbContext context) : base(context)
+        private readonly IConfiguration configuration;
+        public MemberController(AppDbContext context, IConfiguration configuration) : base(context)
         {
+            this.configuration = configuration;
         }
         [HttpPost("register")]
         public async Task<int> Register(RegisterModel model)
         {           
-            context.Users.Add(new User
+            context.Users.Add(new Member
             {
                 Username = model.Username,
                 Password = SiteHelper.HashPassword(model.Password),
@@ -32,17 +34,17 @@ namespace WebApi.Controllers
             return await context.SaveChangesAsync();
         }
         [HttpGet]
-        public async Task<List<User>> GetUsers()
+        public async Task<List<Member>> GetUsers()
         {
             return await context.Users.ToListAsync();
         }
         [HttpPost("login")]
-        public async Task<User> Login(LoginModel model)
+        public async Task<object> Login(LoginModel model)
         {
-            return await context.Users.Where(user =>
+            Member member =  await context.Users.Where(user =>
                 user.Username == model.Username &&
                 user.Password == SiteHelper.HashPassword(model.Password)
-             ).Select(p => new User
+             ).Select(p => new Member
              {
                  Id = p.Id,
                  Username = p.Username,
@@ -53,7 +55,22 @@ namespace WebApi.Controllers
                  DateCreate = p.DateCreate
 
              }).FirstOrDefaultAsync();
-
+            if(member != null)
+            {
+                string token = SiteHelper.CreateToken(member, configuration.GetSection("secretkey").ToString());
+                return new
+                {
+                    Id = member.Id,
+                    Username = member.Username,
+                    FullName = member.FullName,
+                    Gender = member.Gender,
+                    Email = member.Email,
+                    DateOfBirth = member.DateOfBirth,
+                    DateCreate = member.DateCreate,
+                    Token = token
+                };
+            }
+            return null;
         }
     }
 }

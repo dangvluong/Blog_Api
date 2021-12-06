@@ -10,6 +10,9 @@ namespace WebApp.Models
         public string Username { get; set; }
         //[Required]        
         //public byte[] Password { get; set; }
+        [Required]
+        [StringLength(64, MinimumLength = 6)]
+        public string FullName { get; set; }
         public bool Gender { get; set; }
         [Required]
         [EmailAddress]
@@ -20,5 +23,6 @@ namespace WebApp.Models
         public DateTime DateOfBirth { get; set; }
         public bool IsActive { get; set; } = false;
         public bool IsBanned { get; set; } = false;
+        public string Token { get; set; }
     }
 }

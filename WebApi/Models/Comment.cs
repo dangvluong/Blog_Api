@@ -11,7 +11,7 @@ namespace WebApi.Models
         public string Content { get; set; }       
         public int AuthorId { get; set; }
         [ForeignKey("AuthorId")]
-        public User Author { get; set; }
+        public Member Author { get; set; }
 
         public int PostId { get; set; }
         [ForeignKey("PostId")]

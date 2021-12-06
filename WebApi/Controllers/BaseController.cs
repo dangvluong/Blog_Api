@@ -5,11 +5,11 @@ namespace WebApi.Controllers
 {
     public class BaseController : ControllerBase
     {
-        protected readonly AppDbContext context;
+        protected readonly AppDbContext context;        
 
         public BaseController(AppDbContext context)
         {
-            this.context = context;
+            this.context = context;          
         }
 
     }

@@ -2,7 +2,7 @@
 
 namespace WebApi.Models
 {
-    public class User
+    public class Member
     {
         [Key]
         public int Id { get; set; }
@@ -12,6 +12,8 @@ namespace WebApi.Models
         [Required]       
         public byte[] Password { get; set; }
         public bool Gender { get; set; }
+        [Required]
+        [StringLength(64, MinimumLength = 6)]
         public string FullName { get; set; }
         [Required]
         [EmailAddress]

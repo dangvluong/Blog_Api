@@ -23,7 +23,7 @@ namespace WebApi.Models
         public Category Category { get; set; }
         public int AuthorId { get; set; }
         [ForeignKey("AuthorId")]
-        public User Author { get; set; }
+        public Member Author { get; set; }
         public List<Comment> Comments { get; set; }
     }
 }
