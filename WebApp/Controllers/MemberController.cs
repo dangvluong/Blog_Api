@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WebApp.Helper;
@@ -14,8 +15,9 @@ namespace WebApp.Controllers
         {
             this.siteHelper =  siteHelper;
         }
+        [Authorize]
         public IActionResult Index()
-        {
+        {            
             return View();
         }
         public IActionResult Register()
@@ -36,7 +38,7 @@ namespace WebApp.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginModel model)
+        public async Task<IActionResult> Login(LoginModel model, string returnUrl = "")
         {
             if (!ModelState.IsValid)
                 return View();
@@ -49,7 +51,9 @@ namespace WebApp.Controllers
                     new Claim(ClaimTypes.Name, member.Username),
                     new Claim(ClaimTypes.GivenName, member.FullName),
                     new Claim(ClaimTypes.Email, member.Email),
-                    new Claim(ClaimTypes.Gender, member.Gender ? "Nam" : "Nữ")
+                    new Claim(ClaimTypes.Gender, member.Gender ? "Nam" : "Nữ"),
+                    //Save token to this claimtype
+                    new Claim(ClaimTypes.Authentication, member.Token)
                 };
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 ClaimsPrincipal principal = new ClaimsPrincipal(claimsIdentity);
@@ -58,6 +62,8 @@ namespace WebApp.Controllers
                     IsPersistent = model.Remember
                 };
                 await HttpContext.SignInAsync(principal, properties);
+                if (!string.IsNullOrEmpty(returnUrl))
+                    return Redirect(returnUrl);
                 return Redirect("/");
 
             }

@@ -7,14 +7,14 @@
         }
         public async Task<int> Register(RegisterModel model)
         {
-            HttpResponseMessage message = await client.PostAsJsonAsync<RegisterModel>("/api/user/register", model);
+            HttpResponseMessage message = await client.PostAsJsonAsync<RegisterModel>("/api/member/register", model);
             if (message.IsSuccessStatusCode)
                 return await message.Content.ReadAsAsync<int>();
             return 0;
         }
         public async Task<Member> Login(LoginModel model)
         {
-            HttpResponseMessage message = await client.PostAsJsonAsync<LoginModel>("/api/user/login", model);
+            HttpResponseMessage message = await client.PostAsJsonAsync<LoginModel>("/api/member/login", model);
             if (message.IsSuccessStatusCode)
                 return await message.Content.ReadAsAsync<Member>();
             return null;

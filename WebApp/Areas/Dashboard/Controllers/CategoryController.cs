@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 using WebApp.Helper;
 using WebApp.Models;
 
@@ -40,8 +41,8 @@ namespace WebApp.Areas.Dashboard.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-            
-            var result = await siteHelper.Category.Create(category);
+            string token = User.FindFirstValue(ClaimTypes.Authentication);
+            var result = await siteHelper.Category.Create(category, token);
             return RedirectToAction(nameof(Index));
             
         }
@@ -66,7 +67,8 @@ namespace WebApp.Areas.Dashboard.Controllers
                 return BadRequest();
             if (!ModelState.IsValid)
                 return View();
-            await siteHelper.Category.Edit(category);
+            string token = User.FindFirstValue(ClaimTypes.Authentication);
+            await siteHelper.Category.Edit(category, token);
             return RedirectToAction(nameof(Index));
         }
 
@@ -85,7 +87,8 @@ namespace WebApp.Areas.Dashboard.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirm(int id)
         {
-            await siteHelper.Category.Delete(id);
+            string token = User.FindFirstValue(ClaimTypes.Authentication);
+            await siteHelper.Category.Delete(id, token);
             return RedirectToAction(nameof(Index));
         }
     }

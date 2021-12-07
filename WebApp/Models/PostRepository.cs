@@ -1,4 +1,6 @@
 ﻿
+using System.Net.Http.Headers;
+
 namespace WebApp.Models
 {
     public class PostRepository : BaseRepository
@@ -39,9 +41,10 @@ namespace WebApp.Models
           
         }
 
-        public async Task<int> Create(Post post)
+        public async Task<int> Create(Post post, string token)
         {
             //client.BaseAddress = ApiServer;
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             post.DateCreated = DateTime.Now;
             post.AuthorId = 1;            
             HttpResponseMessage message = await client.PostAsJsonAsync<Post>("/api/post", post);           
@@ -52,9 +55,10 @@ namespace WebApp.Models
             return 0;
 
         }
-        public async Task<int> Edit(Post post)
+        public async Task<int> Edit(Post post, string token)
         {
             //client.BaseAddress = ApiServer;
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             post.DateModifier = DateTime.Now;
             HttpResponseMessage message = await client.PutAsJsonAsync<Post>("/api/post", post);            
             if (message.IsSuccessStatusCode)
@@ -63,9 +67,10 @@ namespace WebApp.Models
             }
             return 0;
         }
-        public async Task<int> Delete(int id)
+        public async Task<int> Delete(int id, string token)
         {
-            //client.BaseAddress = ApiServer;            
+            //client.BaseAddress = ApiServer;
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             HttpResponseMessage message = await client.DeleteAsync($"/api/post/{id}");
             if (message.IsSuccessStatusCode)
             {
