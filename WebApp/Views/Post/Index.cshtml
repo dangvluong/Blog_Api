@@ -8,11 +8,11 @@
     <thead>
         <tr>
             <th>Id</th>
-            <th>Title</th>
-            <th>Description</th>
+            <th>Title</th>          
             <th>IsActive</th>
             <th>IsDeleted</th>
             <th>CategoryId</th>
+            <th>AuthorId</th>
             <th></th>
         </tr>
     </thead>
@@ -21,11 +21,11 @@
         {
             <tr>
                 <td>@post.Id</td>
-                <td>@post.Title</td>
-                <td>@post.Description</td>
+                <td>@post.Title</td>               
                 <td>@post.IsActive</td>
                 <td>@post.IsDeleted</td>
                 <td>@post.CategoryId</td>
+                <td>@post.AuthorId</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@post.Id">Details</a>
                     <a asp-action="Edit" asp-route-id="@post.Id">Edit</a>

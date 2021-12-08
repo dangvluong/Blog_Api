@@ -17,6 +17,9 @@ Author URL: http://w3layouts.com
 
     <!-- Template CSS -->
     <link rel="stylesheet" href="~/css/style-starter.css">
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/style-liberty.css" rel="stylesheet" />
+    <link href="~/css/tlpfoodmenu.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -126,12 +129,12 @@ Author URL: http://w3layouts.com
         <!--//nav-->
     </header>
     <!-- //header -->
+    @RenderBody()
+    @*<div class="w3l-homeblock1 py-5">
+            <div class="container">
 
-    <div class="w3l-homeblock1 py-5">
-        <div class="container">
-            @RenderBody()
-        </div>
-    </div>
+            </div>
+        </div>*@
     <!-- footer -->
     <footer class="w3l-footer-16">
         <div class="footer-content py-lg-5 py-4 text-center">

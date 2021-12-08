@@ -46,6 +46,8 @@ namespace WebApp.Controllers
             if (!ModelState.IsValid)
                 return View(post);
             string token = User.FindFirstValue(ClaimTypes.Authentication);
+            post.AuthorId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            post.DateCreated = DateTime.Now;
             var result = await siteHelper.Post.Create(post, token);
             return RedirectToAction(nameof(Index));
         }
@@ -54,6 +56,9 @@ namespace WebApp.Controllers
         [Authorize]
         public async Task<ActionResult> Edit(int id)
         {
+            //only author of post or admin can edit post
+            if (id != int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) || !User.IsInRole("admin"))
+                return BadRequest();
             Post post = await siteHelper.Post.GetPostById(id);
             if (post is null)
                 return NotFound();
@@ -72,6 +77,7 @@ namespace WebApp.Controllers
             if (!ModelState.IsValid)
                 return View(post);
             string token = User.FindFirstValue(ClaimTypes.Authentication);
+            post.DateModifier = DateTime.Now;
             await siteHelper.Post.Edit(post, token);
             return RedirectToAction(nameof(Index));
         }

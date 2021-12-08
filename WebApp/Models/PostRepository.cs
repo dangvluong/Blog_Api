@@ -45,8 +45,6 @@ namespace WebApp.Models
         {
             //client.BaseAddress = ApiServer;
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            post.DateCreated = DateTime.Now;
-            post.AuthorId = 1;            
             HttpResponseMessage message = await client.PostAsJsonAsync<Post>("/api/post", post);           
             if (message.IsSuccessStatusCode)
             {
@@ -59,7 +57,6 @@ namespace WebApp.Models
         {
             //client.BaseAddress = ApiServer;
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            post.DateModifier = DateTime.Now;
             HttpResponseMessage message = await client.PutAsJsonAsync<Post>("/api/post", post);            
             if (message.IsSuccessStatusCode)
             {
