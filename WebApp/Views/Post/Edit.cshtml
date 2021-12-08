@@ -3,11 +3,16 @@
     <div class="contact-grids">
         <form method="post" class="signin-form">
             <div asp-validation-summary="All"></div>
-            <input asp-for="AuthorId" />
-            <input asp-for="DateCreated" />
+            <input asp-for="AuthorId" type="hidden" />
+            <input asp-for="DateCreated" type="hidden" />
             <div class="input-grids">
                 <label asp-for="Title"></label>
                 <input type="text" class="contact-input" asp-for="Title" />
+            </div>
+            <div>
+                <label asp-for="CategoryId"></label>
+                <select asp-for="CategoryId" asp-items="@ViewBag.categories">                    
+                </select>
             </div>
             <div class="form-input">
                 <label asp-for="Description"></label>
@@ -16,11 +21,6 @@
             <div class="form-input">
                 <label asp-for="Content"></label>
                 <textarea asp-for="Content" rows="10"></textarea>
-            </div>
-            <div>
-                <select asp-for="CategoryId" asp-items="@ViewBag.categories">
-                    <option>Chọn danh mục</option>
-                </select>
             </div>
             <button class="btn btn-style btn-outline">Edit</button>
             <a asp-action="Index" class="btn btn-outline-secondary">Back</a>

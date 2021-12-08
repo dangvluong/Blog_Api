@@ -55,13 +55,13 @@ namespace WebApp.Controllers
         // GET: PostController/Edit/5
         [Authorize]
         public async Task<ActionResult> Edit(int id)
-        {
-            //only author of post or admin can edit post
-            if (id != int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) || !User.IsInRole("admin"))
-                return BadRequest();
+        {   
             Post post = await siteHelper.Post.GetPostById(id);
             if (post is null)
                 return NotFound();
+            //only author of post or admin can edit post            
+            if (post.AuthorId != int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)))
+                return BadRequest();
             ViewBag.categories = new SelectList(await siteHelper.Category.GetCategories(), "Id", "Name");
             return View(post);
         }
@@ -89,6 +89,9 @@ namespace WebApp.Controllers
             Post post = await siteHelper.Post.GetPostById(id);
             if (post is null)
                 return NotFound();
+            //only author of post or admin can delete post            
+            if (post.AuthorId != int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)))
+                return BadRequest();
             return View(post);           
         }
 

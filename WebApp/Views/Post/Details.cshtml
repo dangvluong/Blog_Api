@@ -49,13 +49,8 @@
                 <ul class="blog-meta">
 
                     <li class="meta-item blog-lesson">
-                        <span class="meta-value"> March 8, 2021 </span>
+                        <span class="meta-value"> @Model.DateCreated.ToShortDateString() </span>
                     </li>
-
-                    <li class="meta-item blog-students">
-                        <span class="meta-value"> 6:38 am</span>
-                    </li>
-
                 </ul>
             </div>
         </div>
@@ -158,8 +153,7 @@
                                        style="display:none;">Cancel reply</a>
                                 </small>
                             </h3>
-                            <form action="https://wp.w3layouts.com/designblog/wp-comments-post.php"
-                                  method="post" id="commentform" class="comment-form" novalidate="">
+                            <form action="#" method="post" id="commentform" class="comment-form" novalidate="">
                                 <p class="comment-form-comment">
                                     <label for="comment">Comment</label>
                                     <textarea id="comment" name="comment" cols="45" rows="8"

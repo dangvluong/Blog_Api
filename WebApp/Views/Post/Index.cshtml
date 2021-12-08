@@ -1,38 +1,43 @@
 ﻿
 @model List<Post>
+<div class="container">
     <a asp-action="Create">Create</a>
-@if (Model.Count() > 0)
-{
+    @if (Model.Count() > 0)
+    {
 
-<table class="table table-borderless">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Title</th>          
-            <th>IsActive</th>
-            <th>IsDeleted</th>
-            <th>CategoryId</th>
-            <th>AuthorId</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (Post post in Model)
-        {
-            <tr>
-                <td>@post.Id</td>
-                <td>@post.Title</td>               
-                <td>@post.IsActive</td>
-                <td>@post.IsDeleted</td>
-                <td>@post.CategoryId</td>
-                <td>@post.AuthorId</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@post.Id">Details</a>
-                    <a asp-action="Edit" asp-route-id="@post.Id">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@post.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-}
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>IsActive</th>
+                    <th>IsDeleted</th>
+                    <th>CategoryId</th>
+                    <th>AuthorId</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Post post in Model)
+                {
+                    <tr>
+                        <td>@post.Id</td>
+                        <td>@post.Title</td>
+                        <td>@post.IsActive</td>
+                        <td>@post.IsDeleted</td>
+                        <td>@post.CategoryId</td>
+                        <td>@post.AuthorId</td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@post.Id">Details</a>
+                            <a asp-action="Edit" asp-route-id="@post.Id">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@post.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table> }
+    else
+    {
+        <h5>Hiện không có bài viết nào</h5>
+    }
+</div>
