@@ -62,6 +62,8 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
+            if (!ModelState.IsValid)
+                return BadRequest();
             context.Categories.Add(category);
             await context.SaveChangesAsync();
 

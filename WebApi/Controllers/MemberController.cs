@@ -19,8 +19,10 @@ namespace WebApi.Controllers
             this.configuration = configuration;
         }
         [HttpPost("register")]
-        public async Task<int> Register(RegisterModel model)
-        {           
+        public async Task<IActionResult> Register(RegisterModel model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
             context.Users.Add(new Member
             {
                 Username = model.Username,
@@ -30,8 +32,10 @@ namespace WebApi.Controllers
                 Email = model.Email,
                 FullName = model.FullName,
                 DateCreate = DateTime.Now,
-            });           
-            return await context.SaveChangesAsync();
+            });
+            await context.SaveChangesAsync();
+            return Ok();
+                
         }
         [HttpGet]
         public async Task<List<Member>> GetUsers()
@@ -41,6 +45,8 @@ namespace WebApi.Controllers
         [HttpPost("login")]
         public async Task<object> Login(LoginModel model)
         {
+            if (!ModelState.IsValid)
+                return BadRequest();
             Member member =  await context.Users.Where(user =>
                 user.Username == model.Username &&
                 user.Password == SiteHelper.HashPassword(model.Password)

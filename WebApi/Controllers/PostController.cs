@@ -36,12 +36,10 @@ namespace WebApi.Controllers
         public async Task<ActionResult<Post>> GetPost(int id)
         {
             var post = await context.Posts.FindAsync(id);
-
             if (post == null)
             {
                 return NotFound();
             }
-
             return post;
         }
 
