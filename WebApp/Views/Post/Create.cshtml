@@ -9,7 +9,7 @@
             </div>
             <div>
                 <label asp-for="CategoryId"></label>
-                <select asp-for="CategoryId" asp-items="@ViewBag.categories">                 
+                <select asp-for="CategoryId" asp-items="@ViewBag.categories" class="form-control">                 
                 </select>
             </div>
             <div class="form-input">
@@ -20,8 +20,9 @@
                 <label asp-for="Content"></label>
                 <textarea asp-for="Content" rows="10"></textarea>
             </div>
-
-            <button class="btn btn-style btn-outline">Create</button>
+            <div class="d-flex">
+                <button class="btn btn-style btn-outline mx-auto">Create</button>
+            </div>            
         </form>
     </div>
 </div>

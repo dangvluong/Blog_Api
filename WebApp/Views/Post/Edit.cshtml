@@ -11,7 +11,7 @@
             </div>
             <div>
                 <label asp-for="CategoryId"></label>
-                <select asp-for="CategoryId" asp-items="@ViewBag.categories">                    
+                <select asp-for="CategoryId" asp-items="@ViewBag.categories" class="form-control">                    
                 </select>
             </div>
             <div class="form-input">
@@ -22,8 +22,10 @@
                 <label asp-for="Content"></label>
                 <textarea asp-for="Content" rows="10"></textarea>
             </div>
-            <button class="btn btn-style btn-outline">Edit</button>
-            <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+            <div class="d-flex my-3">
+                <button class="btn btn-primary ml-auto mr-2">Edit</button>
+                <a asp-action="Index" class="btn btn-secondary mr-auto ml-2">Back</a>
+            </div>            
         </form>
     </div>
 </div>
