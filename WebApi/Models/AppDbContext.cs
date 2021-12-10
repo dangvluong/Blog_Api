@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebApi.Models;
 
 namespace WebApi.Models
 {
@@ -11,6 +12,7 @@ namespace WebApi.Models
         public DbSet<Post> Posts { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Role> Roles { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
@@ -22,6 +24,11 @@ namespace WebApi.Models
             {
                 entity.HasOne(p => p.Author).WithMany().OnDelete(DeleteBehavior.NoAction);
             });
+            modelBuilder.Entity<Member>(entity =>
+            {
+                entity.HasMany(p => p.Roles).WithMany(p => p.Members);
+            });
         }
+        
     }
 }

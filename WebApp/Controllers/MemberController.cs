@@ -53,8 +53,17 @@ namespace WebApp.Controllers
                     new Claim(ClaimTypes.Email, member.Email),
                     new Claim(ClaimTypes.Gender, member.Gender ? "Nam" : "Nữ"),
                     //Save token to this claimtype
-                    new Claim(ClaimTypes.Authentication, member.Token)
+                    new Claim(ClaimTypes.Authentication, member.Token),                    
                 };
+
+                //Get roles of member and save to claims
+                if(member.Roles!= null)
+                {
+                    foreach (var role in member.Roles)
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, role.Name));
+                    }
+                }                
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 ClaimsPrincipal principal = new ClaimsPrincipal(claimsIdentity);
                 AuthenticationProperties properties = new AuthenticationProperties

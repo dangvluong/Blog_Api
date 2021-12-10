@@ -24,5 +24,6 @@ namespace WebApp.Models
         public bool IsActive { get; set; } = false;
         public bool IsBanned { get; set; } = false;
         public string Token { get; set; }
+        public IList<Role> Roles { get; set; }
     }
 }

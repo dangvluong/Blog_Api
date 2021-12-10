@@ -23,7 +23,7 @@ namespace WebApi.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-            context.Users.Add(new Member
+            Member member = new Member
             {
                 Username = model.Username,
                 Password = SiteHelper.HashPassword(model.Password),
@@ -31,25 +31,29 @@ namespace WebApi.Controllers
                 DateOfBirth = model.DateOfBirth,
                 Email = model.Email,
                 FullName = model.FullName,
-                DateCreate = DateTime.Now,
-            });
+                DateCreate = DateTime.Now
+            };
+            member.Roles = new List<Role>();
+            var role = context.Roles.FirstOrDefault(s=> s.Name == "Member");
+            member.Roles.Add(role);            
+            context.Users.Add(member);
             await context.SaveChangesAsync();
             return Ok();
-                
+
         }
         [HttpGet]
         public async Task<List<Member>> GetUsers()
         {
-            return await context.Users.ToListAsync();
+            return await context.Users.Include(p=>p.Roles).ToListAsync();
         }
         [HttpPost("login")]
         public async Task<object> Login(LoginModel model)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-            Member member =  await context.Users.Where(user =>
-                user.Username == model.Username &&
-                user.Password == SiteHelper.HashPassword(model.Password)
+            Member member = await context.Users.Include(usr => usr.Roles).Where(user =>
+               user.Username == model.Username &&
+               user.Password == SiteHelper.HashPassword(model.Password)
              ).Select(p => new Member
              {
                  Id = p.Id,
@@ -58,10 +62,11 @@ namespace WebApi.Controllers
                  Gender = p.Gender,
                  Email = p.Email,
                  DateOfBirth = p.DateOfBirth,
-                 DateCreate = p.DateCreate
+                 DateCreate = p.DateCreate,
+                 Roles = p.Roles
 
              }).FirstOrDefaultAsync();
-            if(member != null)
+            if (member != null)
             {
                 string token = SiteHelper.CreateToken(member, configuration.GetSection("secretkey").ToString());
                 return new
@@ -73,6 +78,7 @@ namespace WebApi.Controllers
                     Email = member.Email,
                     DateOfBirth = member.DateOfBirth,
                     DateCreate = member.DateCreate,
+                    Roles = member.Roles,
                     Token = token
                 };
             }

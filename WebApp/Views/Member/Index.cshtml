@@ -1,4 +1,8 @@
 ﻿<div>
     <p>Username: @User.Identity.Name</p>
     <p>Token: @User.FindFirst(ClaimTypes.Authentication).Value</p>
+    @foreach (var item in User.FindAll(ClaimTypes.Role))
+    {
+        <p>@item.Value</p>
+    }
 </div>
