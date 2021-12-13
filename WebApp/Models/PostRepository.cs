@@ -11,41 +11,33 @@ namespace WebApp.Models
 
         public async Task<List<Post>> GetPosts()
         {
-            try
+            //client.BaseAddress = ApiServer;
+            HttpResponseMessage message = await client.GetAsync("/api/post");
+            if (message.IsSuccessStatusCode)
             {
-                //client.BaseAddress = ApiServer;
-                HttpResponseMessage message = await client.GetAsync("/api/post");
-                if (message.IsSuccessStatusCode)
-                {
-                    return await message.Content.ReadAsAsync<List<Post>>();
-                }
-                return new List<Post>();
+                return await message.Content.ReadAsAsync<List<Post>>();
             }
-            catch
-            {
-                //Write to log
-                return new List<Post>();
-            }
+            return new List<Post>();
         }
 
         public async Task<Post> GetPostById(int id)
         {
-            
-               // client.BaseAddress = ApiServer;
-                HttpResponseMessage message = await client.GetAsync($"/api/post/{id}");
-                if (message.IsSuccessStatusCode)
-                {
-                    return await message.Content.ReadAsAsync<Post>();
-                }
-                return null;            
-          
+
+            // client.BaseAddress = ApiServer;
+            HttpResponseMessage message = await client.GetAsync($"/api/post/{id}");
+            if (message.IsSuccessStatusCode)
+            {
+                return await message.Content.ReadAsAsync<Post>();
+            }
+            return null;
+
         }
 
         public async Task<int> Create(Post post, string token)
         {
             //client.BaseAddress = ApiServer;
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            HttpResponseMessage message = await client.PostAsJsonAsync<Post>("/api/post", post);           
+            HttpResponseMessage message = await client.PostAsJsonAsync<Post>("/api/post", post);
             if (message.IsSuccessStatusCode)
             {
                 return 1;
@@ -57,7 +49,7 @@ namespace WebApp.Models
         {
             //client.BaseAddress = ApiServer;
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            HttpResponseMessage message = await client.PutAsJsonAsync<Post>("/api/post", post);            
+            HttpResponseMessage message = await client.PutAsJsonAsync<Post>("/api/post", post);
             if (message.IsSuccessStatusCode)
             {
                 return 1;

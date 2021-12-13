@@ -55,6 +55,17 @@ namespace WebApp.Helper
 
         }
 
+        private SeedDataRepository seedData;
+
+        public SeedDataRepository SeedData
+        {
+            get
+            {
+                return seedData ?? new SeedDataRepository(Client);                
+            }
+
+        }
+
 
         public void Dispose()
         {

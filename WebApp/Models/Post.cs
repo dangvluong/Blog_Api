@@ -16,7 +16,7 @@ namespace WebApp.Models
         [DataType(DataType.Date)]
         public DateTime DateCreated { get; set; }
         [DataType(DataType.Date)]
-        public DateTime DateModifier { get; set; }
+        public DateTime? DateModifier { get; set; }
 
         public bool IsActive { get; set; } = false;
         public bool IsDeleted { get; set; } = false;

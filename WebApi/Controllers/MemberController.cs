@@ -36,7 +36,7 @@ namespace WebApi.Controllers
             member.Roles = new List<Role>();
             var role = context.Roles.FirstOrDefault(s=> s.Name == "Member");
             member.Roles.Add(role);            
-            context.Users.Add(member);
+            context.Members.Add(member);
             await context.SaveChangesAsync();
             return Ok();
 
@@ -44,14 +44,14 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<List<Member>> GetUsers()
         {
-            return await context.Users.Include(p=>p.Roles).ToListAsync();
+            return await context.Members.Include(p=>p.Roles).ToListAsync();
         }
         [HttpPost("login")]
         public async Task<object> Login(LoginModel model)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-            Member member = await context.Users.Include(usr => usr.Roles).Where(user =>
+            Member member = await context.Members.Include(usr => usr.Roles).Where(user =>
                user.Username == model.Username &&
                user.Password == SiteHelper.HashPassword(model.Password)
              ).Select(p => new Member

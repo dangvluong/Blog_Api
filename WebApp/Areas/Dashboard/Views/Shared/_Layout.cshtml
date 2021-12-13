@@ -14,9 +14,13 @@ Author URL: http://w3layouts.com
 
     <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <!-- Template CSS -->
     <link rel="stylesheet" href="~/css/style-starter.css">
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/style-liberty.css" rel="stylesheet" />
+    <link href="~/css/tlpfoodmenu.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -47,6 +51,9 @@ Author URL: http://w3layouts.com
                         </li>
                         <li class="nav-item active">
                             <a class="nav-link" asp-area="Dashboard" asp-controller="Category" asp-action="Index">Category</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" asp-controller="SeedData" asp-action="Index">Manage Data</a>
                         </li>
                         <li class="nav-item dropdown @@category__active">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -82,22 +89,32 @@ Author URL: http://w3layouts.com
                     </div>
                     <!--//search-right-->
                     <!-- author -->
-                    <div class="header-author d-flex ml-lg-4 pl-2 mt-lg-0 mt-3">
-                        <a class="img-circle img-circle-sm" href="#author">
-                            <img src="~/images/author.jpg" class="img-fluid" alt="...">
-                        </a>
-                        <div class="align-self ml-3">
-                            <a href="#author">
-                                <h5>Alexander</h5>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="header-author d-flex ml-lg-4 pl-2 mt-lg-0 mt-3">
+                            <a class="img-circle img-circle-sm" href="#author">
+                                <img src="~/images/author.jpg" class="img-fluid" alt="...">
                             </a>
-                            <span>Blog Writer</span>
+                            <div class="align-self ml-3">
+                                <a href="#author">
+                                    <h5>Alexander</h5>
+                                </a>
+                                <span>Blog Writer</span>
+                            </div>
                         </div>
-                    </div>
+                    }
+                    else
+                    { <div class="header-author d-flex ml-lg-4 pl-2 mt-lg-0 mt-3">
+                            <a asp-action="Login" asp-controller="Member" class="btn btn-info mr-3">Login</a>
+                            <a asp-action="Register" asp-controller="Member" class="btn btn-primary">Register</a>
+                        </div>
+                    }
+
                     <!-- // author-->
                 </div>
 
                 <!-- toggle switch for light and dark theme -->
-                <div class="mobile-position">
+                <!--<div class="mobile-position">
                     <nav class="navigation">
                         <div class="theme-switch-wrapper">
                             <label class="theme-switch" for="checkbox">
@@ -109,19 +126,19 @@ Author URL: http://w3layouts.com
                             </label>
                         </div>
                     </nav>
-                </div>
+                </div>-->
                 <!-- //toggle switch for light and dark theme -->
             </div>
         </nav>
         <!--//nav-->
     </header>
     <!-- //header -->
+    @RenderBody()
+    @*<div class="w3l-homeblock1 py-5">
+            <div class="container">
 
-    <div class="w3l-homeblock1 py-5">
-        <div class="container">
-            @RenderBody()
-        </div>
-    </div>
+            </div>
+        </div>*@
     <!-- footer -->
     <footer class="w3l-footer-16">
         <div class="footer-content py-lg-5 py-4 text-center">
