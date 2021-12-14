@@ -45,34 +45,23 @@ namespace WebApi.Controllers
             return comment;
         }
 
+        // GET: api/GetCommentsByPost/5
+        [HttpGet]
+        [Route("GetCommentsByPost/{id}")]
+        public async Task<IList<Comment>> GetCommentsByPost(int id)
+        {           
+            return await context.Comments.Where(c => c.PostId == id).ToListAsync(); 
+        }
+
         // PUT: api/Comment/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutComment(int id, Comment comment)
+        public async Task<IActionResult> PutComment(Comment comment)
         {
-            if (id != comment.Id)
-            {
+            if (!ModelState.IsValid)
                 return BadRequest();
-            }
-
-            context.Entry(comment).State = EntityState.Modified;
-
-            try
-            {
-                await context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CommentExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            context.Comments.Update(comment);
+            await context.SaveChangesAsync();
             return NoContent();
         }
 
@@ -81,6 +70,8 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Comment>> PostComment(Comment comment)
         {
+            if (!ModelState.IsValid)
+                return BadRequest();
             context.Comments.Add(comment);
             await context.SaveChangesAsync();
 

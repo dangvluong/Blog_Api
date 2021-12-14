@@ -26,6 +26,7 @@ namespace WebApp.Controllers
             Post post = await siteHelper.Post.GetPostById(id);
             if (post is null)
                 return NotFound();
+            post.Comments = await siteHelper.Comment.GetCommentByPostId(post.Id);
             return View(post);
         }
 

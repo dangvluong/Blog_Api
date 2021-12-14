@@ -41,8 +41,9 @@ namespace WebApi.Controllers
             context.SaveChanges();
             var roles1 = context.Roles.ToList();
             //seed member
-            Member member = new Member()
+            var members = new Member[]
             {
+                new Member{
                 Username = "vanluong92",
                 Password = SiteHelper.HashPassword("123123"),
                 Gender = true,
@@ -50,15 +51,88 @@ namespace WebApi.Controllers
                 Email = "admin@gmail.com",
                 FullName = "admin",
                 DateCreate = DateTime.Now
+                },
+                new Member{
+                Username = "vanluong93",
+                Password = SiteHelper.HashPassword("123123"),
+                Gender = true,
+                DateOfBirth = DateTime.Now,
+                Email = "admin1@gmail.com",
+                FullName = "admin1",
+                DateCreate = DateTime.Now
+                },
+                new Member{
+                Username = "vanluong94",
+                Password = SiteHelper.HashPassword("123123"),
+                Gender = true,
+                DateOfBirth = DateTime.Now,
+                Email = "admin2@gmail.com",
+                FullName = "admin2",
+                DateCreate = DateTime.Now
+                },
+                new Member{
+                Username = "vanluong95",
+                Password = SiteHelper.HashPassword("123123"),
+                Gender = false,
+                DateOfBirth = DateTime.Now,
+                Email = "admin3@gmail.com",
+                FullName = "admin3",
+                DateCreate = DateTime.Now
+                },
+                new Member{
+                Username = "vanluong96",
+                Password = SiteHelper.HashPassword("123123"),
+                Gender = false,
+                DateOfBirth = DateTime.Now,
+                Email = "admin4@gmail.com",
+                FullName = "admin4",
+                DateCreate = DateTime.Now
+                }
             };
-            member.Roles = new List<Role>();
-            var role = context.Roles.FirstOrDefault(s => s.Name == "admin");
-            member.Roles.Add(context.Roles.FirstOrDefault(s => s.Name == "admin"));
-            member.Roles.Add(context.Roles.FirstOrDefault(s => s.Name == "member"));
-            context.Members.Add(member);
+            foreach (var member in members)
+            {
+                member.Roles = new List<Role>();
+                var role = context.Roles.FirstOrDefault(s => s.Name == "admin");
+                member.Roles.Add(context.Roles.FirstOrDefault(s => s.Name == "admin"));
+                member.Roles.Add(context.Roles.FirstOrDefault(s => s.Name == "member"));
+            }
+            context.Members.AddRange(members);
             await context.SaveChangesAsync();
             //seed posts and categories
             await SeedPostAndCategoryAsync();
+            await SeedComments();
+            //await context.SaveChangesAsync();
+        }
+
+        private async Task SeedComments()
+        {
+            var fk = new Faker<Comment>();
+            fk.RuleFor(p => p.Content, f => $"Comment " + f.Lorem.Sentences(5));
+            fk.RuleFor(p => p.DateCreate, f => f.Date.Between(new DateTime(2019, 12, 31), new DateTime(2021, 12, 31)));
+            var members = context.Members.ToArray();
+            var posts = context.Posts.ToArray();
+            var rand = new Random();
+            var comments = new List<Comment>();
+            for (int i = 0; i < 20; i++)
+            {
+                var comment = fk.Generate();
+                comment.AuthorId = members[rand.Next(members.Length)].Id;
+                comment.PostId = posts[rand.Next(posts.Length)].Id;                
+                comments.Add(comment);                
+            }
+            context.Comments.AddRange(comments);
+            await context.SaveChangesAsync();
+            comments.Clear();
+            var commentsInDb = context.Comments.ToArray();
+            for (int i = 0; i < 30; i++)
+            {
+                var comment = fk.Generate();
+                comment.AuthorId = members[rand.Next(members.Length)].Id;
+                comment.PostId = posts[rand.Next(posts.Length)].Id;
+                comment.CommentParentId = commentsInDb[rand.Next(commentsInDb.Length)].Id;
+                comments.Add(comment);
+            }
+            context.Comments.AddRange(comments);
             await context.SaveChangesAsync();
         }
 
@@ -83,7 +157,7 @@ namespace WebApi.Controllers
             fakerPost.RuleFor(p => p.Title, fk => $"Post {index++} " + fk.Lorem.Sentence(3, 4).Trim('.'));
             fakerPost.RuleFor(p => p.Description, fk => fk.Lorem.Sentences(3));
             fakerPost.RuleFor(p => p.Content, fk => fk.Lorem.Paragraphs(10));
-            fakerPost.RuleFor(p => p.DateCreated, fk => fk.Date.Between(new DateTime(2021, 12, 31), new DateTime(2019, 1, 1)));
+            fakerPost.RuleFor(p => p.DateCreated, fk => fk.Date.Between(new DateTime(2019, 1, 1), new DateTime(2021, 12, 31)));
             fakerPost.RuleFor(p => p.AuthorId, fk => context.Members.FirstOrDefault(m => m.Username == "vanluong92").Id);
 
             var posts = new List<Post>();
@@ -97,6 +171,6 @@ namespace WebApi.Controllers
             }
             context.Posts.AddRange(posts);
             await context.SaveChangesAsync();
-        }        
+        }
     }
 }

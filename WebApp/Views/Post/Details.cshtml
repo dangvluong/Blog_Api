@@ -1,5 +1,5 @@
 ﻿@model Post
-    @*<div class="container">
+@*<div class="container">
         <div class="contact-grids">
             @Html.DisplayFor(m => m.Title)
             @Html.DisplayFor(m => m.AuthorId)
@@ -13,9 +13,9 @@
 
 <nav id="breadcrumbs" class="breadcrumbs">
     <div class="container page-wrapper AllBreadcrumbs">
-        <a asp-action="Index" asp-controller="Home"  rel="homepage">Home</a>&nbsp;&nbsp;»&nbsp;&nbsp;
-        <a asp-action="Index" asp-controller="Post"   rel="post">Post</a>
-        &nbsp;&nbsp;»&nbsp;&nbsp; 
+        <a asp-action="Index" asp-controller="Home" rel="homepage">Home</a>&nbsp;&nbsp;»&nbsp;&nbsp;
+        <a asp-action="Index" asp-controller="Post" rel="post">Post</a>
+        &nbsp;&nbsp;»&nbsp;&nbsp;
         @Model.Title
     </div>
 </nav>
@@ -43,136 +43,194 @@
                     </a><a class="url fn n"
                            href="https://wp.w3layouts.com/designblog/author/w3layouts/">@Model.AuthorId</a>
 
-                    in <a asp-action="Category" asp-controller="Post" asp-route-id="@Model.CategoryId" rel="category">@Model.CategoryId</a>
+                        in <a asp-action="Category" asp-controller="Post" asp-route-id="@Model.CategoryId" rel="category">@Model.CategoryId</a>
 
+                    </div>
+                    <ul class="blog-meta">
+
+                        <li class="meta-item blog-lesson">
+                            <span class="meta-value"> @Model.DateCreated.ToShortDateString() </span>
+                        </li>
+                    </ul>
                 </div>
-                <ul class="blog-meta">
-
-                    <li class="meta-item blog-lesson">
-                        <span class="meta-value"> @Model.DateCreated.ToShortDateString() </span>
-                    </li>
-                </ul>
             </div>
         </div>
     </div>
-</div>
 
-<section class="blog-post-main w3l-homeblock1">
-    <!--/blog-post-->
-    <div class="blog-content-inf pb-5">
-        <div class="container pb-lg-4 w3BlogLayout">
-            <div class="single-post-image mb-5">
-                <!--post's thumbnail-->
-                <!--<div class="post-content">
+    <section class="blog-post-main w3l-homeblock1">
+        <!--/blog-post-->
+        <div class="blog-content-inf pb-5">
+            <div class="container pb-lg-4 w3BlogLayout">
+                <div class="single-post-image mb-5">
+                    <!--post's thumbnail-->
+                    <!--<div class="post-content">
 
-                    <div class="post-thumbnail">
-                        <img width="560" height="370"
-                             src="./Your Blog Posts are Boring_ 9 Tips for Making your Writing more Interesting – Design Blog – Blogging Category WordPress Theme_files/p3.jpg"
-                             class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt=""
-                             loading="lazy"
-                             srcset="https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/p3.jpg 560w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/p3-300x198.jpg 300w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/p3-360x238.jpg 360w"
-                             sizes="(max-width: 560px) 100vw, 560px">
-                    </div>--><!-- .post-thumbnail -->
-
-                <!--</div>-->
-            </div>
-            <div class="single-post-content">
-                <!--post content-->
-                @Model.Content
-                @*<p>
-                    Maecenas vitae lacus sit amet turpis consequat eleifend. Cras odio purus, venenatis et
-                    vehicula sit amet, dictum cursus mauris.
-                </p>
-                <p>
-                    Integer suscipit lectus quis est dictum, at imperdiet urna ullamcorper. Aliquam ac
-                    consectetur nisl, id semper dolor. Duis iaculis lacus est, sed malesuada arcu
-                    pellentesque et. Donec aliquet lectus non mi cursus euismod. Suspendisse aliquam sem
-                    metus, eget mattis leo pharetra non. Nulla finibus ultrices massa ut vestibulum.
-                    Curabitur nec tortor lectus. Fusce porttitor massa eget augue tempus fringilla. Donec
-                    gravida, mauris at tristique semper, ipsum libero lobortis lectus, quis commodo augue mi
-                    ac ante. Nullam gravida enim nec velit tempus suscipit. Donec convallis molestie ex,
-                    luctus laoreet magna commodo ut. Suspendisse mauris erat, volutpat nec fermentum id,
-                    ullamcorper vitae est. Sed luctus, tortor non hendrerit commodo, metus sem eleifend sem,
-                    sed feugiat odio nisi quis justo.
-                </p>
-                <p>
-                    Quisque tortor libero, consequat sed lacinia a, facilisis ac dui. Donec vulputate purus
-                    mauris, sit amet volutpat arcu condimentum at. Sed sed lobortis mi. Maecenas ac sodales
-                    massa. Aenean sapien enim, commodo et scelerisque sit amet, efficitur ut diam. In ut
-                    lacinia orci, in ultrices sem. Integer hendrerit volutpat nulla, non ornare mi ultricies
-                    quis.&nbsp;
-                </p>*@
-                <!--about author-->
-                <div class="author-card author-listhny my-lg-5 my-sm-4 w3ArticleAuth">
-                    <div class="row">
-                        <div class="author-left col-sm-3 mb-sm-0 mb-4">
-                            <a href="https://wp.w3layouts.com/designblog/author/w3layouts/">
-                                <!--author's avatar-->
-                                <img class="img-fluid"
-                                     src="~/images/328cc1f23e4a3b73aa60ee6ced1897a1(2).jpeg"
-                                     alt="W3Layouts">
-                            </a>
-                        </div>
-                        <div class="author-right col-sm-9 position-relative align-self">
-
-                            <h4>
-                                <a href="https://wp.w3layouts.com/designblog/author/w3layouts/"
-                                   class="title-team-28">@Model.AuthorId</a>
-                            </h4>
-                            <p class="para-team mb-0">
-                                We help developers, designers and website owner's
-                                create stunning websites. We have been building a huge collection of website
-                                templates for every business and industry needs. Simply select your
-                                favourite template, edit, download and launc
-                            </p>
-
-                            <div class="share-icons mt-4">
-                                <a href="https://twitter.com/w3layouts">
-                                    <span class="fa fa-twitter"></span>
+                        <div class="post-thumbnail">
+                            <img width="560" height="370"
+                                 src="./Your Blog Posts are Boring_ 9 Tips for Making your Writing more Interesting – Design Blog – Blogging Category WordPress Theme_files/p3.jpg"
+                                 class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt=""
+                                 loading="lazy"
+                                 srcset="https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/p3.jpg 560w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/p3-300x198.jpg 300w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/p3-360x238.jpg 360w"
+                                 sizes="(max-width: 560px) 100vw, 560px">
+                        </div>-->
+                    <!-- .post-thumbnail -->
+                    <!--</div>-->
+                </div>
+                <div class="single-post-content">
+                    <!--post content-->
+                    @Model.Content
+                    @*<p>
+                            Maecenas vitae lacus sit amet turpis consequat eleifend. Cras odio purus, venenatis et
+                            vehicula sit amet, dictum cursus mauris.
+                        </p>
+                        <p>
+                            Integer suscipit lectus quis est dictum, at imperdiet urna ullamcorper. Aliquam ac
+                            consectetur nisl, id semper dolor. Duis iaculis lacus est, sed malesuada arcu
+                            pellentesque et. Donec aliquet lectus non mi cursus euismod. Suspendisse aliquam sem
+                            metus, eget mattis leo pharetra non. Nulla finibus ultrices massa ut vestibulum.
+                            Curabitur nec tortor lectus. Fusce porttitor massa eget augue tempus fringilla. Donec
+                            gravida, mauris at tristique semper, ipsum libero lobortis lectus, quis commodo augue mi
+                            ac ante. Nullam gravida enim nec velit tempus suscipit. Donec convallis molestie ex,
+                            luctus laoreet magna commodo ut. Suspendisse mauris erat, volutpat nec fermentum id,
+                            ullamcorper vitae est. Sed luctus, tortor non hendrerit commodo, metus sem eleifend sem,
+                            sed feugiat odio nisi quis justo.
+                        </p>
+                        <p>
+                            Quisque tortor libero, consequat sed lacinia a, facilisis ac dui. Donec vulputate purus
+                            mauris, sit amet volutpat arcu condimentum at. Sed sed lobortis mi. Maecenas ac sodales
+                            massa. Aenean sapien enim, commodo et scelerisque sit amet, efficitur ut diam. In ut
+                            lacinia orci, in ultrices sem. Integer hendrerit volutpat nulla, non ornare mi ultricies
+                            quis.&nbsp;
+                        </p>*@
+                    <!--about author-->
+                    <div class="author-card author-listhny my-lg-5 my-sm-4 w3ArticleAuth">
+                        <div class="row">
+                            <div class="author-left col-sm-3 mb-sm-0 mb-4">
+                                <a href="https://wp.w3layouts.com/designblog/author/w3layouts/">
+                                    <!--author's avatar-->
+                                    <img class="img-fluid"
+                                         src="~/images/328cc1f23e4a3b73aa60ee6ced1897a1(2).jpeg"
+                                         alt="W3Layouts">
                                 </a>
+                            </div>
+                            <div class="author-right col-sm-9 position-relative align-self">
 
-                                <a href="https://www.facebook.com/w3layouts">
-                                    <span class="fa fa-facebook"></span>
-                                </a>
+                                <h4>
+                                    <a href="https://wp.w3layouts.com/designblog/author/w3layouts/"
+                                       class="title-team-28">@Model.AuthorId</a>
+                                </h4>
+                                <p class="para-team mb-0">
+                                    We help developers, designers and website owner's
+                                    create stunning websites. We have been building a huge collection of website
+                                    templates for every business and industry needs. Simply select your
+                                    favourite template, edit, download and launc
+                                </p>
 
-                                <a href="https://www.instagram.com/w3layouts_/">
-                                    <span class="fa fa-instagram"></span>
-                                </a>
+                                <div class="share-icons mt-4">
+                                    <a href="https://twitter.com/w3layouts">
+                                        <span class="fa fa-twitter"></span>
+                                    </a>
+
+                                    <a href="https://www.facebook.com/w3layouts">
+                                        <span class="fa fa-facebook"></span>
+                                    </a>
+
+                                    <a href="https://www.instagram.com/w3layouts_/">
+                                        <span class="fa fa-instagram"></span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <!--post's comments'-->
-                <div class="w3PostComments">
-                    <div id="comments" class="comments-area">
-                        <div id="respond" class="comment-respond">
-                            <h3 id="reply-title" class="comment-reply-title">
-                                Leave a Reply <small>
-                                    <a rel="nofollow" id="cancel-comment-reply-link"
-                                       href="https://wp.w3layouts.com/designblog/2021/03/08/blog-post-title-3-goes-here/#respond"
-                                       style="display:none;">Cancel reply</a>
-                                </small>
-                            </h3>
-                            <form action="#" method="post" id="commentform" class="comment-form" novalidate="">
-                                <p class="comment-form-comment">
-                                    <label for="comment">Comment</label>
-                                    <textarea id="comment" name="comment" cols="45" rows="8"
-                                              maxlength="65525" required="required"></textarea>
-                                </p>
-                                <p class="form-submit">
-                                    <input name="submit" type="submit" id="submit"
-                                           class="submit" value="Post Comment"> <input type="hidden"
-                                                                                       name="comment_post_ID" value="39" id="comment_post_ID">
-                                    <input type="hidden" name="comment_parent" id="comment_parent"
-                                           value="0">
-                                </p>
-                            </form>
-                        </div><!-- #respond -->
+                    <!--post's comments'-->
+                    <div class="w3PostComments">
+                        <div id="comments" class="comments-area">
+                            @if (Model.Comments != null && Model.Comments.Count > 0)
+                            {
+                                <h2 class="comments-title">
+                                    @Model.Comments.Count  thoughts on “<span>@Model.Title</span>”
+                                </h2><!-- .comments-title -->
+                                <ol class="comment-list">
+                                    @foreach (var comment in Model.Comments)
+                                    {
+                                        <li id="comment-2" class="comment even thread-even depth-1 parent">
+                                            <article id="div-comment-2" class="comment-body">
+                                                <footer class="comment-meta">
+                                                    <div class="comment-author vcard">
+                                                        <img alt="" src="./Hello world! – Design Blog – Blogging Category WordPress Theme_files/d7a973c7dab26985da5f961be7b74480.png" srcset="https://secure.gravatar.com/avatar/d7a973c7dab26985da5f961be7b74480?s=64&amp;d=mm&amp;r=g 2x" class="avatar avatar-32 photo" height="32" width="32" loading="lazy">						<b class="fn"><a href="https://wordpress.org/" rel="external nofollow ugc" class="url">@comment.AuthorId</a></b> <span class="says">says:</span>
+                                                    </div><!-- .comment-author -->
 
-                    </div><!-- #comments -->
-                </div>
+                                                    <div class="comment-metadata">
+                                                        <a href="https://wp.w3layouts.com/designblog/2021/03/08/hello-world-2/#comment-2"><time>@comment.DateCreate.ToShortDateString() at @comment.DateCreate.ToShortTimeString()</time></a>
+                                                    </div><!-- .comment-metadata -->
 
+                                                </footer><!-- .comment-meta -->
+
+                                                <div class="comment-content">
+                                                    <p>
+                                                       @comment.Content
+                                                    </p>
+                                                </div><!-- .comment-content -->
+
+                                                <div class="reply"><a rel="nofollow" class="comment-reply-link" href="https://wp.w3layouts.com/designblog/2021/03/08/hello-world-2/?replytocom=2#respond" data-commentid="2" data-postid="63" data-belowelement="div-comment-2" data-respondelement="respond" data-replyto="Reply to A WordPress Commenter" aria-label="Reply to A WordPress Commenter">Reply</a></div>
+                                            </article><!-- .comment-body -->
+                                            <!--<ol class="children">
+                                                <li id="comment-5" class="comment odd alt depth-2">
+                                                    <article id="div-comment-5" class="comment-body">
+                                                        <footer class="comment-meta">
+                                                            <div class="comment-author vcard">
+                                                                <img alt="" src="./Hello world! – Design Blog – Blogging Category WordPress Theme_files/95f668354f65b9655308ff8eb78b9279.png" srcset="https://secure.gravatar.com/avatar/95f668354f65b9655308ff8eb78b9279?s=64&amp;d=mm&amp;r=g 2x" class="avatar avatar-32 photo" height="32" width="32" loading="lazy">						<b class="fn">ada</b> <span class="says">says:</span>
+                                                            </div>--><!-- .comment-author -->
+
+                                                            <!--<div class="comment-metadata">
+                                                                <a href="https://wp.w3layouts.com/designblog/2021/03/08/hello-world-2/#comment-5"><time datetime="2021-12-14T02:33:25+00:00">December 14, 2021 at 2:33 am</time></a>
+                                                            </div>--><!-- .comment-metadata -->
+
+                                                            <!--<em class="comment-awaiting-moderation">Your comment is awaiting moderation. This is a preview; your comment will be visible after it has been approved.</em>
+                                                        </footer>--><!-- .comment-meta -->
+
+                                                        <!--<div class="comment-content">
+                                                            aasda
+                                                        </div>--><!-- .comment-content -->
+
+                                                    <!--</article>--><!-- .comment-body -->
+                                                <!--</li>--><!-- #comment-## -->
+                                            <!--</ol>--><!-- .children -->
+                                        </li><!-- #comment-## -->
+                                    }
+
+                                </ol><!-- .comment-list -->
+                            }
+
+
+                            <div id="respond" class="comment-respond">
+                                <h3 id="reply-title" class="comment-reply-title">
+                                    Leave a Reply <small>
+                                        <a rel="nofollow" id="cancel-comment-reply-link"
+                                           href="https://wp.w3layouts.com/designblog/2021/03/08/blog-post-title-3-goes-here/#respond"
+                                           style="display:none;">Cancel reply</a>
+                                    </small>
+                                </h3>
+                                <form action="#" method="post" id="commentform" class="comment-form" novalidate="">
+                                    <p class="comment-form-comment">
+                                        <label for="comment">Comment</label>
+                                        <textarea id="comment" name="comment" cols="45" rows="8"
+                                                  maxlength="65525" required="required"></textarea>
+                                    </p>
+                                    <p class="form-submit">
+                                        <input name="submit" type="submit" id="submit"
+                                               class="submit" value="Post Comment"> <input type="hidden"
+                                                                                           name="comment_post_ID" value="39" id="comment_post_ID">
+                                        <input type="hidden" name="comment_parent" id="comment_parent"
+                                               value="0">
+                                    </p>
+                                </form>
+                            </div><!-- #respond -->
+
+                        </div><!-- #comments -->
+                    </div>
+
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>

@@ -61,11 +61,21 @@ namespace WebApp.Helper
         {
             get
             {
-                return seedData ?? new SeedDataRepository(Client);                
+                return seedData ?? new SeedDataRepository(Client);
             }
 
         }
 
+        private CommentRepository comment;
+
+        public CommentRepository Comment
+        {
+            get
+            {
+                return comment ?? new CommentRepository(Client);
+            }
+
+        }
 
         public void Dispose()
         {
