@@ -9,11 +9,13 @@
                 <input type="text" class="contact-input" asp-for="Name" />
             </div>
             <div>
-                <select asp-for="ParentCategoryId" asp-items="@ViewBag.categories">
+                <select asp-for="ParentCategoryId" asp-items="@ViewBag.categories" class="form-control">
                     <option>Chọn danh mục</option>
                 </select>
             </div>
-            <button class="btn btn-style btn-outline">Create</button>
+            <div class="my-3">
+                <button class="btn btn-style btn-outline">Create</button>
+            </div>            
         </form>
     </div>
 </div>

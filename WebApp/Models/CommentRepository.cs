@@ -5,12 +5,12 @@
         public CommentRepository(HttpClient client) : base(client)
         {
         }
-        public async Task<IEnumerable<Comment>> GetComments()
+        public async Task<IList<Comment>> GetComments()
         {
             HttpResponseMessage message = await client.GetAsync("/api/comment");
             if (message.IsSuccessStatusCode)
             {
-                return await message.Content.ReadAsAsync<IEnumerable<Comment>>();
+                return await message.Content.ReadAsAsync<IList<Comment>>();
             }
             return null;
         }

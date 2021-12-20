@@ -61,7 +61,9 @@ namespace WebApp.Helper
         {
             get
             {
-                return seedData ?? new SeedDataRepository(Client);
+                if (seedData is null)
+                    seedData = new SeedDataRepository(Client);
+                return seedData;
             }
 
         }
@@ -72,7 +74,9 @@ namespace WebApp.Helper
         {
             get
             {
-                return comment ?? new CommentRepository(Client);
+                if (comment is null)
+                    comment = new CommentRepository(Client);
+                return comment;
             }
 
         }

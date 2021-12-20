@@ -2,19 +2,19 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
+using WebApp.Controllers;
 using WebApp.Helper;
 using WebApp.Models;
 
 namespace WebApp.Areas.Dashboard.Controllers
 {
     [Area("dashboard")]
-    public class CategoryController : Controller
+    public class CategoryController : BaseController
     {
-        SiteProvider siteHelper;
-        public CategoryController(SiteProvider siteHelper)
+        public CategoryController(SiteProvider siteHelper) : base(siteHelper)
         {
-            this.siteHelper = siteHelper;
         }
+
         // GET: CategoryController
         public async Task<ActionResult> Index()
         {

@@ -54,7 +54,6 @@ namespace WebApi.Controllers
         }
 
         // PUT: api/Comment/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutComment(Comment comment)
         {
@@ -65,8 +64,7 @@ namespace WebApi.Controllers
             return NoContent();
         }
 
-        // POST: api/Comment
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // POST: api/Comment        
         [HttpPost]
         public async Task<ActionResult<Comment>> PostComment(Comment comment)
         {
@@ -74,7 +72,6 @@ namespace WebApi.Controllers
                 return BadRequest();
             context.Comments.Add(comment);
             await context.SaveChangesAsync();
-
             return CreatedAtAction("GetComment", new { id = comment.Id }, comment);
         }
 

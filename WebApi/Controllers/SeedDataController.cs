@@ -113,24 +113,26 @@ namespace WebApi.Controllers
             var posts = context.Posts.ToArray();
             var rand = new Random();
             var comments = new List<Comment>();
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < posts.Length; i++)
             {
                 var comment = fk.Generate();
                 comment.AuthorId = members[rand.Next(members.Length)].Id;
-                comment.PostId = posts[rand.Next(posts.Length)].Id;                
+                comment.PostId = posts[i].Id;                
                 comments.Add(comment);                
             }
             context.Comments.AddRange(comments);
             await context.SaveChangesAsync();
             comments.Clear();
             var commentsInDb = context.Comments.ToArray();
+            //add comments child
             for (int i = 0; i < 30; i++)
             {
-                var comment = fk.Generate();
-                comment.AuthorId = members[rand.Next(members.Length)].Id;
-                comment.PostId = posts[rand.Next(posts.Length)].Id;
-                comment.CommentParentId = commentsInDb[rand.Next(commentsInDb.Length)].Id;
-                comments.Add(comment);
+                var commentParent = commentsInDb[rand.Next(commentsInDb.Length)];
+                var commentChild = fk.Generate();
+                commentChild.AuthorId = members[rand.Next(members.Length)].Id;
+                commentChild.PostId = commentParent.PostId;
+                commentChild.CommentParentId = commentParent.Id;
+                comments.Add(commentChild);
             }
             context.Comments.AddRange(comments);
             await context.SaveChangesAsync();
