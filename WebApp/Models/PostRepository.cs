@@ -67,5 +67,14 @@ namespace WebApp.Models
             }
             return 0;
         }
+        public async Task<IEnumerable<Post>> GetPostsByMember(int id)
+        {            
+            HttpResponseMessage message = await client.GetAsync($"/api/post/getpostsbymember/{id}");
+            if (message.IsSuccessStatusCode)
+            {
+                return await message.Content.ReadAsAsync<IEnumerable<Post>>();
+            }
+            return null;
+        }
     }
 }

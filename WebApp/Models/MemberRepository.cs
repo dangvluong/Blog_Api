@@ -1,4 +1,6 @@
-﻿namespace WebApp.Models
+﻿using System.Net.Http.Headers;
+
+namespace WebApp.Models
 {
     public class MemberRepository : BaseRepository
     {
@@ -17,6 +19,16 @@
             HttpResponseMessage message = await client.PostAsJsonAsync<LoginModel>("/api/member/login", model);
             if (message.IsSuccessStatusCode)
                 return await message.Content.ReadAsAsync<Member>();
+            return null;
+        }
+        public async Task<Member> GetMemberById(int id, string token)
+        {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            HttpResponseMessage message = await client.GetAsync($"/api/member/{id}");
+            if (message.IsSuccessStatusCode)
+            {
+                return await message.Content.ReadAsAsync<Member>();
+            }
             return null;
         }
     }

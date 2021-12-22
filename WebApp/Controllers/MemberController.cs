@@ -16,9 +16,11 @@ namespace WebApp.Controllers
             this.siteHelper =  siteHelper;
         }
         [Authorize]
-        public IActionResult Index()
-        {            
-            return View();
+        public async Task<IActionResult> Index()
+        {
+            string token = User.FindFirstValue(ClaimTypes.Authentication);
+            Member member = await siteHelper.Member.GetMemberById(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),token);
+            return View(member);
         }
         public IActionResult Register()
         {

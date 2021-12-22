@@ -1,8 +1,35 @@
-﻿<div>
-    <p>Username: @User.Identity.Name</p>
-    <p>Token: @User.FindFirst(ClaimTypes.Authentication).Value</p>
-    @foreach (var item in User.FindAll(ClaimTypes.Role))
-    {
-        <p>@item.Value</p>
-    }
+﻿@model Member
+<div class="container">
+    <div class="row">
+       <partial name="MemberFunction" />
+        <div class="col-7">
+            <table class="table table-borderless">
+
+                <tr>
+                    <th>DateCreate</th>
+                    <td>@Model.DateCreate.ToShortDateString()</td>
+                </tr>
+                <tr>
+                    <th>Username</th>
+                    <td>@Model.Username</td>
+                </tr>
+                <tr>
+                    <th>FullName</th>
+                    <td>@Model.FullName</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>@Model.Email</td>
+                </tr>
+                <tr>
+                    <th>Gender</th>
+                    <td>@(Model.Gender ? "Nam" :"Nữ")</td>
+                </tr>
+                <tr>
+                    <th>DateOfBirth</th>
+                    <td>@Model.DateOfBirth.ToShortDateString()</td>
+                </tr>              
+            </table>
+        </div>
+    </div>
 </div>

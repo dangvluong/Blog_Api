@@ -84,6 +84,11 @@ namespace WebApi.Controllers
 
             return NoContent();
         }
+        [HttpGet("getpostsbymember/{id}")]
+        public async Task<List<Post>> GetPostsByMember(int id)
+        {
+            return await context.Posts.Where(p => p.AuthorId == id && p.IsDeleted == false).OrderByDescending(p => p.DateCreated).ToListAsync();
+        }
 
         private bool PostExists(int id)
         {

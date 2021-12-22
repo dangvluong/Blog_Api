@@ -85,7 +85,7 @@ namespace WebApp.Controllers
 
         // GET: PostController/Delete/5
         [Authorize]
-        public async Task<ActionResult> DeleteAsync(int id)
+        public async Task<ActionResult> Delete(int id)
         {            
             Post post = await siteHelper.Post.GetPostById(id);
             if (post is null)
@@ -101,11 +101,19 @@ namespace WebApp.Controllers
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmAsync(int id)
+        public async Task<ActionResult> DeleteConfirm(int id)
         {
             string token = User.FindFirstValue(ClaimTypes.Authentication);
             await siteHelper.Post.Delete(id, token);
             return RedirectToAction(nameof(Index));
+        }
+        [Authorize]
+        public async Task<IActionResult> ListPostByMember(int? id = null)
+        {
+            if (id == null)
+                id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var listPost = await siteHelper.Post.GetPostsByMember(id.Value);
+            return View(listPost);
         }
     }
 }

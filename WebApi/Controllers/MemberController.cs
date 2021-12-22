@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -84,5 +85,15 @@ namespace WebApi.Controllers
             }
             return null;
         }
+        [HttpGet("{id}")]   
+        [Authorize]
+        public async Task<Member> GetMemberById(int id)
+        {
+            //Will implement only members can get data about them, or admins can view data of all members.
+
+            //
+            return await context.Members.FirstOrDefaultAsync(m => m.Id == id);            
+        }
+        
     }
 }

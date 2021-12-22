@@ -13966,6 +13966,9 @@ h3.main-title {
 .navbar-expand-lg .navbar-nav .dropdown-menu {
     transform: translateX(-50px);
 }
+.navbar-expand-lg .navbar-nav .dropdown-menu#dropdown-menu2 {
+    transform: translateX(-27px);
+}
 
     .navbar-expand-lg .navbar-nav .dropdown-menu:before {
         content: '';
