@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -35,8 +36,8 @@ namespace WebApi.Controllers
                 DateCreate = DateTime.Now
             };
             member.Roles = new List<Role>();
-            var role = context.Roles.FirstOrDefault(s=> s.Name == "Member");
-            member.Roles.Add(role);            
+            var role = context.Roles.FirstOrDefault(s => s.Name == "Member");
+            member.Roles.Add(role);
             context.Members.Add(member);
             await context.SaveChangesAsync();
             return Ok();
@@ -45,7 +46,7 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<List<Member>> GetUsers()
         {
-            return await context.Members.Include(p=>p.Roles).ToListAsync();
+            return await context.Members.Include(p => p.Roles).ToListAsync();
         }
         [HttpPost("login")]
         public async Task<object> Login(LoginModel model)
@@ -85,15 +86,39 @@ namespace WebApi.Controllers
             }
             return null;
         }
-        [HttpGet("{id}")]   
+        [HttpGet("{id}")]
         [Authorize]
         public async Task<Member> GetMemberById(int id)
         {
             //Will implement only members can get data about them, or admins can view data of all members.
 
             //
-            return await context.Members.FirstOrDefaultAsync(m => m.Id == id);            
+            return await context.Members.FirstOrDefaultAsync(m => m.Id == id);
         }
-        
+        [HttpPost("checkoldpasswordvalid")]
+        [Authorize]
+        public async Task<IActionResult> CheckOldPasswordValid([FromBody]string oldPassword)
+        {
+            if (string.IsNullOrEmpty(oldPassword) || oldPassword.Length < 6  || oldPassword.Length > 64)
+                return BadRequest();
+            bool isOldPasswordValid =await context.Members.AnyAsync(m => m.Password == SiteHelper.HashPassword(oldPassword));
+            if (isOldPasswordValid)
+                return Ok();
+            return BadRequest();
+        }
+        [HttpPost("changepassword")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody] string newPassword)
+        {
+            if (string.IsNullOrEmpty(newPassword) && (newPassword.Length < 6 || newPassword.Length > 64))
+                return BadRequest();
+            int memberId =int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            Member member =await context.Members.FirstOrDefaultAsync(p => p.Id == memberId);
+            if (member == null)
+                return BadRequest();
+            member.Password = SiteHelper.HashPassword(newPassword);
+            await context.SaveChangesAsync();
+            return Ok();
+        }         
     }
 }

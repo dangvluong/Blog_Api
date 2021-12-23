@@ -31,5 +31,21 @@ namespace WebApp.Models
             }
             return null;
         }
+        public async Task<bool> CheckOldPasswordValid(string oldPassword, string token)
+        {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);           
+            HttpResponseMessage message = await client.PostAsJsonAsync("/api/member/checkoldpasswordvalid", oldPassword);
+            if (message.IsSuccessStatusCode)
+                return true;
+            return false;
+        }
+        public async Task<int> ChangePassword(string newPassword, string token)
+        {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            HttpResponseMessage message = await client.PostAsJsonAsync("/api/member/changepassword", newPassword);
+            if (message.IsSuccessStatusCode)
+                return 1;
+            return 0;
+        }
     }
 }
