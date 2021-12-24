@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Models;
+using WebApi.Repositories;
 
 namespace WebApi.Controllers
 {
@@ -15,11 +16,13 @@ namespace WebApi.Controllers
     [ApiController]
     public class MemberController : BaseController
     {
-        private readonly IConfiguration configuration;
-        public MemberController(AppDbContext context, IConfiguration configuration) : base(context)
+        private readonly IConfiguration _configuration;
+
+        public MemberController(RepositoryManager repository, IConfiguration configuration) : base(repository)
         {
-            this.configuration = configuration;
+            _configuration = configuration;
         }
+
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterModel model)
         {
@@ -36,41 +39,26 @@ namespace WebApi.Controllers
                 DateCreate = DateTime.Now
             };
             member.Roles = new List<Role>();
-            var role = context.Roles.FirstOrDefault(s => s.Name == "Member");
+            var role = await _repository.Role.GetRoleByName("Member");           
             member.Roles.Add(role);
-            context.Members.Add(member);
-            await context.SaveChangesAsync();
+            _repository.Member.Add(member);            
+            await _repository.SaveChanges();
             return Ok();
-
         }
         [HttpGet]
-        public async Task<List<Member>> GetUsers()
+        public async Task<IEnumerable<Member>> GetUsers()
         {
-            return await context.Members.Include(p => p.Roles).ToListAsync();
+            return await _repository.Member.GetMembers();            
         }
         [HttpPost("login")]
-        public async Task<object> Login(LoginModel model)
+        public async Task<object> Login(LoginModel loginModel)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-            Member member = await context.Members.Include(usr => usr.Roles).Where(user =>
-               user.Username == model.Username &&
-               user.Password == SiteHelper.HashPassword(model.Password)
-             ).Select(p => new Member
-             {
-                 Id = p.Id,
-                 Username = p.Username,
-                 FullName = p.FullName,
-                 Gender = p.Gender,
-                 Email = p.Email,
-                 DateOfBirth = p.DateOfBirth,
-                 DateCreate = p.DateCreate,
-                 Roles = p.Roles
-
-             }).FirstOrDefaultAsync();
+            Member member = await _repository.Member.Login(loginModel);            
             if (member != null)
             {
-                string token = SiteHelper.CreateToken(member, configuration.GetSection("secretkey").ToString());
+                string token = SiteHelper.CreateToken(member, _configuration.GetSection("secretkey").ToString());
                 return new
                 {
                     Id = member.Id,
@@ -93,7 +81,7 @@ namespace WebApi.Controllers
             //Will implement only members can get data about them, or admins can view data of all members.
 
             //
-            return await context.Members.FirstOrDefaultAsync(m => m.Id == id);
+            return await _repository.Member.GetMember(id);
         }
         [HttpPost("checkoldpasswordvalid")]
         [Authorize]
@@ -101,8 +89,9 @@ namespace WebApi.Controllers
         {
             if (string.IsNullOrEmpty(oldPassword) || oldPassword.Length < 6  || oldPassword.Length > 64)
                 return BadRequest();
-            bool isOldPasswordValid =await context.Members.AnyAsync(m => m.Password == SiteHelper.HashPassword(oldPassword));
-            if (isOldPasswordValid)
+            var memberId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            bool isCurrentPasswordValid = await _repository.Member.CheckCurrentPasswordValid(memberId, oldPassword);            
+            if (isCurrentPasswordValid)
                 return Ok();
             return BadRequest();
         }
@@ -113,11 +102,11 @@ namespace WebApi.Controllers
             if (string.IsNullOrEmpty(newPassword) && (newPassword.Length < 6 || newPassword.Length > 64))
                 return BadRequest();
             int memberId =int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            Member member =await context.Members.FirstOrDefaultAsync(p => p.Id == memberId);
+            Member member =await _repository.Member.GetMember(memberId);
             if (member == null)
                 return BadRequest();
             member.Password = SiteHelper.HashPassword(newPassword);
-            await context.SaveChangesAsync();
+            await _repository.SaveChanges();
             return Ok();
         }         
     }

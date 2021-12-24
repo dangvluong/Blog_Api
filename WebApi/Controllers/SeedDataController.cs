@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using WebApi.Models;
+using WebApi.Repositories;
 
 namespace WebApi.Controllers
 {
@@ -10,19 +11,21 @@ namespace WebApi.Controllers
     [ApiController]
     public class SeedDataController : BaseController
     {
-        public SeedDataController(AppDbContext context) : base(context)
+        private AppDbContext _context;
+        public SeedDataController(RepositoryManager repository, AppDbContext context) : base(repository)
         {
+            _context = context;
         }
+
         [HttpGet("cleardata")]
         public async Task<bool> ClearData()
         {
-            var result = await context.Database.EnsureDeletedAsync();
-            return result;
+            return await _context.Database.EnsureDeletedAsync();           
         }
         [HttpGet("migrate")]
         public async Task Migrate()
         {
-            await context.Database.MigrateAsync();
+            await _context.Database.MigrateAsync();
         }
         [HttpGet("seeddata")]
         public async Task SeedData()
@@ -36,10 +39,10 @@ namespace WebApi.Controllers
             //context.Roles.Add(new Role
             //{
             //    Name = "admin1"
-            //});            
-            context.Roles.AddRange(roles);
-            context.SaveChanges();
-            var roles1 = context.Roles.ToList();
+            //});
+            _repository.Role.AddRange(roles);            
+            await _repository.SaveChanges();
+            var roles1 = _repository.Role.GetRoles();
             //seed member
             var members = new Member[]
             {
@@ -91,13 +94,12 @@ namespace WebApi.Controllers
             };
             foreach (var member in members)
             {
-                member.Roles = new List<Role>();
-                var role = context.Roles.FirstOrDefault(s => s.Name == "admin");
-                member.Roles.Add(context.Roles.FirstOrDefault(s => s.Name == "admin"));
-                member.Roles.Add(context.Roles.FirstOrDefault(s => s.Name == "member"));
+                member.Roles = new List<Role>();                
+                member.Roles.Add(await _repository.Role.GetRoleByName("admin"));
+                member.Roles.Add(await _repository.Role.GetRoleByName("member"));                
             }
-            context.Members.AddRange(members);
-            await context.SaveChangesAsync();
+            _repository.Member.AddRange(members);            
+            await _repository.SaveChanges();
             //seed posts and categories
             await SeedPostAndCategoryAsync();
             await SeedComments();
@@ -109,33 +111,33 @@ namespace WebApi.Controllers
             var fk = new Faker<Comment>();
             fk.RuleFor(p => p.Content, f => $"Comment " + f.Lorem.Sentences(5));
             fk.RuleFor(p => p.DateCreate, f => f.Date.Between(new DateTime(2019, 12, 31), new DateTime(2021, 12, 31)));
-            var members = context.Members.ToArray();
-            var posts = context.Posts.ToArray();
+            var members = await _repository.Member.GetMembers();
+            var posts = await _repository.Post.GetPosts();
             var rand = new Random();
             var comments = new List<Comment>();
-            for (int i = 0; i < posts.Length; i++)
+            for (int i = 0; i < posts.Count; i++)
             {
                 var comment = fk.Generate();
-                comment.AuthorId = members[rand.Next(members.Length)].Id;
-                comment.PostId = posts[i].Id;                
-                comments.Add(comment);                
+                comment.AuthorId = members[rand.Next(members.Count)].Id;
+                comment.PostId = posts[i].Id;
+                comments.Add(comment);
             }
-            context.Comments.AddRange(comments);
-            await context.SaveChangesAsync();
+            _repository.Comment.AddRange(comments);            
+            await _repository.SaveChanges();
             comments.Clear();
-            var commentsInDb = context.Comments.ToArray();
+            var commentsInDb = await _repository.Comment.GetComments();
             //add comments child
             for (int i = 0; i < 30; i++)
             {
-                var commentParent = commentsInDb[rand.Next(commentsInDb.Length)];
+                var commentParent = commentsInDb[rand.Next(commentsInDb.Count)];
                 var commentChild = fk.Generate();
-                commentChild.AuthorId = members[rand.Next(members.Length)].Id;
+                commentChild.AuthorId = members[rand.Next(members.Count)].Id;
                 commentChild.PostId = commentParent.PostId;
                 commentChild.CommentParentId = commentParent.Id;
                 comments.Add(commentChild);
             }
-            context.Comments.AddRange(comments);
-            await context.SaveChangesAsync();
+            _repository.Comment.AddRange(comments);            
+            await _repository.SaveChanges();
         }
 
         private async Task SeedPostAndCategoryAsync()
@@ -152,27 +154,28 @@ namespace WebApi.Controllers
             category11.ParentCategory = category1;
             category31.ParentCategory = category3;
             var categories = new Category[] { category1, category11, category2, category3, category31, category4 };
-            context.Categories.AddRange(categories);
-            await context.SaveChangesAsync();
+            _repository.Category.AddRange(categories);            
+            await _repository.SaveChanges();
             var fakerPost = new Faker<Post>();
             var index = 1;
+            var members = await _repository.Member.GetMembers();
+            var rand = new Random();
             fakerPost.RuleFor(p => p.Title, fk => $"Post {index++} " + fk.Lorem.Sentence(3, 4).Trim('.'));
             fakerPost.RuleFor(p => p.Description, fk => fk.Lorem.Sentences(3));
             fakerPost.RuleFor(p => p.Content, fk => fk.Lorem.Paragraphs(10));
-            fakerPost.RuleFor(p => p.DateCreated, fk => fk.Date.Between(new DateTime(2019, 1, 1), new DateTime(2021, 12, 31)));
-            fakerPost.RuleFor(p => p.AuthorId, fk => context.Members.FirstOrDefault(m => m.Username == "vanluong92").Id);
+            fakerPost.RuleFor(p => p.DateCreated, fk => fk.Date.Between(new DateTime(2019, 1, 1), new DateTime(2021, 12, 31)));           
 
             var posts = new List<Post>();
-            categories = await context.Categories.ToArrayAsync();
-            var rand = new Random();
+            var categoriesInDb = await _repository.Category.GetCategories();            
             for (int i = 0; i < 50; i++)
             {
                 var post = fakerPost.Generate();
-                post.CategoryId = categories[rand.Next(categories.Length)].Id;
+                post.CategoryId = categoriesInDb[rand.Next(categoriesInDb.Count)].Id;
+                post.AuthorId = members[rand.Next(members.Count)].Id;
                 posts.Add(post);
             }
-            context.Posts.AddRange(posts);
-            await context.SaveChangesAsync();
+            _repository.Post.AddRange(posts);            
+            await _repository.SaveChanges();
         }
     }
 }

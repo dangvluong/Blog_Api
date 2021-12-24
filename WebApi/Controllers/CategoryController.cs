@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Models;
+using WebApi.Repositories;
 
 namespace WebApi.Controllers
 {
@@ -13,47 +14,34 @@ namespace WebApi.Controllers
     [ApiController]
     public class CategoryController : BaseController
     {
-        public CategoryController(AppDbContext context) : base(context)
+        public CategoryController(RepositoryManager repository) : base(repository)
         {
         }
 
-        //private readonly AppDbContext _context;
-
-        //public CategoryController(AppDbContext context)
-        //{
-        //    _context = context;
-        //}
 
         // GET: api/Category
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
+        public async Task<IList<Category>> GetCategories()
         {
-            return await context.Categories.ToListAsync();
+            return await _repository.Category.GetCategories();
         }
 
         // GET: api/Category/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
-            var category = await context.Categories.FindAsync(id);
-
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return category;
+            return await _repository.Category.GetCategory(id);            
         }
 
         // PUT: api/Category/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
-        public async Task<IActionResult> PutCategory( Category category)
+        public async Task<IActionResult> UpdateCategory( Category category)
         {           
             if(!ModelState.IsValid)
                 return BadRequest();
-            context.Categories.Update(category);
-            await context.SaveChangesAsync();
+            _repository.Category.Update(category);
+            await _repository.SaveChanges();
             return Ok();
         }
 
@@ -64,8 +52,8 @@ namespace WebApi.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-            context.Categories.Add(category);
-            await context.SaveChangesAsync();
+            _repository.Category.Add(category);
+            await _repository.SaveChanges();
 
             return CreatedAtAction("GetCategory", new { id = category.Id }, category);
         }
@@ -74,21 +62,16 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            var category = await context.Categories.FindAsync(id);
+            var category = await _repository.Category.GetCategory(id);
             if (category == null)
             {
                 return NotFound();
             }
             category.IsDeleted = true;
-            //_context.Categories.Remove(category);
-            await context.SaveChangesAsync();
+            //__repository.Categories.Remove(category);
+            await _repository.SaveChanges();
 
             return NoContent();
-        }
-
-        private bool CategoryExists(int id)
-        {
-            return context.Categories.Any(e => e.Id == id);
-        }
+        }       
     }
 }

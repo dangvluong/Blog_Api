@@ -6,52 +6,43 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Models;
+using WebApi.Repositories;
 
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class PostController : BaseController
-    {
-        public PostController(AppDbContext context) : base(context)
+    {       
+
+        public PostController(RepositoryManager repository):base(repository)
         {
+            
         }
-
-        //private readonly AppDbContext _context;
-
-        //public PostController(AppDbContext context)
-        //{
-        //    _context = context;
-        //}
 
         // GET: api/Post
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
+        public async Task<IEnumerable<Post>> GetPosts()
         {
-            return await context.Posts.ToListAsync();
+            return await _repository.Post.GetPosts();
         }
 
         // GET: api/Post/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Post>> GetPost(int id)
+        public async Task<Post> GetPost(int id)
         {
-            var post = await context.Posts.FindAsync(id);
-            if (post == null)
-            {
-                return NotFound();
-            }
-            return post;
+            return  await _repository.Post.GetPost(id);            
         }
 
         // PUT: api/Post/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
-        public async Task<IActionResult> PutPost(Post post)
+        public async Task<IActionResult> UpdatePost(Post post)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-            context.Posts.Update(post);
-            await context.SaveChangesAsync();
+            _repository.Post.Update(post);
+            await _repository.SaveChanges();
             return Ok();
         }
 
@@ -62,8 +53,8 @@ namespace WebApi.Controllers
         {
             if(ModelState.IsValid)
             {
-                context.Posts.Add(post);
-                await context.SaveChangesAsync();
+                _repository.Post.Add(post);
+                await _repository.SaveChanges();
                 return CreatedAtAction("GetPost", new { id = post.Id }, post);
             }
             return BadRequest();            
@@ -73,26 +64,21 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePost(int id)
         {
-            var post = await context.Posts.FindAsync(id);
+            var post = await _repository.Post.GetPost(id);
             if (post == null)
             {
                 return NotFound();
             }
             post.IsDeleted = true;
-            //_context.Posts.Remove(post);
-            await context.SaveChangesAsync();
+            //__repository.Posts.Remove(post);
+            await _repository.SaveChanges();
 
             return NoContent();
         }
         [HttpGet("getpostsbymember/{id}")]
-        public async Task<List<Post>> GetPostsByMember(int id)
+        public async Task<IList<Post>> GetPostsByMember(int id)
         {
-            return await context.Posts.Where(p => p.AuthorId == id && p.IsDeleted == false).OrderByDescending(p => p.DateCreated).ToListAsync();
-        }
-
-        private bool PostExists(int id)
-        {
-            return context.Posts.Any(e => e.Id == id);
-        }
+            return await _repository.Post.GetPostsByMember(id);
+        }      
     }
 }

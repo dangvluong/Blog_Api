@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using WebApi.Models;
+using WebApi.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,7 +56,7 @@ builder.Services.AddDbContext<AppDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("blog"));
 });
-
+builder.Services.AddTransient<RepositoryManager>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

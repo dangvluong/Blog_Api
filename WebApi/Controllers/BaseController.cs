@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Models;
+using WebApi.Repositories;
 
 namespace WebApi.Controllers
 {
     public class BaseController : ControllerBase
     {
-        protected readonly AppDbContext context;        
+        protected readonly RepositoryManager _repository;        
 
-        public BaseController(AppDbContext context)
+        public BaseController(RepositoryManager repository)
         {
-            this.context = context;          
+            _repository = repository;          
         }
 
     }
