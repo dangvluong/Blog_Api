@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using WebApp.Controllers;
 using WebApp.Helper;
 using WebApp.Models;
@@ -8,7 +9,7 @@ namespace WebApp.Areas.Dashboard.Controllers
     [Area("Dashboard")]
     public class CommentController : BaseController
     {
-        public CommentController(SiteProvider siteHelper) : base(siteHelper)
+        public CommentController(RepositoryManager siteHelper) : base(siteHelper)
         {
         }
 
@@ -19,7 +20,8 @@ namespace WebApp.Areas.Dashboard.Controllers
         }
         public async Task<IActionResult> Delete(int id)
         {
-            await siteHelper.Comment.DeleteComment(id);
+            string token = User.FindFirstValue(ClaimTypes.Authentication);
+            await siteHelper.Comment.DeleteComment(id, token);
             return RedirectToAction(nameof(Index));
         }
     }

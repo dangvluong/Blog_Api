@@ -5,7 +5,7 @@ namespace WebApp.Controllers
 {
     public class SeedDataController : BaseController
     {
-        public SeedDataController(SiteProvider siteHelper) : base(siteHelper)
+        public SeedDataController(RepositoryManager siteHelper) : base(siteHelper)
         {
         }
         public IActionResult Index()

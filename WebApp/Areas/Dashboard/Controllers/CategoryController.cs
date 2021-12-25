@@ -11,7 +11,7 @@ namespace WebApp.Areas.Dashboard.Controllers
     [Area("dashboard")]
     public class CategoryController : BaseController
     {
-        public CategoryController(SiteProvider siteHelper) : base(siteHelper)
+        public CategoryController(RepositoryManager siteHelper) : base(siteHelper)
         {
         }
 

@@ -10,7 +10,7 @@ namespace WebApp.Controllers
 {
     public class PostController : BaseController
     {
-        public PostController(SiteProvider siteHelper) : base(siteHelper)
+        public PostController(RepositoryManager siteHelper) : base(siteHelper)
         {
         }
 

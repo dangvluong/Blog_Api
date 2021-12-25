@@ -49,13 +49,12 @@ namespace WebApi.Controllers
         // POST: api/Post
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Post>> PostPost(Post post)
+        public async Task<ActionResult<int>> PostPost(Post post)
         {
             if(ModelState.IsValid)
             {
                 _repository.Post.Add(post);
-                await _repository.SaveChanges();
-                return CreatedAtAction("GetPost", new { id = post.Id }, post);
+                return await _repository.SaveChanges();                
             }
             return BadRequest();            
         }

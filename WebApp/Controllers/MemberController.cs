@@ -10,8 +10,8 @@ namespace WebApp.Controllers
 {
     public class MemberController : Controller
     {
-        private readonly SiteProvider siteHelper;
-        public MemberController(SiteProvider siteHelper)
+        private readonly RepositoryManager siteHelper;
+        public MemberController(RepositoryManager siteHelper)
         {
             this.siteHelper =  siteHelper;
         }

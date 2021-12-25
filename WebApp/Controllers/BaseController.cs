@@ -5,8 +5,8 @@ namespace WebApp.Controllers
 {
     public abstract class BaseController : Controller
     {
-        protected readonly SiteProvider siteHelper;
-        public BaseController(SiteProvider siteHelper)
+        protected readonly RepositoryManager siteHelper;
+        public BaseController(RepositoryManager siteHelper)
         {
             this.siteHelper = siteHelper;
         }

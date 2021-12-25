@@ -3,7 +3,7 @@ using WebApp.Helper;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMvc();
-builder.Services.AddTransient<SiteProvider>();
+builder.Services.AddTransient<RepositoryManager>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
 {
     option.LoginPath = "/member/login";

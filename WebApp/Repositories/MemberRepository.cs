@@ -9,10 +9,7 @@ namespace WebApp.Models
         }
         public async Task<int> Register(RegisterModel model)
         {
-            HttpResponseMessage message = await client.PostAsJsonAsync<RegisterModel>("/api/member/register", model);
-            if (message.IsSuccessStatusCode)
-                return await message.Content.ReadAsAsync<int>();
-            return 0;
+            return await Post<RegisterModel>("/api/member/register", model);            
         }
         public async Task<Member> Login(LoginModel model)
         {
@@ -23,13 +20,7 @@ namespace WebApp.Models
         }
         public async Task<Member> GetMemberById(int id, string token)
         {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            HttpResponseMessage message = await client.GetAsync($"/api/member/{id}");
-            if (message.IsSuccessStatusCode)
-            {
-                return await message.Content.ReadAsAsync<Member>();
-            }
-            return null;
+            return await Get<Member>($"/api/member/{id}", token);            
         }
         public async Task<bool> CheckOldPasswordValid(string oldPassword, string token)
         {

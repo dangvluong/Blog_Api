@@ -2,7 +2,7 @@
 
 namespace WebApp.Helper
 {
-    public class SiteProvider : IDisposable
+    public class RepositoryManager : IDisposable
     {
         private CategoryRepository category;
         //private readonly Uri ApiServer = new Uri("https://localhost:7207/");

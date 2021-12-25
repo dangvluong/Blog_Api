@@ -11,9 +11,9 @@ namespace WebApi.Repositories
             _context = context;
         }
 
-        public async Task SaveChanges()
+        public async Task<int> SaveChanges()
         {
-            await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync();
         }
 
         //Declare properties
@@ -74,6 +74,6 @@ namespace WebApi.Repositories
     }
     public interface IRepositoryManager
     {
-        Task SaveChanges();
+        Task<int> SaveChanges();
     }
 }
