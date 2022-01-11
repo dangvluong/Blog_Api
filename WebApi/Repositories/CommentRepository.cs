@@ -1,40 +1,40 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebApi.Interfaces;
 using WebApi.Models;
 
 namespace WebApi.Repositories
 {
-    public class CommentRepository : BaseRepository
+    public class CommentRepository : BaseRepository<Comment>, ICommentRepository
     {
         public CommentRepository(AppDbContext context) : base(context)
         {
         }
-        public async Task<IList<Comment>> GetComments()
+
+        public void AddComment(Comment comment)
         {
-            return await _context.Comments.ToListAsync();
+            Add(comment);
         }
+
+        public void DeleteComment(Comment comment)
+        {
+            Delete(comment);
+        }
+       
         public async Task<Comment> GetComment(int id)
         {
-            return await _context.Comments.FindAsync(id);
+            //return await _context.Comments.FindAsync(id);
+            return await FindByCondition(comment => comment.Id == id, false).SingleOrDefaultAsync();
         }
         public async Task<IEnumerable<Comment>> GetCommentsByPost(int postId)
         {
-            return await _context.Comments.Where(c => c.PostId == postId).ToListAsync();
+            //return await _context.Comments.Where(c => c.PostId == postId).ToListAsync();
+            return await FindByCondition(comment => comment.PostId == postId, trackChanges: false).ToListAsync();
         }
-        public void Update(Comment comment)
+
+        public void UpdateComment(Comment comment)
         {
-            _context.Comments.Update(comment);
+            Update(comment);
         }
-        public void Add(Comment comment)
-        {
-            _context.Comments.Add(comment);
-        }
-        public void AddRange(List<Comment> comment)
-        {
-            _context.Comments.AddRange(comment);
-        }
-        public void Delete(Comment comment)
-        {
-            _context.Comments.Remove(comment);
-        }        
+     
     }
 }

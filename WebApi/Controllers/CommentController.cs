@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using WebApi.Interfaces;
 using WebApi.Models;
-using WebApi.Repositories;
 
 namespace WebApi.Controllers
 {
@@ -14,31 +8,37 @@ namespace WebApi.Controllers
     [ApiController]
     public class CommentController : BaseController
     {
-        public CommentController(RepositoryManager repository) : base(repository)
+        public CommentController(IRepositoryManager repository) : base(repository)
         {
         }
 
 
         // GET: api/Comment
-        [HttpGet]
-        public async Task<IEnumerable<Comment>> GetComments()
-        {
-            return await _repository.Comment.GetComments();
-        }
+        //[HttpGet]
+        //public async Task<IEnumerable<Comment>> GetComments()
+        //{
+        //    return await _repository.Comment.GetComments();
+        //}
 
         // GET: api/Comment/5
         [HttpGet("{id}")]
-        public async Task<Comment> GetComment(int id)
+        public async Task<ActionResult<Comment>> GetComment(int id)
         {
-            return await _repository.Comment.GetComment(id);            
+            Comment comment = await _repository.Comment.GetComment(id);
+            if (comment == null)
+                return NotFound();
+            return Ok(comment);
         }
 
         // GET: api/GetCommentsByPost/5
         [HttpGet]
         [Route("GetCommentsByPost/{id}")]
-        public async Task<IEnumerable<Comment>> GetCommentsByPost(int id)
+        public async Task<ActionResult<IEnumerable<Comment>>> GetCommentsByPost(int id)
         {
-            return await _repository.Comment.GetCommentsByPost(id);            
+            IEnumerable<Comment> comments = await _repository.Comment.GetCommentsByPost(id);
+            if (comments == null)
+                return NotFound();
+            return Ok(comments);
         }
 
         // PUT: api/Comment/5
@@ -47,7 +47,7 @@ namespace WebApi.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-            _repository.Comment.Update(comment);
+            _repository.Comment.UpdateComment(comment);
             await _repository.SaveChanges();
             return NoContent();
         }
@@ -58,7 +58,7 @@ namespace WebApi.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-            _repository.Comment.Add(comment);            
+            _repository.Comment.AddComment(comment);            
             await _repository.SaveChanges();
             return CreatedAtAction("GetComment", new { id = comment.Id }, comment);
         }
@@ -72,7 +72,7 @@ namespace WebApi.Controllers
             {
                 return NotFound();
             }
-            _repository.Comment.Delete(comment);            
+            _repository.Comment.DeleteComment(comment);            
             await _repository.SaveChanges();
             return NoContent();
         }

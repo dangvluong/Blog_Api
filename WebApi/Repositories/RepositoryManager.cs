@@ -1,4 +1,5 @@
-﻿using WebApi.Models;
+﻿using WebApi.Interfaces;
+using WebApi.Models;
 
 namespace WebApi.Repositories
 {
@@ -17,12 +18,12 @@ namespace WebApi.Repositories
         }
 
         //Declare properties
-        private PostRepository post;
-        private CategoryRepository category;
-        private CommentRepository comment;
-        private RoleRepository role;
-        private MemberRepository member;
-        public MemberRepository Member
+        private IPostRepository post;
+        private ICategoryRepository category;
+        private ICommentRepository comment;
+        private IRoleRepository role;
+        private IMemberRepository member;
+        public IMemberRepository Member
         {
             get
             {
@@ -31,7 +32,7 @@ namespace WebApi.Repositories
                 return member;
             }
         }
-        public RoleRepository Role
+        public IRoleRepository Role
         {
             get
             {
@@ -40,7 +41,7 @@ namespace WebApi.Repositories
                 return role;
             }
         }
-        public CommentRepository Comment
+        public ICommentRepository Comment
         {
             get
             {
@@ -50,7 +51,7 @@ namespace WebApi.Repositories
             }
         }
 
-        public CategoryRepository Category
+        public ICategoryRepository Category
         {
             get
             {
@@ -60,7 +61,7 @@ namespace WebApi.Repositories
             }
         }
 
-        public PostRepository Post
+        public IPostRepository Post
         {
             get
             {
@@ -69,11 +70,5 @@ namespace WebApi.Repositories
                 return post;
             }
         }
-
-
-    }
-    public interface IRepositoryManager
-    {
-        Task<int> SaveChanges();
-    }
+    }   
 }

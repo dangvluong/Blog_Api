@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using WebApi.Interfaces;
 using WebApi.Models;
-using WebApi.Repositories;
 
 namespace WebApi.Controllers
 {
@@ -14,7 +8,7 @@ namespace WebApi.Controllers
     [ApiController]
     public class RoleController : BaseController
     {
-        public RoleController(RepositoryManager repository) : base(repository)
+        public RoleController(IRepositoryManager repository) : base(repository)
         {
         }
 
@@ -27,9 +21,12 @@ namespace WebApi.Controllers
 
         // GET: api/Role/5
         [HttpGet("{id}")]
-        public async Task<Role> GetRole(int id)
+        public async Task<ActionResult<Role>> GetRole(int id)
         {
-            return  await _repository.Role.GetRole(id);            
+            Role role = await _repository.Role.GetRole(id);
+            if (role == null)
+                return NotFound();
+            return Ok(role);
         }
 
         // PUT: api/Role/5
@@ -39,7 +36,7 @@ namespace WebApi.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-            _repository.Role.Update(role);           
+            _repository.Role.UpdateRole(role);           
             await _repository.SaveChanges();
             return Ok();
         }
@@ -51,7 +48,7 @@ namespace WebApi.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-            _repository.Role.Add(role);
+            _repository.Role.AddRole(role);
             await _repository.SaveChanges();
 
             return CreatedAtAction("GetRole", new { id = role.Id }, role);
@@ -65,7 +62,8 @@ namespace WebApi.Controllers
             if (role == null)
             {
                 return NotFound();
-            }            
+            }
+            _repository.Role.DeleteRole(role);
             await _repository.SaveChanges();
             return NoContent();
         }        

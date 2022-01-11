@@ -1,14 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebApi.Models;
-using WebApi.Repositories;
-
+using WebApi.Interfaces;
 namespace WebApi.Controllers
 {
     public class BaseController : ControllerBase
     {
-        protected readonly RepositoryManager _repository;        
+        protected readonly IRepositoryManager _repository;        
 
-        public BaseController(RepositoryManager repository)
+        public BaseController(IRepositoryManager repository)
         {
             _repository = repository;          
         }

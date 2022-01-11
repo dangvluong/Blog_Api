@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using WebApi.Interfaces;
 using WebApi.Models;
-using WebApi.Repositories;
 
 namespace WebApi.Controllers
 {
@@ -15,7 +9,7 @@ namespace WebApi.Controllers
     public class PostController : BaseController
     {       
 
-        public PostController(RepositoryManager repository):base(repository)
+        public PostController(IRepositoryManager repository):base(repository)
         {
             
         }
@@ -29,9 +23,12 @@ namespace WebApi.Controllers
 
         // GET: api/Post/5
         [HttpGet("{id}")]
-        public async Task<Post> GetPost(int id)
+        public async Task<ActionResult<Post>> GetPost(int id)
         {
-            return  await _repository.Post.GetPost(id);            
+            Post post = await _repository.Post.GetPost(id);
+            if (post == null)
+                return NotFound();
+            return Ok(post); 
         }
 
         // PUT: api/Post/5
@@ -41,7 +38,7 @@ namespace WebApi.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-            _repository.Post.Update(post);
+            _repository.Post.UpdatePost(post);
             await _repository.SaveChanges();
             return Ok();
         }
@@ -53,7 +50,7 @@ namespace WebApi.Controllers
         {
             if(ModelState.IsValid)
             {
-                _repository.Post.Add(post);
+                _repository.Post.AddPost(post);
                 return await _repository.SaveChanges();                
             }
             return BadRequest();            
@@ -68,16 +65,19 @@ namespace WebApi.Controllers
             {
                 return NotFound();
             }
-            post.IsDeleted = true;
-            //__repository.Posts.Remove(post);
+            //post.IsDeleted = true;
+            _repository.Post.DeletePost(post);
             await _repository.SaveChanges();
 
             return NoContent();
         }
         [HttpGet("getpostsbymember/{id}")]
-        public async Task<IList<Post>> GetPostsByMember(int id)
+        public async Task<ActionResult<IEnumerable<Post>>> GetPostsByMember(int id)
         {
-            return await _repository.Post.GetPostsByMember(id);
+            IEnumerable<Post> posts = await _repository.Post.GetPostsByMember(id);
+            if (posts == null)
+                return NotFound();
+            return Ok(posts);
         }      
     }
 }

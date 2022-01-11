@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using WebApi.Helper;
 using WebApi.Models;
 using WebApi.Repositories;
 
@@ -40,7 +41,8 @@ namespace WebApi.Controllers
             //{
             //    Name = "admin1"
             //});
-            _repository.Role.AddRange(roles);            
+            _context.Roles.AddRange(roles);
+            
             await _repository.SaveChanges();
             var roles1 = _repository.Role.GetRoles();
             //seed member
@@ -95,10 +97,10 @@ namespace WebApi.Controllers
             foreach (var member in members)
             {
                 member.Roles = new List<Role>();                
-                member.Roles.Add(await _repository.Role.GetRoleByName("admin"));
-                member.Roles.Add(await _repository.Role.GetRoleByName("member"));                
+                member.Roles.Add(await _repository.Role.GetRoleByName("admin", trackChanges: true));
+                member.Roles.Add(await _repository.Role.GetRoleByName("member", trackChanges: true));                
             }
-            _repository.Member.AddRange(members);            
+            _context.Members.AddRange(members);            
             await _repository.SaveChanges();
             //seed posts and categories
             await SeedPostAndCategoryAsync();
@@ -111,8 +113,8 @@ namespace WebApi.Controllers
             var fk = new Faker<Comment>();
             fk.RuleFor(p => p.Content, f => $"Comment " + f.Lorem.Sentences(5));
             fk.RuleFor(p => p.DateCreate, f => f.Date.Between(new DateTime(2019, 12, 31), new DateTime(2021, 12, 31)));
-            var members = await _repository.Member.GetMembers();
-            var posts = await _repository.Post.GetPosts();
+            var members = (await _repository.Member.GetMembers()).ToList();
+            var posts = (await _repository.Post.GetPosts()).ToList();
             var rand = new Random();
             var comments = new List<Comment>();
             for (int i = 0; i < posts.Count; i++)
@@ -122,10 +124,10 @@ namespace WebApi.Controllers
                 comment.PostId = posts[i].Id;
                 comments.Add(comment);
             }
-            _repository.Comment.AddRange(comments);            
+            _context.Comments.AddRange(comments);            
             await _repository.SaveChanges();
             comments.Clear();
-            var commentsInDb = await _repository.Comment.GetComments();
+            var commentsInDb = _context.Comments.ToList();
             //add comments child
             for (int i = 0; i < 30; i++)
             {
@@ -136,7 +138,7 @@ namespace WebApi.Controllers
                 commentChild.CommentParentId = commentParent.Id;
                 comments.Add(commentChild);
             }
-            _repository.Comment.AddRange(comments);            
+            _context.Comments.AddRange(comments);            
             await _repository.SaveChanges();
         }
 
@@ -158,7 +160,7 @@ namespace WebApi.Controllers
             await _repository.SaveChanges();
             var fakerPost = new Faker<Post>();
             var index = 1;
-            var members = await _repository.Member.GetMembers();
+            var members = await _context.Members.ToListAsync();
             var rand = new Random();
             fakerPost.RuleFor(p => p.Title, fk => $"Post {index++} " + fk.Lorem.Sentence(3, 4).Trim('.'));
             fakerPost.RuleFor(p => p.Description, fk => fk.Lorem.Sentences(3));
@@ -166,7 +168,7 @@ namespace WebApi.Controllers
             fakerPost.RuleFor(p => p.DateCreated, fk => fk.Date.Between(new DateTime(2019, 1, 1), new DateTime(2021, 12, 31)));           
 
             var posts = new List<Post>();
-            var categoriesInDb = await _repository.Category.GetCategories();            
+            var categoriesInDb = await _context.Categories.ToListAsync();
             for (int i = 0; i < 50; i++)
             {
                 var post = fakerPost.Generate();
@@ -174,7 +176,7 @@ namespace WebApi.Controllers
                 post.AuthorId = members[rand.Next(members.Count)].Id;
                 posts.Add(post);
             }
-            _repository.Post.AddRange(posts);            
+            _context.Posts.AddRange(posts);            
             await _repository.SaveChanges();
         }
     }

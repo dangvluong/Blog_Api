@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using WebApi.Interfaces;
 using WebApi.Models;
 using WebApi.Repositories;
 
@@ -56,7 +57,7 @@ builder.Services.AddDbContext<AppDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("blog"));
 });
-builder.Services.AddTransient<RepositoryManager>();
+builder.Services.AddScoped<IRepositoryManager,RepositoryManager>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

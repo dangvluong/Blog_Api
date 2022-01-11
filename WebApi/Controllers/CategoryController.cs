@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using WebApi.Interfaces;
 using WebApi.Models;
-using WebApi.Repositories;
 
 namespace WebApi.Controllers
 {
@@ -14,14 +8,13 @@ namespace WebApi.Controllers
     [ApiController]
     public class CategoryController : BaseController
     {
-        public CategoryController(RepositoryManager repository) : base(repository)
+        public CategoryController(IRepositoryManager repository) : base(repository)
         {
         }
 
-
         // GET: api/Category
         [HttpGet]
-        public async Task<IList<Category>> GetCategories()
+        public async Task<IEnumerable<Category>> GetCategories()
         {
             return await _repository.Category.GetCategories();
         }
@@ -30,7 +23,10 @@ namespace WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
-            return await _repository.Category.GetCategory(id);            
+            Category category  = await _repository.Category.GetCategory(id);
+            if(category == null)
+                return NotFound();
+            return Ok(category);
         }
 
         // PUT: api/Category/5
@@ -40,7 +36,7 @@ namespace WebApi.Controllers
         {           
             if(!ModelState.IsValid)
                 return BadRequest();
-            _repository.Category.Update(category);
+            _repository.Category.UpdateCategory(category);
             await _repository.SaveChanges();
             return Ok();
         }
@@ -52,10 +48,10 @@ namespace WebApi.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-            _repository.Category.Add(category);
+            _repository.Category.AddCategory(category);
             await _repository.SaveChanges();
-
-            return CreatedAtAction("GetCategory", new { id = category.Id }, category);
+            return Ok();
+            //return CreatedAtAction("GetCategory", new { id = category.Id }, category);
         }
 
         // DELETE: api/Category/5
@@ -67,10 +63,9 @@ namespace WebApi.Controllers
             {
                 return NotFound();
             }
-            category.IsDeleted = true;
-            //__repository.Categories.Remove(category);
+            //category.IsDeleted = true;
+            _repository.Category.DeleteCategory(category);
             await _repository.SaveChanges();
-
             return NoContent();
         }       
     }

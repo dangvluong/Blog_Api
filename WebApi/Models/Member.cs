@@ -24,6 +24,6 @@ namespace WebApi.Models
         public DateTime DateOfBirth { get; set; }
         public bool IsActive { get; set; } = false;
         public bool IsBanned { get; set; } = false;
-        public IList<Role> Roles { get; set; }
+        public List<Role> Roles { get; set; }
     }
 }

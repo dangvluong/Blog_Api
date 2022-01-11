@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using WebApi.Models;
 
-namespace WebApi
+namespace WebApi.Helper
 {
     public static class SiteHelper
     {
