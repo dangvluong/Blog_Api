@@ -1,6 +1,8 @@
-﻿namespace WebApp.Models
+﻿using WebApp.Interfaces;
+
+namespace WebApp.Repositories
 {
-    public class SeedDataRepository : BaseRepository
+    public class SeedDataRepository : BaseRepository, ISeedDataRepository
     {
         public SeedDataRepository(HttpClient client) : base(client)
         {

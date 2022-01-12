@@ -1,15 +1,18 @@
-﻿namespace WebApp.Models
+﻿using WebApp.Interfaces;
+using WebApp.Models;
+
+namespace WebApp.Repositories
 {
-    public class CommentRepository : BaseRepository
+    public class CommentRepository : BaseRepository, ICommentRepository
     {
         public CommentRepository(HttpClient client) : base(client)
         {
         }
-        public async Task<IList<Comment>> GetComments()
+        public async Task<List<Comment>> GetComments()
         {
-            return await Get<IList<Comment>>("/api/comment");            
+            return await Get<List<Comment>>("/api/comment");            
         }
-        public async Task<List<Comment>> GetCommentByPostId(int id)
+        public async Task<List<Comment>> GetCommentsByPostId(int id)
         {
             return await Get<List<Comment>>($"/api/comment/GetCommentsByPost/{id}");            
         }        

@@ -1,8 +1,9 @@
-﻿using System.Net.Http.Headers;
+﻿using WebApp.Interfaces;
+using WebApp.Models;
 
-namespace WebApp.Models
+namespace WebApp.Repositories
 {
-    public class CategoryRepository : BaseRepository
+    public class CategoryRepository : BaseRepository, ICategoryRepository
     {
         public CategoryRepository(HttpClient client) : base(client)
         {

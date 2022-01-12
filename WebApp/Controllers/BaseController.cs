@@ -1,18 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebApp.Helper;
+using WebApp.Interfaces;
 
 namespace WebApp.Controllers
 {
     public abstract class BaseController : Controller
     {
-        protected readonly RepositoryManager siteHelper;
-        public BaseController(RepositoryManager siteHelper)
+        protected readonly IRepositoryManager _repository;
+        public BaseController(IRepositoryManager repository)
         {
-            this.siteHelper = siteHelper;
-        }
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
+            _repository = repository;
+        }       
     }
 }

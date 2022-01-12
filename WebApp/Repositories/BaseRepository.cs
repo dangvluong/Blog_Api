@@ -1,16 +1,13 @@
 ﻿using System.Net.Http.Headers;
 
-namespace WebApp.Models
+namespace WebApp.Repositories
 {
-    public class BaseRepository
+    public abstract class BaseRepository
     {        
-        protected readonly Uri ApiServer = new Uri("https://localhost:7207/");
         protected HttpClient client;
         public BaseRepository(HttpClient client)
         {
-            this.client = client;
-            if (client.BaseAddress is null)
-                client.BaseAddress = ApiServer;            
+            this.client = client;           
         }
         protected async Task<T> Get<T>(string url, string token = null)
         {                   
@@ -33,7 +30,7 @@ namespace WebApp.Models
                 return await message.Content.ReadAsAsync<int>();
             return -1;
         }
-        public async Task<int> Put<T>(string url,T obj, string token = null)
+        protected async Task<int> Put<T>(string url,T obj, string token = null)
         {
             if (token != null)
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);            
@@ -42,7 +39,7 @@ namespace WebApp.Models
                 return await message.Content.ReadAsAsync<int>();
             return -1;
         }
-        public async Task<int> Delete(string url, string token = null)
+        protected async Task<int> Delete(string url, string token = null)
         {
             if (token != null)
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);

@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebApp.Helper;
+using WebApp.Interfaces;
 
 namespace WebApp.Controllers
 {
     public class SeedDataController : BaseController
     {
-        public SeedDataController(RepositoryManager siteHelper) : base(siteHelper)
+        public SeedDataController(IRepositoryManager repository) : base(repository)
         {
         }
         public IActionResult Index()
@@ -14,13 +14,13 @@ namespace WebApp.Controllers
         }
         public async Task<IActionResult> ClearData()
         {
-            await siteHelper.SeedData.ClearAll();
+            await _repository.SeedData.ClearAll();
             TempData["message"] = "Đã xoá data thành công";
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> SeedData()
         {
-            await siteHelper.SeedData.SeedData();
+            await _repository.SeedData.SeedData();
             TempData["message"] = "Đã seed data thành công";
             return RedirectToAction(nameof(Index));
         }

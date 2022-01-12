@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
-using WebApp.Helper;
+using WebApp.Interfaces;
+using WebApp.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMvc();
-builder.Services.AddTransient<RepositoryManager>();
+builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
 {
     option.LoginPath = "/member/login";

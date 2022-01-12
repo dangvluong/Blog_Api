@@ -1,17 +1,17 @@
-﻿
-using System.Net.Http.Headers;
+﻿using WebApp.Interfaces;
+using WebApp.Models;
 
-namespace WebApp.Models
+namespace WebApp.Repositories
 {
-    public class PostRepository : BaseRepository
+    public class PostRepository : BaseRepository, IPostRepository
     {
         public PostRepository(HttpClient client) : base(client)
         {
         }
 
-        public async Task<IList<Post>> GetPosts()
+        public async Task<List<Post>> GetPosts()
         {
-            return await Get<IList<Post>>("/api/post");
+            return await Get<List<Post>>("/api/post");
         }
 
         public async Task<Post> GetPostById(int id)

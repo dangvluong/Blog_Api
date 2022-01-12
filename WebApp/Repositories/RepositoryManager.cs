@@ -1,24 +1,18 @@
-﻿using WebApp.Models;
+﻿using WebApp.Interfaces;
+using WebApp.Models;
 
-namespace WebApp.Helper
+namespace WebApp.Repositories
 {
-    public class RepositoryManager : IDisposable
-    {
-        private CategoryRepository category;
-        //private readonly Uri ApiServer = new Uri("https://localhost:7207/");
-        private HttpClient client;
-        public HttpClient Client
-        {
-            get
-            {
-                if (client == null)
-                {
-                    client = new HttpClient();
-                }
-                return client;
-            }
-        }
-        public CategoryRepository Category
+    public class RepositoryManager : RepositoryManagerBase, IRepositoryManager
+    {        
+        private ICategoryRepository category;       
+        private IPostRepository post;
+        private IMemberRepository member;
+        private ICommentRepository comment;
+        private IAuthRepository auth;
+        private ISeedDataRepository seedData;
+       
+        public ICategoryRepository Category
         {
             get
             {
@@ -29,10 +23,9 @@ namespace WebApp.Helper
                 return category;
             }
 
-        }
-        private PostRepository post;
+        }        
 
-        public PostRepository Post
+        public IPostRepository Post
         {
             get
             {
@@ -40,11 +33,9 @@ namespace WebApp.Helper
                     post = new PostRepository(Client);
                 return post;
             }
+        }       
 
-        }
-        private MemberRepository member;
-
-        public MemberRepository Member
+        public IMemberRepository Member
         {
             get
             {
@@ -52,12 +43,9 @@ namespace WebApp.Helper
                     member = new MemberRepository(Client);
                 return member;
             }
+        }       
 
-        }
-
-        private SeedDataRepository seedData;
-
-        public SeedDataRepository SeedData
+        public ISeedDataRepository SeedData
         {
             get
             {
@@ -65,12 +53,9 @@ namespace WebApp.Helper
                     seedData = new SeedDataRepository(Client);
                 return seedData;
             }
+        }        
 
-        }
-
-        private CommentRepository comment;
-
-        public CommentRepository Comment
+        public ICommentRepository Comment
         {
             get
             {
@@ -78,15 +63,16 @@ namespace WebApp.Helper
                     comment = new CommentRepository(Client);
                 return comment;
             }
-
         }
-
-        public void Dispose()
+        
+        public IAuthRepository Auth
         {
-            if (client != null)
+            get
             {
-                client.Dispose();
+                if (auth == null)
+                    auth = new AuthRepository(Client);
+                return auth;
             }
-        }
+        }        
     }
 }

@@ -3,23 +3,22 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using WebApp.Helper;
+using WebApp.Interfaces;
 using WebApp.Models;
 
 namespace WebApp.Controllers
 {
-    public class MemberController : Controller
-    {
-        private readonly RepositoryManager siteHelper;
-        public MemberController(RepositoryManager siteHelper)
+    public class MemberController : BaseController
+    {        
+        public MemberController(IRepositoryManager repository) : base(repository)
         {
-            this.siteHelper =  siteHelper;
+            
         }
         [Authorize]
         public async Task<IActionResult> Index()
         {
             string token = User.FindFirstValue(ClaimTypes.Authentication);
-            Member member = await siteHelper.Member.GetMemberById(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),token);
+            Member member = await _repository.Member.GetMemberById(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),token);
             return View(member);
         }
         public IActionResult Register()
@@ -31,7 +30,7 @@ namespace WebApp.Controllers
         {
             if(!ModelState.IsValid)
                 return View();
-            await siteHelper.Member.Register(model);
+            await _repository.Auth.Register(model);
             return RedirectToAction(nameof(Login));
         }
         public IActionResult Login()
@@ -44,7 +43,7 @@ namespace WebApp.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-            Member member = await siteHelper.Member.Login(model);
+            Member member = await _repository.Auth.Login(model);
             if (member != null)
             {
                 List<Claim> claims = new List<Claim>()
@@ -98,13 +97,13 @@ namespace WebApp.Controllers
             if (!ModelState.IsValid)
                 return View();
             string token = User.FindFirstValue(ClaimTypes.Authentication);
-            bool isOldPasswordValid = await siteHelper.Member.CheckOldPasswordValid(changePasswordModel.OldPassword, token);
+            bool isOldPasswordValid = await _repository.Auth.CheckOldPasswordValid(changePasswordModel.OldPassword, token);
             if (!isOldPasswordValid)
             {
                 ModelState.AddModelError(string.Empty, "Mật khẩu cũ không đúng");
                 return View();
             }                
-            int result = await siteHelper.Member.ChangePassword(changePasswordModel.NewPassword, token);
+            int result = await _repository.Auth.ChangePassword(changePasswordModel.NewPassword, token);
             //Implement notification
 
             //Force member to login again after change password
