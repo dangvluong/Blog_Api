@@ -21,21 +21,29 @@ namespace WebApp.Repositories
         {
             return await Post<RegisterModel>("/api/auth/register", model);
         }
-        public async Task<bool> CheckOldPasswordValid(string oldPassword, string token)
+        //public async Task<bool> CheckOldPasswordValid(string oldPassword, string token)
+        //{
+        //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        //    HttpResponseMessage message = await client.PostAsJsonAsync("/api/auth/checkoldpasswordvalid", oldPassword);
+        //    if (message.IsSuccessStatusCode)
+        //        return true;
+        //    return false;
+        //}
+        public async Task<ReponseResult> ChangePassword(ChangePasswordModel obj, string token)
         {
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            HttpResponseMessage message = await client.PostAsJsonAsync("/api/auth/checkoldpasswordvalid", oldPassword);
+            HttpResponseMessage message =  await client.PostAsJsonAsync<ChangePasswordModel>("/api/auth/changepassword", obj);
             if (message.IsSuccessStatusCode)
-                return true;
-            return false;
-        }
-        public async Task<int> ChangePassword(string newPassword, string token)
-        {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            HttpResponseMessage message = await client.PostAsJsonAsync("/api/auth/changepassword", newPassword);
-            if (message.IsSuccessStatusCode)
-                return 1;
-            return 0;
+                return new ReponseResult
+                {
+                    IsSuccess = true
+                };
+            return new ReponseResult
+            {
+                IsSuccess = false,
+                Message = message.Content.ReadAsStringAsync().Result
+            };
+                
         }
     }
 }

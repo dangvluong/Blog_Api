@@ -92,22 +92,26 @@ namespace WebApp.Controllers
         }
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> ChangePassword(ChangePasswordModel changePasswordModel)
+        public async Task<IActionResult> ChangePassword(ChangePasswordModel obj)
         {
             if (!ModelState.IsValid)
                 return View();
             string token = User.FindFirstValue(ClaimTypes.Authentication);
-            bool isOldPasswordValid = await _repository.Auth.CheckOldPasswordValid(changePasswordModel.OldPassword, token);
-            if (!isOldPasswordValid)
-            {
-                ModelState.AddModelError(string.Empty, "Mật khẩu cũ không đúng");
-                return View();
-            }                
-            int result = await _repository.Auth.ChangePassword(changePasswordModel.NewPassword, token);
+            //bool isOldPasswordValid = await _repository.Auth.CheckOldPasswordValid(changePasswordModel.OldPassword, token);
+            //if (!isOldPasswordValid)
+            //{
+            //    ModelState.AddModelError(string.Empty, "Mật khẩu cũ không đúng");
+            //    return View();
+            //}                
+            ReponseResult result = await _repository.Auth.ChangePassword(obj, token);
+            if(result.IsSuccess)
+                return RedirectToAction(nameof(Logout));
+
+            ModelState.AddModelError(string.Empty, result.Message);
+            return View();
             //Implement notification
 
             //Force member to login again after change password
-            return RedirectToAction(nameof(Logout));
         } 
     }
 }

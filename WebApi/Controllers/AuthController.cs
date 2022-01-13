@@ -15,7 +15,7 @@ namespace WebApi.Controllers
         private readonly IConfiguration _configuration;
         public AuthController(IRepositoryManager repository, IConfiguration configuration) : base(repository)
         {
-            _configuration = configuration; 
+            _configuration = configuration;
         }
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterModel model)
@@ -32,7 +32,7 @@ namespace WebApi.Controllers
                 FullName = model.FullName,
                 DateCreate = DateTime.Now
             };
-            member.Roles = new List<Role>();           
+            member.Roles = new List<Role>();
             var role = await _repository.Role.GetRoleByName("member", trackChanges: true);
             member.Roles.Add(role);
             _repository.Member.AddMember(member);
@@ -67,32 +67,38 @@ namespace WebApi.Controllers
             }
             return null;
         }
-        [HttpPost("checkoldpasswordvalid")]
-        [Authorize]
-        public async Task<IActionResult> CheckOldPasswordValid([FromBody] string oldPassword)
-        {
-            if (string.IsNullOrEmpty(oldPassword) || oldPassword.Length < 6 || oldPassword.Length > 64)
-                return BadRequest();
-            var memberId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            //bool isCurrentPasswordValid = await _repository.Member.CheckCurrentPasswordValid(memberId, oldPassword);
-            Member member = await _repository.Member.GetMemberByCondition(member =>
-                member.Id == memberId && member.Password == SiteHelper.HashPassword(oldPassword),trackChanges: false
-            ).FirstOrDefaultAsync();
-            if (member != null)
-                return Ok();
-            return BadRequest();
-        }
+        //[HttpPost("checkoldpasswordvalid")]
+        //[Authorize]
+        //public async Task<IActionResult> CheckOldPasswordValid([FromBody] string oldPassword)
+        //{
+        //    if (string.IsNullOrEmpty(oldPassword) || oldPassword.Length < 6 || oldPassword.Length > 64)
+        //        return BadRequest();
+        //    var memberId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        //    //bool isCurrentPasswordValid = await _repository.Member.CheckCurrentPasswordValid(memberId, oldPassword);
+        //    Member member = await _repository.Member.GetMemberByCondition(member =>
+        //        member.Id == memberId && member.Password == SiteHelper.HashPassword(oldPassword),trackChanges: false
+        //    ).FirstOrDefaultAsync();
+        //    if (member != null)
+        //        return Ok();
+        //    return BadRequest();
+        //}
         [HttpPost("changepassword")]
         [Authorize]
-        public async Task<IActionResult> ChangePassword([FromBody] string newPassword)
+        public async Task<IActionResult> ChangePassword(ChangePasswordModel obj)
         {
-            if (string.IsNullOrEmpty(newPassword) && (newPassword.Length < 6 || newPassword.Length > 64))
+            if (!ModelState.IsValid)
                 return BadRequest();
-            int memberId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            Member member = await _repository.Member.GetMemberByCondition(member => member.Id == memberId,trackChanges:true).FirstOrDefaultAsync();
+            var memberId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            Member member = await _repository.Member.GetMemberByCondition(member =>
+                   member.Id == memberId, trackChanges: true
+               ).FirstOrDefaultAsync();
             if (member == null)
                 return BadRequest();
-            member.Password = SiteHelper.HashPassword(newPassword);
+            if (!member.Password.SequenceEqual(SiteHelper.HashPassword(obj.OldPassword)))
+            {               
+                return BadRequest("Mật khẩu cũ không đúng");
+            }                
+            member.Password = SiteHelper.HashPassword(obj.NewPassword);
             await _repository.SaveChanges();
             return Ok();
         }
