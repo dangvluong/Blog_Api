@@ -1,4 +1,5 @@
 ﻿
+using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using WebApp.Interfaces;
 using WebApp.Models;
@@ -29,21 +30,14 @@ namespace WebApp.Repositories
         //        return true;
         //    return false;
         //}
-        public async Task<ReponseResult> ChangePassword(ChangePasswordModel obj, string token)
+        public async Task<BadRequestResponse> ChangePassword(ChangePasswordModel obj, string token)
         {
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             HttpResponseMessage message =  await client.PostAsJsonAsync<ChangePasswordModel>("/api/auth/changepassword", obj);
             if (message.IsSuccessStatusCode)
-                return new ReponseResult
-                {
-                    IsSuccess = true
-                };
-            return new ReponseResult
-            {
-                IsSuccess = false,
-                Message = message.Content.ReadAsStringAsync().Result
-            };
-                
+                return null;            
+            BadRequestResponse badRequest = JsonConvert.DeserializeObject<BadRequestResponse>(await message.Content.ReadAsStringAsync());
+            return badRequest;                
         }
     }
 }

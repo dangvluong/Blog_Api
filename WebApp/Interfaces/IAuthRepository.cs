@@ -6,6 +6,6 @@ namespace WebApp.Interfaces
     {
         Task<Member> Login(LoginModel model);
         Task<int> Register(RegisterModel model);       
-        Task<ReponseResult> ChangePassword(ChangePasswordModel obj, string token);
+        Task<BadRequestResponse> ChangePassword(ChangePasswordModel obj, string token);
     }
 }

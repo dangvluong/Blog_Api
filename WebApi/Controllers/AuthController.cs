@@ -67,21 +67,7 @@ namespace WebApi.Controllers
             }
             return null;
         }
-        //[HttpPost("checkoldpasswordvalid")]
-        //[Authorize]
-        //public async Task<IActionResult> CheckOldPasswordValid([FromBody] string oldPassword)
-        //{
-        //    if (string.IsNullOrEmpty(oldPassword) || oldPassword.Length < 6 || oldPassword.Length > 64)
-        //        return BadRequest();
-        //    var memberId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        //    //bool isCurrentPasswordValid = await _repository.Member.CheckCurrentPasswordValid(memberId, oldPassword);
-        //    Member member = await _repository.Member.GetMemberByCondition(member =>
-        //        member.Id == memberId && member.Password == SiteHelper.HashPassword(oldPassword),trackChanges: false
-        //    ).FirstOrDefaultAsync();
-        //    if (member != null)
-        //        return Ok();
-        //    return BadRequest();
-        //}
+       
         [HttpPost("changepassword")]
         [Authorize]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel obj)
@@ -95,8 +81,9 @@ namespace WebApi.Controllers
             if (member == null)
                 return BadRequest();
             if (!member.Password.SequenceEqual(SiteHelper.HashPassword(obj.OldPassword)))
-            {               
-                return BadRequest("Mật khẩu cũ không đúng");
+            {
+                ModelState.AddModelError(nameof(obj.OldPassword), "Mật khẩu cũ không đúng");
+                return ValidationProblem(ModelState);
             }                
             member.Password = SiteHelper.HashPassword(obj.NewPassword);
             await _repository.SaveChanges();

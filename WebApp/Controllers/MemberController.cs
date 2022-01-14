@@ -103,15 +103,17 @@ namespace WebApp.Controllers
             //    ModelState.AddModelError(string.Empty, "Mật khẩu cũ không đúng");
             //    return View();
             //}                
-            ReponseResult result = await _repository.Auth.ChangePassword(obj, token);
-            if(result.IsSuccess)
+            BadRequestResponse response= await _repository.Auth.ChangePassword(obj, token);
+            if(response == null)
                 return RedirectToAction(nameof(Logout));
-
-            ModelState.AddModelError(string.Empty, result.Message);
+            foreach (var errorMessage in response.Errors)
+            {
+                foreach (var error in errorMessage.Value)
+                {
+                    ModelState.AddModelError(errorMessage.Key, error);
+                }                
+            }            
             return View();
-            //Implement notification
-
-            //Force member to login again after change password
         } 
     }
 }
