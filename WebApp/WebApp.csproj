@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <Folder Include="Helper\" />
+    <Folder Include="Views\Member\" />
   </ItemGroup>
 
 </Project>
