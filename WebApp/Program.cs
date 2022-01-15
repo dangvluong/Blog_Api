@@ -7,8 +7,8 @@ builder.Services.AddMvc();
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
 {
-    option.LoginPath = "/member/login";
-    option.AccessDeniedPath = "/member/denied";
+    option.LoginPath = "/account/login";
+    option.AccessDeniedPath = "/account/denied";
     option.ExpireTimeSpan = TimeSpan.FromMinutes(5); // 5 minutes
 });
 

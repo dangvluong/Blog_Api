@@ -219,7 +219,7 @@ Author URL: http://w3layouts.com
     <!-- disable body scroll which navbar is in active -->
 
     <script src="~/js/bootstrap.min.js"></script>
-
+    @await RenderSectionAsync("script",required: false) 
 </body>
 
 </html>

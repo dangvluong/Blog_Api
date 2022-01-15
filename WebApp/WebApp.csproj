@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <Folder Include="Helper\" />
+    <Folder Include="ViewModel\" />
     <Folder Include="Views\Member\" />
   </ItemGroup>
 

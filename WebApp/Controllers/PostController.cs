@@ -19,8 +19,8 @@ namespace WebApp.Controllers
             return View(await _repository.Post.GetPosts());
         }
 
-        // GET: PostController/Details/5
-        public async Task<ActionResult> Details(int id)
+        // GET: PostController/Detail/5
+        public async Task<ActionResult> Detail(int id)
         {
             Post post = await _repository.Post.GetPostById(id);
             if (post is null)

@@ -147,17 +147,18 @@
                                                 <div class="media-body">
                                                     <ul class="time-rply mb-2">
                                                         <li>
-                                                            <a href="https://demo.w3layouts.com/demos_new/template_demo/25-04-2020/designblog-liberty-demo_Free/1801554861/web/blog-single.html#URL"
-                                                               class="name mt-0 mb-2 d-block">James Harper</a>
+                                                            <a href="#" class="name mt-0 mb-2 d-block">@comment.AuthorName</a>
                                                             @comment.DateCreate.ToShortDateString() - @comment.DateCreate.ToShortTimeString()
 
                                                         </li>
-                                                        <li class="reply-last">
-                                                            <a href="https://demo.w3layouts.com/demos_new/template_demo/25-04-2020/designblog-liberty-demo_Free/1801554861/web/blog-single.html#reply"
-                                                               class="reply">
-                                                                Reply
-                                                            </a>
-                                                        </li>
+                                                        @if (User.Identity.IsAuthenticated)
+                                                        {
+                                                            <li class="reply-last">
+                                                                <a href="#reply" class="reply reply-comment" data-comment-id="@comment.Id">
+                                                                    Reply
+                                                                </a>
+                                                            </li>
+                                                        }
                                                     </ul>
                                                     <p>
                                                         @comment.Content
@@ -179,10 +180,13 @@
                                                                             @commentChild.DateCreate.ToShortDateString() - @commentChild.DateCreate.ToShortTimeString()
 
                                                                         </li>
-                                                                        <li class="reply-last">
-                                                                            <a href="https://demo.w3layouts.com/demos_new/template_demo/25-04-2020/designblog-liberty-demo_Free/1801554861/web/blog-single.html#reply"
-                                                                               class="reply"> Reply</a>
-                                                                        </li>
+                                                                        @if (User.Identity.IsAuthenticated)
+                                                                        {
+                                                                            <li class="reply-last">
+                                                                                <a href="https://demo.w3layouts.com/demos_new/template_demo/25-04-2020/designblog-liberty-demo_Free/1801554861/web/blog-single.html#reply"
+                                                                                   class="reply"> Reply</a>
+                                                                            </li>
+                                                                        }
                                                                     </ul>
                                                                     <p>
                                                                         @commentChild.Content
@@ -197,21 +201,35 @@
                                     }
                                 </div>
                             }
-
-                            <div class="leave-comment-form mt-5" id="reply">
-                                <h4 class="side-title mb-2">Leave a Reply</h4>
-                                <form action="https://demo.w3layouts.com/demos_new/template_demo/25-04-2020/designblog-liberty-demo_Free/1801554861/web/blog-single.html#"
-                                      method="post">
-                                    <div class="form-group">
-                                        <textarea name="Comment" class="form-control" placeholder="Your Comment*" required=""
-                                                  spellcheck="false"></textarea>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <div class="leave-comment-form mt-5" id="reply">
+                                    <div class="d-flex">
+                                        <h4 class="side-title mb-2" id="reply-to-comment-title">Leave a Reply</h4>
+                                        <a href="" id="cancel-reply-to-comment" class="ml-3 pt-2" hidden>Cancel</a>
                                     </div>
-                                    <div class="submit text-right">
-                                        <button class="btn btn-style btn-primary">Post Comment </button>
-                                    </div>
-                                </form>
-                            </div>
-
+                                    @*<h4 class="side-title mb-2"></h4>*@
+                                    <form asp-action="PostComment" asp-controller="Comment" method="post">
+                                        <div class="form-group">
+                                            <input type="hidden" name="PostId" value="@Model.Id" />
+                                            <input type="hidden" name="CommentParentId"  id="CommentParentId" value="" />
+                                            <textarea name="Content" class="form-control" placeholder="Your Comment*" required
+                                                      spellcheck="false"></textarea>
+                                        </div>
+                                        <div class="submit text-right">
+                                            <button class="btn btn-style btn-primary">Post Comment </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            }
+                            else
+                            {
+                                //consider add returnUrl
+                                <div class="text-center mt-3">
+                                    Bạn phải <a asp-action="Login" asp-controller="Account">đăng nhập </a>
+                                    mới có thể bình luận
+                                </div>
+                            }
                         </div><!-- #comments -->
                     </div>
 
@@ -219,3 +237,20 @@
             </div>
         </div>
     </section>
+    @section script{
+        <script>
+            $(document).on('click', '.reply-comment', function () {
+                var commentParentId = $(this).attr('data-comment-id');
+                $('#reply-to-comment-title').text('Reply to Comment');
+                $('#cancel-reply-to-comment').removeAttr('hidden');
+                $('input[name="CommentParentId"]').val(commentParentId);
+            });
+
+            $(document).on('click', '#cancel-reply-to-comment', function (e) {
+                e.preventDefault();
+                $(this).attr('hidden', "hidden");
+                $('#reply-to-comment-title').text('Leave a Reply');
+                $('input[name="CommentParentId"]').val(null);
+            });
+        </script>
+    }

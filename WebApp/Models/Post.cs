@@ -17,15 +17,12 @@ namespace WebApp.Models
         public DateTime DateCreated { get; set; }
         [DataType(DataType.Date)]
         public DateTime? DateModifier { get; set; }
-
         public bool IsActive { get; set; } = false;
         public bool IsDeleted { get; set; } = false;
         [Display(Name = "Danh mục")]
         public int CategoryId { get; set; }        
         public Category Category { get; set; }
         public int? AuthorId { get; set; }
-        
-        //public User Author { get; set; }
         public List<Comment> Comments { get; set; }
     }
 }

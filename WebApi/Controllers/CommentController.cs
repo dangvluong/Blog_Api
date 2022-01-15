@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApi.Dto;
 using WebApi.Interfaces;
 using WebApi.Models;
 
@@ -33,9 +34,9 @@ namespace WebApi.Controllers
         // GET: api/GetCommentsByPost/5
         [HttpGet]
         [Route("GetCommentsByPost/{id}")]
-        public async Task<ActionResult<IEnumerable<Comment>>> GetCommentsByPost(int id)
+        public async Task<ActionResult<IEnumerable<CommentDto>>> GetCommentsByPost(int id)
         {
-            IEnumerable<Comment> comments = await _repository.Comment.GetCommentsByPost(id);
+            IEnumerable<CommentDto> comments = await _repository.Comment.GetCommentsByPost(id);
             if (comments == null)
                 return NotFound();
             return Ok(comments);
@@ -54,13 +55,13 @@ namespace WebApi.Controllers
 
         // POST: api/Comment        
         [HttpPost]
-        public async Task<ActionResult<Comment>> PostComment(Comment comment)
+        public async Task<ActionResult> PostComment(Comment comment)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
             _repository.Comment.AddComment(comment);            
             await _repository.SaveChanges();
-            return CreatedAtAction("GetComment", new { id = comment.Id }, comment);
+            return Ok();            
         }
 
         // DELETE: api/Comment/5
