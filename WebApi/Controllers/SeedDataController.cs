@@ -1,10 +1,9 @@
 ﻿using Bogus;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 using WebApi.Helper;
+using WebApi.Interfaces;
 using WebApi.Models;
-using WebApi.Repositories;
 
 namespace WebApi.Controllers
 {
@@ -13,7 +12,7 @@ namespace WebApi.Controllers
     public class SeedDataController : BaseController
     {
         private AppDbContext _context;
-        public SeedDataController(RepositoryManager repository, AppDbContext context) : base(repository)
+        public SeedDataController(IRepositoryManager repository, AppDbContext context) : base(repository)
         {
             _context = context;
         }
