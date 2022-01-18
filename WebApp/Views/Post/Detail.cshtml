@@ -134,7 +134,8 @@
                         <div id="comments" class="comments-area">
                             @if (Model.Comments != null && Model.Comments.Count > 0)
                             {
-                                <div class="comments mt-5">
+                                <comment list-comment="@Model.Comments" is-authenticated="@User.Identity.IsAuthenticated"></comment>                                                         
+                                @*<div class="comments mt-5">
                                     <h4 class="side-title ">Comments (@Model.Comments.Count)</h4>
                                     @foreach (var comment in Model.Comments)
                                     {
@@ -199,7 +200,7 @@
                                             </div>
                                         }
                                     }
-                                </div>
+                                </div>*@
                             }
                             @if (User.Identity.IsAuthenticated)
                             {
