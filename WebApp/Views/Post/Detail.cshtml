@@ -136,7 +136,7 @@
                             {
                                 <div class="comments mt-5">
                                     <h4 class="side-title ">Comments (@Model.Comments.Count)</h4>
-                                   <partial name="Comments" model="@Model.Comments" />
+                                   <partial name="_Comments" model="@Model.Comments" />
                                 </div>
                             }
                             @if (User.Identity.IsAuthenticated)

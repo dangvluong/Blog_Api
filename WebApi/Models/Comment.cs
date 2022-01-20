@@ -15,8 +15,7 @@ namespace WebApi.Models
 
         public int PostId { get; set; }
         [ForeignKey("PostId")]
-        public Post Post { get; set; }
-        public int? CommentParentId { get; set; }
+        public Post Post { get; set; }      
         public DateTime DateCreate { get; set; }
     }
 }

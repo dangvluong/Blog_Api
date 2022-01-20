@@ -35,8 +35,7 @@ namespace WebApi.Repositories
                 Content= comment.Content,
                 AuthorId = comment.AuthorId,
                 AuthorName = comment.Author.FullName,
-                PostId = comment.PostId,
-                CommentParentId = comment.CommentParentId,
+                PostId = comment.PostId,                
                 DateCreate = comment.DateCreate                
             }).OrderByDescending(c => c.DateCreate).ToListAsync();
         }

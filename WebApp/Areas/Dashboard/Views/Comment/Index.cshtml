@@ -9,8 +9,7 @@
                     <th>CommentId</th>
                     <th>Comment Content</th>
                     <th>Comment's Author</th>
-                    <th>Post Id</th>
-                    <th>Comment Parent Id</th>
+                    <th>Post Id</th>                 
                     <th></th>
                 </tr>
             </thead>
@@ -22,8 +21,7 @@
                         <td>@comment.Id</td>
                         <td>@comment.Content</td>
                         <td>@comment.AuthorId</td>
-                        <td>@comment.PostId</td>
-                        <td>@comment.CommentParentId</td>
+                        <td>@comment.PostId</td>                      
                         <td>                            
                             <a asp-area="Dashboard" asp-controller="Comment" asp-action="Delete" asp-route-id="@comment.Id">Delete</a>
                         </td>
