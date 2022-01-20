@@ -6,12 +6,17 @@ namespace WebApi.Repositories
 {
     public class PostRepository : BaseRepository<Post>, IPostRepository
     {
+        private readonly int size = 10;
         public PostRepository(AppDbContext context) : base(context)
         {
         }
-        public async Task<IEnumerable<Post>> GetPosts()
+        public async Task<IEnumerable<Post>> GetPosts(int page)
         {
-            return await FindAll(trackChanges:false).ToListAsync();
+            return await FindAll(trackChanges:false).OrderBy(p=> p.Id).Skip(size*(page-1)).Take(size).ToListAsync();
+        }
+        public async Task<int> CountTotalPage()
+        {
+            return (int)Math.Floor(await FindAll(trackChanges: false).CountAsync()/(float)size);
         }
         public async Task<Post> GetPost(int id)
         {

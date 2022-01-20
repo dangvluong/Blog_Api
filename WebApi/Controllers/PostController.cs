@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApi.DataTransferObject;
 using WebApi.Interfaces;
 using WebApi.Models;
 
@@ -7,18 +8,23 @@ namespace WebApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class PostController : BaseController
-    {       
-
-        public PostController(IRepositoryManager repository):base(repository)
+    {   
+        public PostController(IRepositoryManager repository) : base(repository)
         {
-            
+
         }
 
         // GET: api/Post
         [HttpGet]
-        public async Task<IEnumerable<Post>> GetPosts()
+        public async Task<ListPostDto> GetPosts([FromQuery]int page = 1)
         {
-            return await _repository.Post.GetPosts();
+            ListPostDto listPost = new ListPostDto
+            {
+                Posts = await _repository.Post.GetPosts(page),
+                TotalPage = await _repository.Post.CountTotalPage()
+            };            
+
+            return listPost;
         }
 
         // GET: api/Post/5

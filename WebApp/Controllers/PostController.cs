@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
+using WebApp.DataTransferObject;
 using WebApp.Interfaces;
 using WebApp.Models;
 
@@ -14,9 +15,10 @@ namespace WebApp.Controllers
         }
 
         // GET: PostController
-        public async Task<ActionResult> Index()
-        {                      
-            return View(await _repository.Post.GetPosts());
+        public async Task<ActionResult> Index(int id = 1)
+        {
+            ListPostDto listPost = await _repository.Post.GetPosts(id);
+            return View(listPost);
         }
 
         // GET: PostController/Detail/5

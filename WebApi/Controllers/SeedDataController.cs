@@ -113,7 +113,7 @@ namespace WebApi.Controllers
             fk.RuleFor(p => p.Content, f => $"Comment " + f.Lorem.Sentences(5));
             fk.RuleFor(p => p.DateCreate, f => f.Date.Between(new DateTime(2019, 12, 31), new DateTime(2021, 12, 31)));
             var members = (await _repository.Member.GetMembers()).ToList();
-            var posts = (await _repository.Post.GetPosts()).ToList();
+            var posts = (await _repository.Post.GetPosts(1)).ToList();
             var rand = new Random();
             var comments = new List<Comment>();
             for (int i = 0; i < 30; i++)

@@ -1,4 +1,5 @@
-﻿using WebApp.Interfaces;
+﻿using WebApp.DataTransferObject;
+using WebApp.Interfaces;
 using WebApp.Models;
 
 namespace WebApp.Repositories
@@ -9,9 +10,9 @@ namespace WebApp.Repositories
         {
         }
 
-        public async Task<List<Post>> GetPosts()
+        public async Task<ListPostDto> GetPosts(int page)
         {
-            return await Get<List<Post>>("/api/post");
+            return await Get<ListPostDto>($"/api/post?page={page}");
         }
 
         public async Task<Post> GetPostById(int id)
