@@ -1,42 +1,114 @@
 ﻿@model List<Post>
-<div class="container">
-    <a asp-action="Create">Create</a>
-    @if (Model.Count() > 0)
-    {
+<nav id="breadcrumbs" class="breadcrumbs">
+    <div class="container page-wrapper AllBreadcrumbs">
+        <a asp-action="Index" asp-controller="Home" rel="homepage">Home</a>&nbsp;&nbsp;»&nbsp;&nbsp;
+        <a asp-action="Index" asp-controller="Post" rel="post">Post</a>       
+    </div>
+</nav>
+<section class="w3l-blog-block2 mt-md-5">
+    <div class="container mb-lg-4 BlogHomeLayout my-5">
+        <h3 class="section-title-left">All Featured posts </h3>
+        <div class="row">
+            @foreach (var post in Model)
+            {
+                <div class="col-lg-4 col-md-6 item mb-4">
+                    <div class="card">
+                        <div class="card-header p-0 position-relative blog-post-thumb">
+                            <a href="https://wp.w3layouts.com/designblog/2021/05/31/how-to-write-a-blog-post-a-step-by-step-guide/"></a>
+                            <a class="post-thumbnail" asp-action="Detail" asp-route-id="@post.Id" aria-hidden="true" tabindex="-1">
+                                <img width="340" height="284"
+                                     src="./Blog posts – Design Blog – Blogging Category WordPress Theme_files/16.jpg"
+                                     class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
+                                     alt="How to Write a Blog Post: A Step-by-Step Guide" loading="lazy"
+                                     srcset="https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/05/16.jpg 340w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/05/16-300x251.jpg 300w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/05/16-287x240.jpg 287w"
+                                     sizes="(max-width: 340px) 100vw, 340px">
+                            </a>
 
-        <table class="table table-borderless">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Title</th>
-                    <th>IsActive</th>
-                    <th>IsDeleted</th>
-                    <th>CategoryId</th>
-                    <th>AuthorId</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (Post post in Model)
-                {
-                    <tr>
-                        <td>@post.Id</td>
-                        <td>@post.Title</td>
-                        <td>@post.IsActive</td>
-                        <td>@post.IsDeleted</td>
-                        <td>@post.CategoryId</td>
-                        <td>@post.AuthorId</td>
-                        <td>
-                            <a asp-action="Detail" asp-route-id="@post.Id">Details</a>
-                            <a asp-action="Edit" asp-route-id="@post.Id">Edit</a>
-                            <a asp-action="Delete" asp-route-id="@post.Id">Delete</a>
-                        </td>
-                    </tr>
+
+                        </div>
+                        <div class="card-body p-0 blog-details">
+                            <a asp-action="Detail" asp-route-id="@post.Id" rel="bookmark" class="blog-desc">
+                                @post.Title
+                            </a>
+                            <div class="author align-items-center mt-3 mb-1">
+                                <a href="https://wp.w3layouts.com/designblog/author/w3layouts/">
+                                </a><a class="url fn n"
+                                       href="#">@post.AuthorId</a>
+
+                                    in <a asp-action="Index" asp-route-category="@post.CategoryId" rel="category tag">Category @post.CategoryId</a>
+
+                                </div>
+
+                                <ul class="blog-meta">
+                                    <li class="meta-item blog-lesson">
+                                        <span class="meta-value"> @post.DateCreated.ToShortDateString()</span>
+
+                                    </li>
+                                    <li class="meta-item blog-students">
+                                        <span class="meta-value">at @post.DateCreated.ToShortTimeString()</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 }
-            </tbody>
-        </table> }
-    else
-    {
-        <h5>Hiện không có bài viết nào</h5>
-    }
-</div>
+        </div>
+        <div class="pagination-wrapper mt-4">
+            <div class="page-pagination">
+                <ul class="page-numbers">
+                    <li><span aria-current="page" class="page-numbers current">1</span></li>
+                    <li>
+                        <a class="page-numbers"
+                           href="https://wp.w3layouts.com/designblog/blog-posts/page/2/">2</a>
+                    </li>
+                    <li>
+                        <a class="next page-numbers"
+                           href="https://wp.w3layouts.com/designblog/blog-posts/page/2/">Next</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+    @*@model List<Post>
+        <div class="container">
+            <a asp-action="Create">Create</a>
+            @if (Model.Count() > 0)
+            {
+
+                <table class="table table-borderless">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Title</th>
+                            <th>IsActive</th>
+                            <th>IsDeleted</th>
+                            <th>CategoryId</th>
+                            <th>AuthorId</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Post post in Model)
+                        {
+                            <tr>
+                                <td>@post.Id</td>
+                                <td>@post.Title</td>
+                                <td>@post.IsActive</td>
+                                <td>@post.IsDeleted</td>
+                                <td>@post.CategoryId</td>
+                                <td>@post.AuthorId</td>
+                                <td>
+                                    <a asp-action="Detail" asp-route-id="@post.Id">Details</a>
+                                    <a asp-action="Edit" asp-route-id="@post.Id">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@post.Id">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table> }
+            else
+            {
+                <h5>Hiện không có bài viết nào</h5>
+            }
+        </div>*@
