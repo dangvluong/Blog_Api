@@ -136,69 +136,7 @@
                             {
                                 <div class="comments mt-5">
                                     <h4 class="side-title ">Comments (@Model.Comments.Count)</h4>
-                                    @foreach (var comment in Model.Comments)
-                                    {
-                                        if (comment.CommentParentId == null)
-                                        {
-                                            <div class="media">
-                                                <div class="img-circle">
-                                                    <img src="./post and comments_files/c2.jpg" class="img-fluid" alt="...">
-                                                </div>
-                                                <div class="media-body">
-                                                    <ul class="time-rply mb-2">
-                                                        <li>
-                                                            <a href="#" class="name mt-0 mb-2 d-block">@comment.AuthorName</a>
-                                                            @comment.DateCreate.ToShortDateString() - @comment.DateCreate.ToShortTimeString()
-
-                                                        </li>
-                                                        @if (User.Identity.IsAuthenticated)
-                                                        {
-                                                            <li class="reply-last">
-                                                                <a href="#reply" class="reply reply-comment" data-comment-id="@comment.Id">
-                                                                    Reply
-                                                                </a>
-                                                            </li>
-                                                        }
-                                                    </ul>
-                                                    <p>
-                                                        @comment.Content
-                                                    </p>
-                                                    @foreach (var commentChild in Model.Comments)
-                                                    {
-                                                        if (commentChild.CommentParentId == comment.Id)
-                                                        {
-                                                            <div class="media second mt-4 p-0 pt-2">
-                                                                <a class="img-circle img-circle-sm"
-                                                                   href="https://demo.w3layouts.com/demos_new/template_demo/25-04-2020/designblog-liberty-demo_Free/1801554861/web/blog-single.html#url">
-                                                                    <img src="./post and comments_files/c3.jpg" class="img-fluid" alt="...">
-                                                                </a>
-                                                                <div class="media-body">
-                                                                    <ul class="time-rply mb-2">
-                                                                        <li>
-                                                                            <a href="https://demo.w3layouts.com/demos_new/template_demo/25-04-2020/designblog-liberty-demo_Free/1801554861/web/blog-single.html#URL"
-                                                                               class="name mt-0 mb-2 d-block">Jackson Wyatt</a>
-                                                                            @commentChild.DateCreate.ToShortDateString() - @commentChild.DateCreate.ToShortTimeString()
-
-                                                                        </li>
-                                                                        @if (User.Identity.IsAuthenticated)
-                                                                        {
-                                                                            <li class="reply-last">
-                                                                                <a href="https://demo.w3layouts.com/demos_new/template_demo/25-04-2020/designblog-liberty-demo_Free/1801554861/web/blog-single.html#reply"
-                                                                                   class="reply"> Reply</a>
-                                                                            </li>
-                                                                        }
-                                                                    </ul>
-                                                                    <p>
-                                                                        @commentChild.Content
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        }
-                                                    }
-                                                </div>
-                                            </div>
-                                        }
-                                    }
+                                   <partial name="Comments" model="@Model.Comments" />
                                 </div>
                             }
                             @if (User.Identity.IsAuthenticated)
@@ -237,20 +175,3 @@
             </div>
         </div>
     </section>
-    @section script{
-        <script>
-            $(document).on('click', '.reply-comment', function () {
-                var commentParentId = $(this).attr('data-comment-id');
-                $('#reply-to-comment-title').text('Reply to Comment');
-                $('#cancel-reply-to-comment').removeAttr('hidden');
-                $('input[name="CommentParentId"]').val(commentParentId);
-            });
-
-            $(document).on('click', '#cancel-reply-to-comment', function (e) {
-                e.preventDefault();
-                $(this).attr('hidden', "hidden");
-                $('#reply-to-comment-title').text('Leave a Reply');
-                $('input[name="CommentParentId"]').val(null);
-            });
-        </script>
-    }

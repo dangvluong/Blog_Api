@@ -116,29 +116,29 @@ namespace WebApi.Controllers
             var posts = (await _repository.Post.GetPosts()).ToList();
             var rand = new Random();
             var comments = new List<Comment>();
-            for (int i = 0; i < posts.Count; i++)
+            for (int i = 0; i < 30; i++)
             {
                 var comment = fk.Generate();
                 comment.AuthorId = members[rand.Next(members.Count)].Id;
-                comment.PostId = posts[i].Id;
+                comment.PostId = posts[0].Id;
                 comments.Add(comment);
             }
             _context.Comments.AddRange(comments);            
             await _repository.SaveChanges();
-            comments.Clear();
-            var commentsInDb = _context.Comments.ToList();
+            //comments.Clear();
+            //var commentsInDb = _context.Comments.ToList();
             //add comments child
-            for (int i = 0; i < 30; i++)
-            {
-                var commentParent = commentsInDb[rand.Next(commentsInDb.Count)];
-                var commentChild = fk.Generate();
-                commentChild.AuthorId = members[rand.Next(members.Count)].Id;
-                commentChild.PostId = commentParent.PostId;
-                commentChild.CommentParentId = commentParent.Id;
-                comments.Add(commentChild);
-            }
-            _context.Comments.AddRange(comments);            
-            await _repository.SaveChanges();
+            //for (int i = 0; i < 30; i++)
+            //{
+            //    var commentParent = commentsInDb[rand.Next(commentsInDb.Count)];
+            //    var commentChild = fk.Generate();
+            //    commentChild.AuthorId = members[rand.Next(members.Count)].Id;
+            //    commentChild.PostId = commentParent.PostId;
+            //    commentChild.CommentParentId = commentParent.Id;
+            //    comments.Add(commentChild);
+            //}
+            //_context.Comments.AddRange(comments);
+            //await _repository.SaveChanges();
         }
 
         private async Task SeedPostAndCategoryAsync()
