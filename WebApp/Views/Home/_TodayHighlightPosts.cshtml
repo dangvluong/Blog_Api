@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Post>
+<h3 class="section-title-left">
+    Today Highlights
+</h3>
+<div class="row">
+    @foreach (Post post in Model)
+    {
+        <div class="col-lg-6 col-md-6">
+            <div class="list-view list-view1">
+                <div class="grids5-info mb-5">
+                    <a href="https://wp.w3layouts.com/designblog/2021/05/31/curated-collection-post-8-examples-of-evolution-in-action/"
+                       class="d-block zoom">
+
+                        <div class="post-thumbnail">
+                            <img width="340" height="284"
+                                 src="./Design Blog – Blogging Category WordPress Theme – Just another W3Layouts free WordPress Demo Sites site_files/8.jpg"
+                                 class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" loading="lazy"
+                                 srcset="https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/8.jpg 340w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/8-300x251.jpg 300w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/8-287x240.jpg 287w"
+                                 sizes="(max-width: 340px) 100vw, 340px">
+                        </div><!-- .post-thumbnail -->
+
+                    </a>
+                    <div class="blog-info align-self">
+                        <a href="https://wp.w3layouts.com/designblog/2021/05/31/curated-collection-post-8-examples-of-evolution-in-action/"
+                           class="blog-desc1">
+                            @post.Title
+                        </a>
+
+                        <div class="author align-items-center mt-3 mb-1">
+                            <a class="url fn n" href="#">@post.Author.Username</a>
+
+                            in <a href="#" rel="category tag">@post.Category.Name</a>
+                        </div>
+
+                        <ul class="blog-meta">
+                            <li class="meta-item blog-lesson">
+                                <span class="meta-value"> @post.DateCreated.ToShortDateString() </span>
+                            </li>
+                            <li class="meta-item blog-students">
+                                <span class="meta-value"> @post.DateCreated.ToShortTimeString() </span>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

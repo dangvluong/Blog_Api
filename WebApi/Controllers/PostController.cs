@@ -29,9 +29,9 @@ namespace WebApi.Controllers
 
         // GET: api/Post/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Post>> GetPost(int id)
+        public async Task<ActionResult<Post>> GetPost(int id,[FromQuery] bool countView = false)
         {
-            Post post = await _repository.Post.GetPost(id);
+            Post post = await _repository.Post.GetPost(id, countView);
             if (post == null)
                 return NotFound();
             return Ok(post); 
@@ -85,5 +85,27 @@ namespace WebApi.Controllers
                 return NotFound();
             return Ok(posts);
         }      
+        [HttpGet("gettrendingpost")]
+        public async Task<IEnumerable<PostDto>> GetTrendingPost()
+        {
+            return await _repository.Post.GetTrendingPost();
+        }
+        [HttpGet("getmostrecentposts")]
+        public async Task<IEnumerable<PostDto>> GetMostRecentPosts()
+        {
+            return await _repository.Post.GetMostRecentPosts();
+        }
+
+        [HttpGet("gettodayhighlightposts")]
+        public async Task<IEnumerable<PostDto>> GetTodayHighlightPosts()
+        {
+            return await _repository.Post.GetTodayHighlightPosts();
+        }
+        [HttpGet("getfeaturedposts")]
+        public async Task<IEnumerable<PostDto>> GetFeaturedPosts()
+        {
+            return await _repository.Post.GetFeaturedPosts();
+        }
+
     }
 }

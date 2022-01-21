@@ -15,9 +15,12 @@ namespace WebApp.Repositories
             return await Get<ListPostDto>($"/api/post?page={page}");
         }
 
-        public async Task<Post> GetPostById(int id)
+        public async Task<Post> GetPostById(int id, bool countView = false)
         {
-            return await Get<Post>($"/api/post/{id}");
+            string countViewParam = string.Empty;
+            if (countView)
+                countViewParam = "?countView=true";
+            return await Get<Post>($"/api/post/{id}{countViewParam}");
         }
 
         public async Task<int> Create(Post post, string token)
@@ -35,6 +38,26 @@ namespace WebApp.Repositories
         public async Task<IEnumerable<Post>> GetPostsByMember(int id)
         {
             return await Get<IEnumerable<Post>>($"/api/post/getpostsbymember/{id}");            
+        }
+
+        public async Task<IEnumerable<Post>> GetTrendingPost()
+        {
+            return await Get<IEnumerable<Post>>("/api/post/gettrendingpost");
+        }
+
+        public async Task<IEnumerable<Post>> GetMostRecentPosts()
+        {
+            return await Get<IEnumerable<Post>>("/api/post/getmostrecentposts");
+        }
+
+        public async Task<IEnumerable<Post>> GetTodayHighlightPosts()
+        {
+            return await Get<IEnumerable<Post>>("/api/post/gettodayhighlightposts");
+        }
+
+        public async Task<List<Post>> GetFeaturedPosts()
+        {
+            return await Get<List<Post>>("/api/post/getfeaturedposts");
         }
     }
 }

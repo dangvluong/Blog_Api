@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Post>
+
+<h3 class="section-title-left">
+    Most Recent Posts
+</h3>
+
+@foreach (Post post in Model)
+{
+    <div class="list-view ">
+        <div class="grids5-info img-block-mobile mb-5">
+            <div class="blog-info align-self">
+
+                <span class="category">
+                    <a href="https://wp.w3layouts.com/designblog/category/lifestyle/"
+                       rel="category tag">@post.Category.Name</a>
+                </span>
+
+                <a href="https://wp.w3layouts.com/designblog/2021/05/31/here-are-a-few-tips-that-will-help-you-to-get-started-about-lifestyle/"
+                   class="blog-desc mt-0">
+                    @post.Title
+                </a>
+
+                <div class="author align-items-center mt-3 mb-1">
+                    <a class="url fn n" href="#">@post.Author.Username</a>
+
+                    in <a href="#" rel="category tag">@post.Category.Name</a>
+
+                </div>
+
+                <ul class="blog-meta">
+                    <li class="meta-item blog-lesson">
+                        <span class="meta-value"> @post.DateCreated.ToShortDateString() </span>
+                    </li>
+                    <li class="meta-item blog-students">
+                        <span class="meta-value"> @post.DateCreated.ToShortTimeString()</span>
+                    </li>
+                </ul>
+
+            </div>
+            <a href="https://wp.w3layouts.com/designblog/2021/05/31/here-are-a-few-tips-that-will-help-you-to-get-started-about-lifestyle/"
+               class="d-block zoom mt-md-0 mt-3">
+
+                <div class="post-thumbnail">
+                    <img width="560" height="370"
+                         src="./Design Blog – Blogging Category WordPress Theme – Just another W3Layouts free WordPress Demo Sites site_files/p2.jpg"
+                         class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" loading="lazy"
+                         srcset="https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/p2.jpg 560w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/p2-300x198.jpg 300w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/p2-360x238.jpg 360w"
+                         sizes="(max-width: 560px) 100vw, 560px">
+                </div>
+            </a>
+        </div>
+    </div>
+}

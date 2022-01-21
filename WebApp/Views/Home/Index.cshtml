@@ -1,5 +1,36 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model HomeIndexViewModel
+<div class="w3l-homeblock1 pt-5">
+    <div class="container pt-lg-5 pt-md-4 HomePageFeaturedPosts">
+        <!-- block -->
+
+        <div class="BlogHomeLayout">
+            <partial name="_FeaturedPosts" model="@Model.FeaturedPosts" />            
+
+        </div>
+    </div>
+
+    <div class="w3l-homeblock2 w3l-homeblock6 pt-5">
+        <div class="container py-lg-5 py-md-4 HomePageHighlights">
+            <!-- block -->
+            <partial name="_TodayHighlightPosts" model="@Model.TodayHighlightPosts" />              
+        </div>
+
+        <!-- HomePage Today Highlights Section -->
+        <!-- HomePage Most Recent Section -->
+
+        <div class="container">
+            <div class="row HomePageRecent">
+                <div class="col-lg-9 most-recent">
+                    <partial name="_MostRecentPosts" model="@Model.MostRecentPosts" />
+                </div>
+                <div id="recent-posts-widget-with-thumbnails-5"
+                     class="widget col-lg-3 col-md-12 col-sm-12 recent-posts-widget-with-thumbnails">
+                    @await Component.InvokeAsync("TrendingSideBar") 
+                    <!-- .rpwwt-widget -->
+                </div>
+            </div>
+        </div>
+        <!-- HomePage Most Recent Section -->
+       
+    </div>
+</div>

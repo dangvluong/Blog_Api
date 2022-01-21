@@ -1,0 +1,19 @@
+﻿@model IEnumerable<Post>
+<div id="rpwwt-recent-posts-widget-with-thumbnails-5" class="rpwwt-widget">
+    <h2 class="widget-title">Trending</h2>
+    <ul>
+        @foreach (Post post in Model)
+        {
+            <li>
+                <a asp-action="Detail" asp-controller="Post" asp-route-id="@post.Id">
+                    <span class="rpwwt-post-title">@post.Title</span>
+                </a>
+                <div class="rpwwt-post-author">By @post.AuthorId</div>
+                <div class="rpwwt-post-categories">
+                    In <a href="#">@post.Category.Name</a>
+                </div>
+                <div class="rpwwt-post-date">@post.DateCreated.ToShortDateString()</div>
+            </li>
+        }       
+    </ul>
+</div>

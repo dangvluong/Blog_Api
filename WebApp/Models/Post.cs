@@ -23,6 +23,8 @@ namespace WebApp.Models
         public int CategoryId { get; set; }        
         public Category Category { get; set; }
         public int? AuthorId { get; set; }
+        public Member Author { get; set; }
         public List<Comment> Comments { get; set; }
+        public int CountView { get; set; }
     }
 }

@@ -58,6 +58,7 @@ builder.Services.AddDbContext<AppDbContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("blog"));
 });
 builder.Services.AddScoped<IRepositoryManager,RepositoryManager>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -70,7 +71,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
