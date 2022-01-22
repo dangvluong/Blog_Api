@@ -21,15 +21,15 @@ namespace WebApi.Repositories
             Delete(comment);
         }
        
-        public async Task<Comment> GetComment(int id)
+        public async Task<Comment> GetComment(int id, bool trackChanges)
         {
             //return await _context.Comments.FindAsync(id);
-            return await FindByCondition(comment => comment.Id == id, false).SingleOrDefaultAsync();
+            return await FindByCondition(comment => comment.Id == id, trackChanges).SingleOrDefaultAsync();
         }
-        public async Task<IEnumerable<CommentDto>> GetCommentsByPost(int postId)
+        public async Task<IEnumerable<CommentDto>> GetCommentsByPost(int postId, bool trackChanges)
         {
             //return await _context.Comments.Where(c => c.PostId == postId).ToListAsync();
-            return await FindByCondition(comment => comment.PostId == postId, trackChanges: false).Include(comment => comment.Author).Select(comment => new CommentDto
+            return await FindByCondition(comment => comment.PostId == postId, trackChanges).Include(comment => comment.Author).Select(comment => new CommentDto
             {
                 Id= comment.Id,
                 Content= comment.Content,

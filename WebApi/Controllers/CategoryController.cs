@@ -14,16 +14,19 @@ namespace WebApi.Controllers
 
         // GET: api/Category
         [HttpGet]
-        public async Task<IEnumerable<Category>> GetCategories()
-        {
-            return await _repository.Category.GetCategories();
+        public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
+        {             
+            IEnumerable<Category> categories = await _repository.Category.GetCategories(trackChanges: false);
+            if (categories == null)
+                return NotFound();
+            return Ok(categories);
         }
 
         // GET: api/Category/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
-            Category category  = await _repository.Category.GetCategory(id);
+            Category category  = await _repository.Category.GetCategory(id, trackChanges: false);
             if(category == null)
                 return NotFound();
             return Ok(category);
@@ -58,7 +61,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            var category = await _repository.Category.GetCategory(id);
+            var category = await _repository.Category.GetCategory(id, trackChanges: true);
             if (category == null)
             {
                 return NotFound();

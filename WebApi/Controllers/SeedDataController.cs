@@ -42,8 +42,7 @@ namespace WebApi.Controllers
             //});
             _context.Roles.AddRange(roles);
             
-            await _repository.SaveChanges();
-            var roles1 = _repository.Role.GetRoles();
+            await _repository.SaveChanges();            
             //seed member
             var members = new Member[]
             {
@@ -112,8 +111,8 @@ namespace WebApi.Controllers
             var fk = new Faker<Comment>();
             fk.RuleFor(p => p.Content, f => $"Comment " + f.Lorem.Sentences(5));
             fk.RuleFor(p => p.DateCreate, f => f.Date.Between(new DateTime(2019, 12, 31), new DateTime(2021, 12, 31)));
-            var members = (await _repository.Member.GetMembers()).ToList();
-            var posts = (await _repository.Post.GetPosts(1)).ToList();
+            var members = (await _repository.Member.GetMembers(trackChanges:true)).ToList();
+            var posts = (await _repository.Post.GetPosts(1,50,trackChanges:true)).ToList();
             var rand = new Random();
             var comments = new List<Comment>();
             for (int i = 0; i < 30; i++)

@@ -9,28 +9,20 @@ namespace WebApi.Repositories
         public CategoryRepository(AppDbContext context) : base(context)
         {
         }
-        public async Task<IEnumerable<Category>> GetCategories()
+        public async Task<IEnumerable<Category>> GetCategories(bool trackChanges)
         {
-            return await FindAll(false).ToListAsync();
+            return await FindAll(trackChanges).ToListAsync();
         }
-        public async Task<Category> GetCategory(int id)
+
+        public async Task<Category> GetCategory(int id, bool trackChanges)
         {
-            return await FindByCondition(category => category.Id == id,trackChanges: false).SingleOrDefaultAsync();
+            return await FindByCondition(category => category.Id == id, trackChanges).SingleOrDefaultAsync();
         }
-        //public void Update(Category category)
-        //{
-        //    base.Update(category);
-        //}
-        //public void Add(Category category)
-        //{
-        //    _context.Categories.Add(category);
-        //}
-        #region only for seed data
+
         public void AddRange(Category[] categories)
         {
             _context.Categories.AddRange(categories);
         }
-        #endregion
 
         public void AddCategory(Category category)
         {
@@ -47,6 +39,6 @@ namespace WebApi.Repositories
             //Delete(new Category { Id = categoryId });
             category.IsDeleted = true;
         }
-       
+
     }
 }

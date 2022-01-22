@@ -48,7 +48,7 @@ namespace WebApi.Controllers
             //Member member = await _repository.Member.Login(loginModel);
             Member member = await _repository.Member.GetMemberByCondition(member =>
                 member.Username == loginModel.Username && member.Password == SiteHelper.HashPassword(loginModel.Password)
-            , trackChanges: false).FirstOrDefaultAsync();
+            , trackChanges: false);
             if (member != null)
             {
                 string token = SiteHelper.CreateToken(member, _configuration.GetSection("secretkey").ToString());
@@ -77,7 +77,7 @@ namespace WebApi.Controllers
             var memberId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             Member member = await _repository.Member.GetMemberByCondition(member =>
                    member.Id == memberId, trackChanges: true
-               ).FirstOrDefaultAsync();
+               );
             if (member == null)
                 return BadRequest();
             if (!member.Password.SequenceEqual(SiteHelper.HashPassword(obj.OldPassword)))

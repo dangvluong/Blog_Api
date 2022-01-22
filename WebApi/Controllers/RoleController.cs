@@ -14,16 +14,19 @@ namespace WebApi.Controllers
 
         // GET: api/Role
         [HttpGet]
-        public async Task<IEnumerable<Role>> GetRole()
+        public async Task<ActionResult<IEnumerable<Role>>> GetRole()
         {
-            return await _repository.Role.GetRoles();
+            IEnumerable<Role> roles = await _repository.Role.GetRoles(trackChanges: false);
+            if(roles == null)
+                return NotFound();
+            return Ok(roles);
         }
 
         // GET: api/Role/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Role>> GetRole(int id)
         {
-            Role role = await _repository.Role.GetRole(id);
+            Role role = await _repository.Role.GetRole(id,trackChanges: false);
             if (role == null)
                 return NotFound();
             return Ok(role);
@@ -38,27 +41,27 @@ namespace WebApi.Controllers
                 return BadRequest();
             _repository.Role.UpdateRole(role);           
             await _repository.SaveChanges();
-            return Ok();
+            return NoContent();
         }
 
         // POST: api/Role
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Role>> PostRole(Role role)
+        public async Task<IActionResult> PostRole(Role role)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
             _repository.Role.AddRole(role);
             await _repository.SaveChanges();
 
-            return CreatedAtAction("GetRole", new { id = role.Id }, role);
+            return NoContent();
         }
 
         // DELETE: api/Role/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRole(int id)
         {
-            var role = await _repository.Role.GetRole(id);
+            var role = await _repository.Role.GetRole(id,trackChanges:true);
             if (role == null)
             {
                 return NotFound();

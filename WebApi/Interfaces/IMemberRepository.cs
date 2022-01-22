@@ -3,11 +3,11 @@ using WebApi.Models;
 
 namespace WebApi.Interfaces
 {
-    public interface IMemberRepository 
+    public interface IMemberRepository
     {
-        Task<IEnumerable<Member>> GetMembers();
+        Task<IEnumerable<Member>> GetMembers(bool trackChanges);
         void AddMember(Member member);
         //Task<Member> GetMember(int id);
-        IQueryable<Member> GetMemberByCondition(Expression<Func<Member, bool>> expression, bool trackChanges);
+        Task<Member> GetMemberByCondition(Expression<Func<Member, bool>> condition, bool trackChanges);
     }
 }

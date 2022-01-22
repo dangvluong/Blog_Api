@@ -9,14 +9,14 @@ namespace WebApi.Repositories
         public RoleRepository(AppDbContext context) : base(context)
         {
         }
-        public async Task<IEnumerable<Role>> GetRoles()
+        public async Task<IEnumerable<Role>> GetRoles(bool trackChanges)
         {
-            return await FindAll(trackChanges: false).ToListAsync();
+            return await FindAll(trackChanges).ToListAsync();
         }
-        public async Task<Role> GetRole(int id)
+        public async Task<Role> GetRole(int id, bool trackChanges)
         {
             //return await _context.Roles.FindAsync(id);
-            return await FindByCondition(role => role.Id == id, false).FirstOrDefaultAsync();
+            return await FindByCondition(role => role.Id == id, trackChanges).FirstOrDefaultAsync();
         }
 
         public async Task<Role> GetRoleByName(string roleName, bool trackChanges)

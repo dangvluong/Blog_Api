@@ -25,7 +25,7 @@ namespace WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Comment>> GetComment(int id)
         {
-            Comment comment = await _repository.Comment.GetComment(id);
+            Comment comment = await _repository.Comment.GetComment(id,trackChanges: false);
             if (comment == null)
                 return NotFound();
             return Ok(comment);
@@ -36,7 +36,7 @@ namespace WebApi.Controllers
         [Route("GetCommentsByPost/{id}")]
         public async Task<ActionResult<IEnumerable<CommentDto>>> GetCommentsByPost(int id)
         {
-            IEnumerable<CommentDto> comments = await _repository.Comment.GetCommentsByPost(id);
+            IEnumerable<CommentDto> comments = await _repository.Comment.GetCommentsByPost(id,trackChanges:false);
             if (comments == null)
                 return NotFound();
             return Ok(comments);
@@ -68,7 +68,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteComment(int id)
         {
-            var comment = await _repository.Comment.GetComment(id);
+            var comment = await _repository.Comment.GetComment(id,trackChanges:false);
             if (comment == null)
             {
                 return NotFound();

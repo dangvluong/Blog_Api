@@ -4,8 +4,8 @@ namespace WebApi.Interfaces
 {
     public interface IRoleRepository
     {
-        Task<Role> GetRole(int id);
-        Task<IEnumerable<Role>> GetRoles();   
+        Task<Role> GetRole(int id, bool trackChanges);
+        Task<IEnumerable<Role>> GetRoles(bool trackChanges);   
         void AddRole(Role role);
         void UpdateRole(Role role);
         void DeleteRole(Role role);

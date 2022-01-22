@@ -21,9 +21,12 @@ namespace WebApi.Controllers
            
         }
         [HttpGet]
-        public async Task<IEnumerable<Member>> GetMembers()
+        public async Task<ActionResult<IEnumerable<Member>>> GetMembers()
         {
-            return await _repository.Member.GetMembers();            
+            IEnumerable<Member> members = await _repository.Member.GetMembers(trackChanges:false);
+            if (members == null)
+                return NotFound();
+            return Ok(members);
         }
        
         [HttpGet("{id}")]
@@ -33,7 +36,7 @@ namespace WebApi.Controllers
             //Will implement only members can get data about them, or admins can view data of all members.
 
             //
-            return await _repository.Member.GetMemberByCondition(member=> member.Id == id,trackChanges:false).FirstOrDefaultAsync();
+            return await _repository.Member.GetMemberByCondition(member=> member.Id == id,trackChanges:false);
         }
         
        

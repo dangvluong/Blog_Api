@@ -14,32 +14,22 @@ namespace WebApi.Repositories
         {
             _context.Members.Add(member);
         }      
-        public async Task<IEnumerable<Member>> GetMembers()
+        public async Task<IEnumerable<Member>> GetMembers(bool trackChanges)
         {
             //return await _context.Members.Include(p => p.Roles).ToListAsync();
-            return await FindAll(false).Include(member => member.Roles).ToListAsync();
+            return await FindAll(trackChanges).Include(member => member.Roles).ToListAsync();
         }
-        //public async Task<Member> Login(LoginModel loginModel)
-        //{
-        //    return await _context.Members.Include(usr => usr.Roles).Where(user =>
-        //       user.Username == loginModel.Username &&
-        //       user.Password == SiteHelper.HashPassword(loginModel.Password)
-        //     ).FirstOrDefaultAsync();
-        //}
-        public IQueryable<Member> GetMemberByCondition(Expression<Func<Member, bool>> expression, bool trackChanges)
+        
+        public async Task<Member> GetMemberByCondition(Expression<Func<Member, bool>> condition, bool trackChanges)
         {
             //return await _context.Members.FirstOrDefaultAsync(p => p.Id == id);
-            return FindByCondition(expression, trackChanges);
+            return await FindByCondition(condition, trackChanges).FirstOrDefaultAsync();
         }
-        //public async Task<bool> CheckCurrentPasswordValid(int memberId, string password)
-        //{
-        //    return  await _context.Members.AnyAsync(m => m.Id == memberId && m.Password == SiteHelper.HashPassword(password));
-        //}
-        #region only for seed data
+        
         public void AddRange(Member[] member)
         {
             _context.Members.AddRange(member);
         }
-        #endregion
+        
     }
 }
