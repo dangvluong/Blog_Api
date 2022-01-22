@@ -5,6 +5,8 @@ using WebApi.Helper;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using WebApi.DataTransferObject;
+using AutoMapper;
 
 namespace WebApi.Controllers
 {
@@ -13,7 +15,7 @@ namespace WebApi.Controllers
     public class AuthController : BaseController
     {
         private readonly IConfiguration _configuration;
-        public AuthController(IRepositoryManager repository, IConfiguration configuration) : base(repository)
+        public AuthController(IRepositoryManager repository,IMapper mapper, IConfiguration configuration) : base(repository,mapper)
         {
             _configuration = configuration;
         }
@@ -41,7 +43,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<object> Login(LoginModel loginModel)
+        public async Task<ActionResult<MemberDto>> Login(LoginModel loginModel)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
@@ -50,22 +52,12 @@ namespace WebApi.Controllers
                 member.Username == loginModel.Username && member.Password == SiteHelper.HashPassword(loginModel.Password)
             , trackChanges: false);
             if (member != null)
-            {
-                string token = SiteHelper.CreateToken(member, _configuration.GetSection("secretkey").ToString());
-                return new
-                {
-                    Id = member.Id,
-                    Username = member.Username,
-                    FullName = member.FullName,
-                    Gender = member.Gender,
-                    Email = member.Email,
-                    DateOfBirth = member.DateOfBirth,
-                    DateCreate = member.DateCreate,
-                    Roles = member.Roles,
-                    Token = token
-                };
+            {                
+                MemberDto memberDto = _mapper.Map<MemberDto>(member);
+                memberDto.Token = SiteHelper.CreateToken(member, _configuration.GetSection("secretkey").ToString());
+                return Ok(memberDto);
             }
-            return null;
+            return BadRequest();
         }
        
         [HttpPost("changepassword")]
@@ -87,7 +79,7 @@ namespace WebApi.Controllers
             }                
             member.Password = SiteHelper.HashPassword(obj.NewPassword);
             await _repository.SaveChanges();
-            return Ok();
+            return NoContent();
         }
     }
 

@@ -58,6 +58,7 @@ builder.Services.AddDbContext<AppDbContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("blog"));
 });
 builder.Services.AddScoped<IRepositoryManager,RepositoryManager>();
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 

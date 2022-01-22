@@ -1,12 +1,12 @@
-﻿namespace WebApi.Dto
+﻿using WebApi.Models;
+
+namespace WebApi.DataTransferObject
 {
     public class CommentDto
-    {
+    {        
         public int Id { get; set; }       
         public string Content { get; set; }
-        public int AuthorId { get; set; }     
-        public string AuthorName { get; set; }
-        public int PostId { get; set; }       
+        public MemberDto Author { get; set; }
         public DateTime DateCreate { get; set; }
     }
 }

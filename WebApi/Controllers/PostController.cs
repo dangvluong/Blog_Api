@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using WebApi.DataTransferObject;
 using WebApi.Interfaces;
 using WebApi.Models;
@@ -9,34 +10,37 @@ namespace WebApi.Controllers
     [ApiController]
     public class PostController : BaseController
     {
-        private readonly int pageSize = 12;
-        public PostController(IRepositoryManager repository) : base(repository)
+        private readonly int pageSize = 12;        
+        public PostController(IRepositoryManager repository, IMapper mapper) : base(repository,mapper)
         {
-
+            
         }
 
         // GET: api/Post
         [HttpGet]
-        public async Task<ListPostDto> GetPosts([FromQuery] int page = 1)
+        public async Task<ActionResult<ListPostDto>> GetPosts([FromQuery] int page = 1)
         {
+            var posts = await _repository.Post.GetPosts(page, pageSize, trackChanges: false);
+            if (posts == null)
+                return NotFound();
             ListPostDto listPost = new ListPostDto
             {
-                Posts = await _repository.Post.GetPosts(page, pageSize, trackChanges: false),
+                Posts = MapPosts(posts),
                 TotalPage = await _repository.Post.CountTotalPage(pageSize)
             };
-
-            return listPost;
+            return Ok(listPost);
         }
 
         // GET: api/Post/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Post>> GetPost(int id, [FromQuery] bool countView = false)
+        public async Task<ActionResult<PostDto>> GetPost(int id, [FromQuery] bool countView = false)
         {
             bool trackChanges = countView ? true : false;
             Post post = await _repository.Post.GetPost(id, trackChanges, countView);
             if (post == null)
                 return NotFound();
-            return Ok(post);
+            PostDto postDto = _mapper.Map<PostDto>(post);
+            return Ok(postDto);
         }
 
         // PUT: api/Post/5
@@ -80,12 +84,12 @@ namespace WebApi.Controllers
             return NoContent();
         }
         [HttpGet("getpostsbymember/{id}")]
-        public async Task<ActionResult<IEnumerable<Post>>> GetPostsByMember(int id)
+        public async Task<ActionResult<IEnumerable<PostDto>>> GetPostsByMember(int id)
         {
             IEnumerable<Post> posts = await _repository.Post.GetPostsByMember(id, trackChanges: false);
             if (posts == null)
                 return NotFound();
-            return Ok(posts);
+            return Ok(MapPosts(posts));
         }
         [HttpGet("gettrendingpost")]
         public async Task<ActionResult<IEnumerable<PostDto>>> GetTrendingPost()
@@ -93,83 +97,16 @@ namespace WebApi.Controllers
             var posts = await _repository.Post.GetTrendingPost();
             if (posts == null)
                 return NotFound();
-
-            List<PostDto> postDto = new List<PostDto>();
-            foreach (var post in posts)
-            {
-                postDto.Add(new PostDto
-                {
-                    Id = post.Id,
-                    Title = post.Title,
-                    Description = post.Description,
-                    Content = post.Content,
-                    DateCreated = post.DateCreated,
-                    DateModifier = post.DateModifier,
-                    IsActive = post.IsActive,
-                    IsDeleted = post.IsDeleted,
-                    CategoryId = post.CategoryId,
-                    Category = post.Category,
-                    AuthorId = post.AuthorId,
-                    Author = new MemberDto
-                    {
-                        Id = post.Author.Id,
-                        Username = post.Author.Username,
-                        Gender = post.Author.Gender,
-                        FullName = post.Author.FullName,
-                        Email = post.Author.Email,
-                        DateCreate = post.Author.DateCreate,
-                        DateOfBirth = post.Author.DateOfBirth,
-                        IsActive = post.Author.IsActive,
-                        IsBanned = post.Author.IsBanned
-                    },
-                    Comments = post.Comments,
-                    CountView = post.CountView
-                });
-            }
-            return Ok(postDto);
-
-
+            return Ok(MapPosts(posts));
         }
+
         [HttpGet("getmostrecentposts")]
         public async Task<ActionResult<IEnumerable<PostDto>>> GetMostRecentPosts()
         {
             var posts = await _repository.Post.GetMostRecentPosts();
             if (posts == null)
-                return NotFound();
-
-            List<PostDto> postDto = new List<PostDto>();
-            foreach (var post in posts)
-            {
-                postDto.Add(new PostDto
-                {
-                    Id = post.Id,
-                    Title = post.Title,
-                    Description = post.Description,
-                    Content = post.Content,
-                    DateCreated = post.DateCreated,
-                    DateModifier = post.DateModifier,
-                    IsActive = post.IsActive,
-                    IsDeleted = post.IsDeleted,
-                    CategoryId = post.CategoryId,
-                    Category = post.Category,
-                    AuthorId = post.AuthorId,
-                    Author = new MemberDto
-                    {
-                        Id = post.Author.Id,
-                        Username = post.Author.Username,
-                        Gender = post.Author.Gender,
-                        FullName = post.Author.FullName,
-                        Email = post.Author.Email,
-                        DateCreate = post.Author.DateCreate,
-                        DateOfBirth = post.Author.DateOfBirth,
-                        IsActive = post.Author.IsActive,
-                        IsBanned = post.Author.IsBanned
-                    },
-                    Comments = post.Comments,
-                    CountView = post.CountView
-                });
-            }
-            return Ok(postDto);
+                return NotFound();            
+            return Ok(MapPosts(posts));
         }
 
         [HttpGet("gettodayhighlightposts")]
@@ -178,82 +115,25 @@ namespace WebApi.Controllers
             var posts = await _repository.Post.GetTodayHighlightPosts();
             if (posts == null)
                 return NotFound();
-
-            List<PostDto> postDto = new List<PostDto>();
-            foreach (var post in posts)
-            {
-                postDto.Add(new PostDto
-                {
-                    Id = post.Id,
-                    Title = post.Title,
-                    Description = post.Description,
-                    Content = post.Content,
-                    DateCreated = post.DateCreated,
-                    DateModifier = post.DateModifier,
-                    IsActive = post.IsActive,
-                    IsDeleted = post.IsDeleted,
-                    CategoryId = post.CategoryId,
-                    Category = post.Category,
-                    AuthorId = post.AuthorId,
-                    Author = new MemberDto
-                    {
-                        Id = post.Author.Id,
-                        Username = post.Author.Username,
-                        Gender = post.Author.Gender,
-                        FullName = post.Author.FullName,
-                        Email = post.Author.Email,
-                        DateCreate = post.Author.DateCreate,
-                        DateOfBirth = post.Author.DateOfBirth,
-                        IsActive = post.Author.IsActive,
-                        IsBanned = post.Author.IsBanned
-                    },
-                    Comments = post.Comments,
-                    CountView = post.CountView
-                });
-            }
-            return Ok(postDto);
+            
+            return Ok(MapPosts(posts));
         }
         [HttpGet("getfeaturedposts")]
         public async Task<ActionResult<IEnumerable<PostDto>>> GetFeaturedPosts()
         {
             var posts = await _repository.Post.GetFeaturedPosts();
             if (posts == null)
-                return NotFound();
-
-            List<PostDto> postDto = new List<PostDto>();
+                return NotFound();            
+            return Ok(MapPosts(posts));
+        }
+        private List<PostDto> MapPosts(IEnumerable<Post> posts)
+        {
+            List<PostDto> postDtos = new List<PostDto>();
             foreach (var post in posts)
             {
-                postDto.Add(new PostDto
-                {
-                    Id = post.Id,
-                    Title = post.Title,
-                    Description = post.Description,
-                    Content = post.Content,
-                    DateCreated = post.DateCreated,
-                    DateModifier = post.DateModifier,
-                    IsActive = post.IsActive,
-                    IsDeleted = post.IsDeleted,
-                    CategoryId = post.CategoryId,
-                    Category = post.Category,
-                    AuthorId = post.AuthorId,
-                    Author = new MemberDto
-                    {
-                        Id = post.Author.Id,
-                        Username = post.Author.Username,
-                        Gender = post.Author.Gender,
-                        FullName = post.Author.FullName,
-                        Email = post.Author.Email,
-                        DateCreate = post.Author.DateCreate,
-                        DateOfBirth = post.Author.DateOfBirth,
-                        IsActive = post.Author.IsActive,
-                        IsBanned = post.Author.IsBanned
-                    },
-                    Comments = post.Comments,
-                    CountView = post.CountView
-                });
+                postDtos.Add(_mapper.Map<PostDto>(post));
             }
-            return Ok(postDto);
+            return postDtos;
         }
-
     }
 }

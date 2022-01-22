@@ -4,7 +4,6 @@ namespace WebApi.DataTransferObject
 {
     public class MemberDto
     {
-
         public int Id { get; set; }
         public string Username { get; set; }
         public bool Gender { get; set; }
@@ -14,6 +13,6 @@ namespace WebApi.DataTransferObject
         public DateTime DateOfBirth { get; set; }
         public bool IsActive { get; set; } = false;
         public bool IsBanned { get; set; } = false;
-
+        public string Token { get; set; }
     }
 }

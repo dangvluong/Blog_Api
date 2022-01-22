@@ -8,7 +8,7 @@
                 <a asp-action="Detail" asp-controller="Post" asp-route-id="@post.Id">
                     <span class="rpwwt-post-title">@post.Title</span>
                 </a>
-                <div class="rpwwt-post-author">By @post.AuthorId</div>
+                <div class="rpwwt-post-author">By @post.Author.Username</div>
                 <div class="rpwwt-post-categories">
                     In <a href="#">@post.Category.Name</a>
                 </div>

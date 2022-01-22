@@ -12,7 +12,7 @@ namespace WebApi.Repositories
         }
         public async Task<IEnumerable<Post>> GetPosts(int page,int pageSize, bool trackChanges)
         {
-            return await FindAll(trackChanges).OrderBy(p => p.Id).Skip(pageSize * (page - 1)).Take(pageSize).ToListAsync();
+            return await FindAll(trackChanges).Include(p => p.Author).Include(p => p.Category).OrderBy(p => p.Id).Skip(pageSize * (page - 1)).Take(pageSize).ToListAsync();
         }
         public async Task<int> CountTotalPage(int pageSize,bool trackChanges = false)
         {
@@ -21,7 +21,7 @@ namespace WebApi.Repositories
         public async Task<Post> GetPost(int id, bool trackChanges, bool countView = false)
         {
             //if countView == true, enable trackChange, otherwise keep disable
-            Post post = await FindByCondition(p => p.Id == id, trackChanges).FirstOrDefaultAsync();
+            Post post = await FindByCondition(p => p.Id == id, trackChanges).Include(p => p.Author).Include(p => p.Category).FirstOrDefaultAsync();
             if (countView && trackChanges)
             {
                 post.CountView++;
@@ -42,7 +42,7 @@ namespace WebApi.Repositories
         public async Task<IEnumerable<Post>> GetPostsByMember(int memberId, bool trackChanges)
         {
             //return await _context.Posts.Where(p => p.AuthorId == memberId && p.IsDeleted == false).OrderByDescending(p => p.DateCreated).ToListAsync();
-            return await FindByCondition(post => post.AuthorId == memberId && post.IsDeleted == false,trackChanges)
+            return await FindByCondition(post => post.AuthorId == memberId && post.IsDeleted == false,trackChanges).Include(p => p.Author).Include(p => p.Category)
                 .OrderByDescending(post => post.DateCreated)
                 .ToListAsync();
         }

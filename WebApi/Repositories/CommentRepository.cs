@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebApi.Dto;
 using WebApi.Interfaces;
 using WebApi.Models;
 
@@ -26,18 +25,10 @@ namespace WebApi.Repositories
             //return await _context.Comments.FindAsync(id);
             return await FindByCondition(comment => comment.Id == id, trackChanges).SingleOrDefaultAsync();
         }
-        public async Task<IEnumerable<CommentDto>> GetCommentsByPost(int postId, bool trackChanges)
+        public async Task<IEnumerable<Comment>> GetCommentsByPost(int postId, bool trackChanges)
         {
             //return await _context.Comments.Where(c => c.PostId == postId).ToListAsync();
-            return await FindByCondition(comment => comment.PostId == postId, trackChanges).Include(comment => comment.Author).Select(comment => new CommentDto
-            {
-                Id= comment.Id,
-                Content= comment.Content,
-                AuthorId = comment.AuthorId,
-                AuthorName = comment.Author.FullName,
-                PostId = comment.PostId,                
-                DateCreate = comment.DateCreate                
-            }).OrderByDescending(c => c.DateCreate).ToListAsync();
+            return await FindByCondition(comment => comment.PostId == postId, trackChanges).Include(comment => comment.Author).OrderByDescending(c => c.DateCreate).ToListAsync();
         }
 
         public void UpdateComment(Comment comment)

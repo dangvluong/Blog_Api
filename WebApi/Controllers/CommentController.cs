@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WebApi.Dto;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using WebApi.DataTransferObject;
 using WebApi.Interfaces;
 using WebApi.Models;
 
@@ -9,18 +10,10 @@ namespace WebApi.Controllers
     [ApiController]
     public class CommentController : BaseController
     {
-        public CommentController(IRepositoryManager repository) : base(repository)
+        public CommentController(IRepositoryManager repository, IMapper mapper) : base(repository,mapper)
         {
         }
-
-
-        // GET: api/Comment
-        //[HttpGet]
-        //public async Task<IEnumerable<Comment>> GetComments()
-        //{
-        //    return await _repository.Comment.GetComments();
-        //}
-
+        
         // GET: api/Comment/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Comment>> GetComment(int id)
@@ -36,10 +29,16 @@ namespace WebApi.Controllers
         [Route("GetCommentsByPost/{id}")]
         public async Task<ActionResult<IEnumerable<CommentDto>>> GetCommentsByPost(int id)
         {
-            IEnumerable<CommentDto> comments = await _repository.Comment.GetCommentsByPost(id,trackChanges:false);
+            IEnumerable<Comment> comments = await _repository.Comment.GetCommentsByPost(id,trackChanges:false);
             if (comments == null)
                 return NotFound();
-            return Ok(comments);
+            List<CommentDto> commentsDtos = new List<CommentDto>();
+            foreach (var comment in comments)
+            {
+                CommentDto commentDto = _mapper.Map<CommentDto>(comment);
+                commentsDtos.Add(commentDto);
+            }
+            return Ok(commentsDtos);
         }
 
         // PUT: api/Comment/5

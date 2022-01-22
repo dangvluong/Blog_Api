@@ -13,13 +13,8 @@ namespace WebApi.DataTransferObject
         public DateTime? DateModifier { get; set; }
         public bool IsActive { get; set; } = false;
         public bool IsDeleted { get; set; } = false;
-        public int CategoryId { get; set; }
-       
-        public Category Category { get; set; }
-        public int AuthorId { get; set; }
-      
-        public MemberDto Author { get; set; }
-        public List<Comment> Comments { get; set; }
+        public Category Category { get; set; }      
+        public MemberDto Author { get; set; }        
         public int CountView { get; set; }
     }
 }
