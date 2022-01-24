@@ -25,7 +25,7 @@ namespace WebApp.Repositories
 
         public async Task<int> Create(Post post, string token)
         {
-            return await Post<Post>("/api/post", post, token);            
+            return await PostJson<Post>("/api/post", post, token);            
         }
         public async Task<int> Edit(Post post, string token)
         {
@@ -35,9 +35,9 @@ namespace WebApp.Repositories
         {
             return await Delete($"/api/post/{id}", token);            
         }
-        public async Task<IEnumerable<Post>> GetPostsByMember(int id)
+        public async Task<List<Post>> GetPostsByMember(int id)
         {
-            return await Get<IEnumerable<Post>>($"/api/post/getpostsbymember/{id}");            
+            return await Get<List<Post>>($"/api/post/getpostsbymember/{id}");            
         }
 
         public async Task<IEnumerable<Post>> GetTrendingPost()

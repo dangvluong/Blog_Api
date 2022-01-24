@@ -19,7 +19,7 @@ namespace WebApp.Repositories
         }
         public async Task<int> Create(Category category, string token)
         {
-            return await Post<Category>("/api/category", category, token);            
+            return await PostJson<Category>("/api/category", category, token);            
         }
         public async Task<int> Edit(Category category, string token)
         {

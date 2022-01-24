@@ -25,5 +25,7 @@ namespace WebApi.Models
         public bool IsActive { get; set; } = false;
         public bool IsBanned { get; set; } = false;
         public List<Role> Roles { get; set; }
+        public string AvatarUrl { get; set; }
+        public string AboutMe { get; set; }
     }
 }

@@ -14,5 +14,7 @@ namespace WebApi.DataTransferObject
         public bool IsActive { get; set; } = false;
         public bool IsBanned { get; set; } = false;
         public string Token { get; set; }
+        public string AvatarUrl { get; set; }
+        public string AboutMe { get; set; }
     }
 }

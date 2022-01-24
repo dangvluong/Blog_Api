@@ -10,5 +10,6 @@ namespace WebApp.Interfaces
         Task<int> PostComment(Comment comment, string token);
         Task<int> EditComment(Comment comment, string token);
         Task<int> DeleteComment(int id, string token);
+        Task<List<Comment>> GetCommentsByMember(int id);
     }
 }

@@ -6,6 +6,7 @@ namespace WebApi.DataTransferObject
     {        
         public int Id { get; set; }       
         public string Content { get; set; }
+        public PostDto Post { get; set; }
         public MemberDto Author { get; set; }
         public DateTime DateCreate { get; set; }
     }

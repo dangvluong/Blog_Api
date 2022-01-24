@@ -107,14 +107,6 @@ namespace WebApp.Controllers
             string token = User.FindFirstValue(ClaimTypes.Authentication);
             await _repository.Post.Delete(id, token);
             return RedirectToAction(nameof(Index));
-        }
-        [Authorize]
-        public async Task<IActionResult> ListPostByMember(int? id = null)
-        {
-            if (id == null)
-                id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var listPost = await _repository.Post.GetPostsByMember(id.Value);
-            return View(listPost);
-        }
+        }       
     }
 }

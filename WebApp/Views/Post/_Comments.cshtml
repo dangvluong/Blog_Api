@@ -1,14 +1,20 @@
-﻿@foreach (var comment in Model)
-{
-    <div class="media">
+﻿@model List<Comment>
+@inject IConfiguration configuration
+@{
+    var hostAddress = configuration.GetSection("ApiServer").Value;
+}
+
+@foreach (var comment in Model)
+{    
+    <div class="media" id="comment_@comment.Id">
         <div class="img-circle">
-            <img src="./post and comments_files/c2.jpg" class="img-fluid" alt="...">
+            <img src="@(hostAddress + "/" + comment.Author.AvatarUrl)" class="@comment.Author.FullName" alt="...">
         </div>
         <div class="media-body">
             <ul class="time-rply mb-2">
                 <li>
                     <a href="#" class="name mt-0 mb-2 d-block">@comment.Author.Username</a>
-                    @comment.DateCreate.ToShortDateString() - @comment.DateCreate.ToShortTimeString()
+                    At @comment.DateCreate.ToShortTimeString() - @comment.DateCreate.ToShortDateString()
 
                 </li>
             </ul>

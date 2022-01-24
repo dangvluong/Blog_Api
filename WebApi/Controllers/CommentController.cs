@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.DataTransferObject;
 using WebApi.Interfaces;
@@ -10,15 +11,15 @@ namespace WebApi.Controllers
     [ApiController]
     public class CommentController : BaseController
     {
-        public CommentController(IRepositoryManager repository, IMapper mapper) : base(repository,mapper)
+        public CommentController(IRepositoryManager repository, IMapper mapper) : base(repository, mapper)
         {
         }
-        
+
         // GET: api/Comment/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Comment>> GetComment(int id)
         {
-            Comment comment = await _repository.Comment.GetComment(id,trackChanges: false);
+            Comment comment = await _repository.Comment.GetCommentById(id, trackChanges: false);
             if (comment == null)
                 return NotFound();
             return Ok(comment);
@@ -29,7 +30,7 @@ namespace WebApi.Controllers
         [Route("GetCommentsByPost/{id}")]
         public async Task<ActionResult<IEnumerable<CommentDto>>> GetCommentsByPost(int id)
         {
-            IEnumerable<Comment> comments = await _repository.Comment.GetCommentsByPost(id,trackChanges:false);
+            IEnumerable<Comment> comments = await _repository.Comment.GetCommentsByPost(id, trackChanges: false);
             if (comments == null)
                 return NotFound();
             List<CommentDto> commentsDtos = new List<CommentDto>();
@@ -43,6 +44,7 @@ namespace WebApi.Controllers
 
         // PUT: api/Comment/5
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateComment(Comment comment)
         {
             if (!ModelState.IsValid)
@@ -54,28 +56,43 @@ namespace WebApi.Controllers
 
         // POST: api/Comment        
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult> PostComment(Comment comment)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-            _repository.Comment.AddComment(comment);            
+            _repository.Comment.AddComment(comment);
             await _repository.SaveChanges();
-            return Ok();            
+            return Ok();
         }
 
         // DELETE: api/Comment/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteComment(int id)
         {
-            var comment = await _repository.Comment.GetComment(id,trackChanges:false);
+            var comment = await _repository.Comment.GetCommentById(id, trackChanges: true);
             if (comment == null)
             {
                 return NotFound();
             }
-            _repository.Comment.DeleteComment(comment);            
+            _repository.Comment.DeleteComment(comment);
             await _repository.SaveChanges();
             return NoContent();
         }
-       
+        [HttpGet("getcommentsbymember/{id}")]
+        public async Task<ActionResult<IEnumerable<CommentDto>>> GetCommentsByMember(int id)
+        {
+            var comments = await _repository.Comment.GetCommentsByMember(id, trackChanges: false);
+            if (comments == null)
+                return NotFound();
+            List<CommentDto> commentsDtos = new List<CommentDto>();
+            foreach (var comment in comments)
+            {
+                CommentDto commentDto = _mapper.Map<CommentDto>(comment);
+                commentsDtos.Add(commentDto);
+            }
+            return Ok(commentsDtos);
+        }
     }
 }

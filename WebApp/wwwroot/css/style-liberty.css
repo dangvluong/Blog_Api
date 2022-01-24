@@ -14985,7 +14985,7 @@ h3.blog-desc-big {
 .blog-post-align {
     display: grid;
     grid-template-columns: 70px 1fr;
-    max-width: 300px;
+    max-width: 450px;
     margin: auto;
     align-items: center;
 }

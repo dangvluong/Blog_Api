@@ -9,7 +9,8 @@ namespace WebApp.Models
         public string Content { get; set; }
         public int AuthorId { get; set; }
         public Member Author{ get; set; }
-        public int PostId { get; set; }        
+        public int PostId { get; set; }
+        public Post Post { get; set; }
         public DateTime DateCreate { get; set; }
     }
 }

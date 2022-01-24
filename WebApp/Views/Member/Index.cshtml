@@ -1,0 +1,39 @@
+﻿@model Member    
+<div class="container my-5">
+    <div class="row">
+        <div class="col-3 mt-5">
+            <partial name="_MemberFunction" />
+        </div>
+        <div class="col-7">
+            <h4 class="text-center"> THÔNG TIN CÁ NHÂN</h4>
+            <div id="memberdetails">
+                <table class="table table-borderless">
+                    <tr>
+                        <th>Ngày gia nhập:</th>
+                        <td>@Model.DateCreate.ToShortDateString()</td>
+                    </tr>
+                    <tr>
+                        <th>Tên tài khoản:</th>
+                        <td>@Model.Username</td>
+                    </tr>
+                    <tr>
+                        <th>Tên đầy đủ:</th>
+                        <td>@Model.FullName</td>
+                    </tr>
+                    <tr>
+                        <th>Địa chỉ email:</th>
+                        <td>@Model.Email</td>
+                    </tr>
+                    <tr>
+                        <th>Giới tính:</th>
+                        <td>@(Model.Gender ? "Nam" :"Nữ")</td>
+                    </tr>
+                    <tr>
+                        <th>Ngày sinh:</th>
+                        <td>@Model.DateOfBirth.ToShortDateString()</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

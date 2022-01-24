@@ -1,4 +1,9 @@
 ﻿@model Post
+@inject IConfiguration configuration
+@{ 
+    var hostAddress = configuration.GetSection("ApiServer").Value;
+}
+
 <nav id="breadcrumbs" class="breadcrumbs">
     <div class="container page-wrapper AllBreadcrumbs">
         <a asp-action="Index" asp-controller="Home" rel="homepage">Home</a>&nbsp;&nbsp;»&nbsp;&nbsp;
@@ -18,16 +23,14 @@
 
             <div class="blog-post-img">
                 <a href="https://wp.w3layouts.com/designblog/author/w3layouts/">
-                    <img src="~/images/328cc1f23e4a3b73aa60ee6ced1897a1(1).jpeg"
-                         alt="" class="rounded-circle img-fluid">
+                    <img src="@(hostAddress + "/" + Model.Author.AvatarUrl)"
+                         alt="@Model.Author.FullName" class="rounded-circle img-fluid">
                 </a>
             </div>
 
             <div class="blog-post-info">
                 <div class="author align-items-center mb-1">
-
-                    <a href="https://wp.w3layouts.com/designblog/author/w3layouts/">
-                    </a><a class="url fn n"
+                    <a class="url fn n"
                            href="https://wp.w3layouts.com/designblog/author/w3layouts/">@Model.Author.Username</a>
 
                         in <a asp-action="Category" asp-controller="Post" asp-route-id="@Model.CategoryId" rel="category">@Model.Category.Name</a>
@@ -36,7 +39,7 @@
                     <ul class="blog-meta">
 
                         <li class="meta-item blog-lesson">
-                            <span class="meta-value"> @Model.DateCreated.ToShortDateString() </span>
+                            <span class="meta-value"> At: @Model.DateCreated.ToShortTimeString() - @Model.DateCreated.ToShortDateString() </span>
                         </li>
                     </ul>
                 </div>
@@ -66,29 +69,7 @@
                 <div class="single-post-content">
                     <!--post content-->
                     @Model.Content
-                    @*<p>
-                            Maecenas vitae lacus sit amet turpis consequat eleifend. Cras odio purus, venenatis et
-                            vehicula sit amet, dictum cursus mauris.
-                        </p>
-                        <p>
-                            Integer suscipit lectus quis est dictum, at imperdiet urna ullamcorper. Aliquam ac
-                            consectetur nisl, id semper dolor. Duis iaculis lacus est, sed malesuada arcu
-                            pellentesque et. Donec aliquet lectus non mi cursus euismod. Suspendisse aliquam sem
-                            metus, eget mattis leo pharetra non. Nulla finibus ultrices massa ut vestibulum.
-                            Curabitur nec tortor lectus. Fusce porttitor massa eget augue tempus fringilla. Donec
-                            gravida, mauris at tristique semper, ipsum libero lobortis lectus, quis commodo augue mi
-                            ac ante. Nullam gravida enim nec velit tempus suscipit. Donec convallis molestie ex,
-                            luctus laoreet magna commodo ut. Suspendisse mauris erat, volutpat nec fermentum id,
-                            ullamcorper vitae est. Sed luctus, tortor non hendrerit commodo, metus sem eleifend sem,
-                            sed feugiat odio nisi quis justo.
-                        </p>
-                        <p>
-                            Quisque tortor libero, consequat sed lacinia a, facilisis ac dui. Donec vulputate purus
-                            mauris, sit amet volutpat arcu condimentum at. Sed sed lobortis mi. Maecenas ac sodales
-                            massa. Aenean sapien enim, commodo et scelerisque sit amet, efficitur ut diam. In ut
-                            lacinia orci, in ultrices sem. Integer hendrerit volutpat nulla, non ornare mi ultricies
-                            quis.&nbsp;
-                        </p>*@
+                   
                     <!--about author-->
                     <div class="author-card author-listhny my-lg-5 my-sm-4 w3ArticleAuth">
                         <div class="row">
@@ -96,8 +77,8 @@
                                 <a href="https://wp.w3layouts.com/designblog/author/w3layouts/">
                                     <!--author's avatar-->
                                     <img class="img-fluid"
-                                         src="~/images/328cc1f23e4a3b73aa60ee6ced1897a1(2).jpeg"
-                                         alt="W3Layouts">
+                                        src="@(hostAddress+ "/" + Model.Author.AvatarUrl)"
+                         alt="@Model.Author.FullName">
                                 </a>
                             </div>
                             <div class="author-right col-sm-9 position-relative align-self">
@@ -107,10 +88,7 @@
                                        class="title-team-28">@Model.Author.Username</a>
                                 </h4>
                                 <p class="para-team mb-0">
-                                    We help developers, designers and website owner's
-                                    create stunning websites. We have been building a huge collection of website
-                                    templates for every business and industry needs. Simply select your
-                                    favourite template, edit, download and launc
+                                    @Model.Author.AboutMe
                                 </p>
 
                                 <div class="share-icons mt-4">

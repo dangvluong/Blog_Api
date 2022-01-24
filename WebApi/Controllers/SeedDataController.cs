@@ -53,7 +53,9 @@ namespace WebApi.Controllers
                 DateOfBirth = DateTime.Now,
                 Email = "admin@gmail.com",
                 FullName = "admin",
-                DateCreate = DateTime.Now
+                DateCreate = DateTime.Now,
+                AvatarUrl = DefaultValue.Avatar,
+                AboutMe = DefaultValue.About
                 },
                 new Member{
                 Username = "vanluong93",
@@ -62,7 +64,9 @@ namespace WebApi.Controllers
                 DateOfBirth = DateTime.Now,
                 Email = "admin1@gmail.com",
                 FullName = "admin1",
-                DateCreate = DateTime.Now
+                DateCreate = DateTime.Now,
+                AvatarUrl = DefaultValue.Avatar,
+                AboutMe = DefaultValue.About
                 },
                 new Member{
                 Username = "vanluong94",
@@ -71,7 +75,9 @@ namespace WebApi.Controllers
                 DateOfBirth = DateTime.Now,
                 Email = "admin2@gmail.com",
                 FullName = "admin2",
-                DateCreate = DateTime.Now
+                DateCreate = DateTime.Now,
+                AvatarUrl = DefaultValue.Avatar,
+                AboutMe = DefaultValue.About
                 },
                 new Member{
                 Username = "vanluong95",
@@ -80,7 +86,9 @@ namespace WebApi.Controllers
                 DateOfBirth = DateTime.Now,
                 Email = "admin3@gmail.com",
                 FullName = "admin3",
-                DateCreate = DateTime.Now
+                DateCreate = DateTime.Now,
+                AvatarUrl = DefaultValue.Avatar,
+                AboutMe = DefaultValue.About
                 },
                 new Member{
                 Username = "vanluong96",
@@ -89,7 +97,9 @@ namespace WebApi.Controllers
                 DateOfBirth = DateTime.Now,
                 Email = "admin4@gmail.com",
                 FullName = "admin4",
-                DateCreate = DateTime.Now
+                DateCreate = DateTime.Now,
+                AvatarUrl = DefaultValue.Avatar,
+                AboutMe = DefaultValue.About
                 }
             };
             foreach (var member in members)

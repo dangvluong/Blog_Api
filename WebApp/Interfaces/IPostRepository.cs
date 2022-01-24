@@ -10,7 +10,7 @@ namespace WebApp.Interfaces
         Task<int> Create(Post post, string token);
         Task<int> Edit(Post post, string token);
         Task<int> Delete(int id, string token);
-        Task<IEnumerable<Post>> GetPostsByMember(int id);
+        Task<List<Post>> GetPostsByMember(int id);
         Task<IEnumerable<Post>> GetTrendingPost();
         Task<IEnumerable<Post>> GetMostRecentPosts();
         Task<IEnumerable<Post>> GetTodayHighlightPosts();

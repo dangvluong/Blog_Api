@@ -1,0 +1,6 @@
+﻿#memberdetails tr th {
+    min-width: 170px;
+}
+.validation-summary-errors ul li{
+    color:red;
+}

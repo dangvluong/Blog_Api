@@ -79,35 +79,6 @@ namespace WebApp.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return Redirect(nameof(Login));
         }
-        [Authorize]
-        public IActionResult ChangePassword()
-        {
-            return View();
-        }
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> ChangePassword(ChangePasswordModel obj)
-        {
-            if (!ModelState.IsValid)
-                return View();
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
-            //bool isOldPasswordValid = await _repository.Auth.CheckOldPasswordValid(changePasswordModel.OldPassword, token);
-            //if (!isOldPasswordValid)
-            //{
-            //    ModelState.AddModelError(string.Empty, "Mật khẩu cũ không đúng");
-            //    return View();
-            //}                
-            BadRequestResponse response = await _repository.Auth.ChangePassword(obj, token);
-            if (response == null)
-                return RedirectToAction(nameof(Logout));
-            foreach (var errorMessage in response.Errors)
-            {
-                foreach (var error in errorMessage.Value)
-                {
-                    ModelState.AddModelError(errorMessage.Key, error);
-                }
-            }
-            return View();
-        }
+       
     }
 }

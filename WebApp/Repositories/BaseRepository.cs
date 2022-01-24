@@ -21,11 +21,20 @@ namespace WebApp.Repositories
             return default(T);
         }
 
-        protected async Task<int> Post<T>(string url, T obj, string token = null)
+        protected async Task<int> PostJson<T>(string url, T obj, string token = null)
         {
             if(token != null)
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);            
             HttpResponseMessage message = await client.PostAsJsonAsync<T>(url, obj);
+            if (message.IsSuccessStatusCode)
+                return await message.Content.ReadAsAsync<int>();
+            return -1;
+        }
+        protected async Task<int> Post(string url, HttpContent obj, string token = null)
+        {
+            if (token != null)
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            HttpResponseMessage message = await client.PostAsync(url, obj);
             if (message.IsSuccessStatusCode)
                 return await message.Content.ReadAsAsync<int>();
             return -1;

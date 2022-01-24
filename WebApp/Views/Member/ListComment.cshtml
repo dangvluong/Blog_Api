@@ -1,0 +1,37 @@
+﻿@model ListCommentByMemberViewModel
+<div class="container my-5">
+    <h4 class="text-center">DANH SÁCH BÌNH LUẬN CỦA THÀNH VIÊN <b>@Model.Member.FullName </b> </h4>
+    <div class="mt-4">
+        @if (Model.Comments.Count > 0)
+        {
+            <table class="table table-borderless">
+                <thead>
+                    <tr>
+                        <th>Nội dung</th>
+                        <th>Ngày tạo</th>
+                        <th>Trong bài viết</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Comment comment in Model.Comments)
+                    {
+                        <tr>                           
+                            <td>
+                                @comment.Content
+                            </td>
+                            <td>@comment.DateCreate.ToShortDateString()</td>
+                            <td>
+                                <a asp-action="Detail" asp-controller="Post" asp-route-id="@comment.Post.Id" asp-fragment="comment_@comment.Id">
+                                    @comment.Post.Title
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>}
+        else
+        {
+            <h5>Hiện không có bình luận nào</h5>
+        }
+    </div>
+</div>

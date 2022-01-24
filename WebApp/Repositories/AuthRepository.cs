@@ -19,17 +19,10 @@ namespace WebApp.Repositories
             return null;
         }
         public async Task<int> Register(RegisterModel model)
-        {
-            return await Post<RegisterModel>("/api/auth/register", model);
+        {           
+            return await PostJson<RegisterModel>("/api/auth/register", model);
         }
-        //public async Task<bool> CheckOldPasswordValid(string oldPassword, string token)
-        //{
-        //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        //    HttpResponseMessage message = await client.PostAsJsonAsync("/api/auth/checkoldpasswordvalid", oldPassword);
-        //    if (message.IsSuccessStatusCode)
-        //        return true;
-        //    return false;
-        //}
+       
         public async Task<BadRequestResponse> ChangePassword(ChangePasswordModel obj, string token)
         {
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);

@@ -32,7 +32,9 @@ namespace WebApi.Controllers
                 DateOfBirth = model.DateOfBirth,
                 Email = model.Email,
                 FullName = model.FullName,
-                DateCreate = DateTime.Now
+                DateCreate = DateTime.Now,
+                AvatarUrl = DefaultValue.Avatar,
+                AboutMe = DefaultValue.About
             };
             member.Roles = new List<Role>();
             var role = await _repository.Role.GetRoleByName("member", trackChanges: true);

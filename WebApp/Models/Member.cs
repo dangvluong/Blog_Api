@@ -25,5 +25,7 @@ namespace WebApp.Models
         public bool IsBanned { get; set; } = false;
         public string Token { get; set; }
         public IList<Role> Roles { get; set; }
+        public string AvatarUrl { get; set; }
+        public string AboutMe { get; set; }
     }
 }
