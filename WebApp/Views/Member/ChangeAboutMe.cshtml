@@ -1,24 +1,18 @@
 ﻿@model ChangeAboutMeModel
-<div class="container my-5">
-    <div class="row">
-        <div class="col-3 mt-5">
-            <partial name="_MemberFunction" />
+@{
+    Layout = "_MemberLayout";
+}
+<h4 class="text-center">CẬP NHẬT GIỚI THIỆU BẢN THÂN</h4>
+<div class="contact-grids mt-3">
+    <form method="post" class="signin-form">
+        <div asp-validation-summary="All"></div>
+        <input type="hidden" asp-for="MemberId" />
+        <div class="input-grids">
+            <label asp-for="AboutMe">Mô tả ngắn về bản thân bạn: </label>
+            <textarea class="contact-input" asp-for="AboutMe"></textarea>
         </div>
-        <div class="col-7">
-            <h4 class="text-center">CẬP NHẬT GIỚI THIỆU BẢN THÂN</h4>
-            <div class="contact-grids mt-3">
-                <form method="post" class="signin-form">
-                    <div asp-validation-summary="All"></div>
-                    <input type="hidden" asp-for="MemberId" />
-                    <div class="input-grids">
-                        <label asp-for="AboutMe">Mô tả ngắn về bản thân bạn: </label>
-                        <textarea class="contact-input" asp-for="AboutMe"></textarea>
-                    </div>
-                    <div class="d-flex my-3">
-                        <button class="btn btn-style btn-outline mx-auto">Save change</button>
-                    </div>
-                </form>
-            </div>
+        <div class="d-flex my-3">
+            <button class="btn btn-style btn-outline mx-auto">Save change</button>
         </div>
-    </div>
+    </form>
 </div>

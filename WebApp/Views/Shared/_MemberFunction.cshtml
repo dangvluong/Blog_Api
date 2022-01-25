@@ -1,0 +1,35 @@
+﻿
+<ul id="MemberNavigation">
+    <li id="Index">
+        <a asp-action="Index" class="btn btn-outline-secondary w-100">Thông tin cá nhân</a>
+    </li>
+    <li id="ChangeAboutMe">
+        <a asp-action="ChangeAboutMe" class="btn btn-outline-secondary w-100">Cập nhật giới thiệu bản thân</a>
+    </li>
+    <li id="ChangePassword">
+        <a asp-action="ChangePassword" class="btn btn-outline-secondary w-100">Đổi mật khẩu</a>
+    </li>
+    <li id="ChangeAvatar">
+        <a asp-action="ChangeAvatar" class="btn btn-outline-secondary w-100">Đổi avatar</a>
+    </li>
+    <li id="ListPost">
+        <a asp-action="ListPost" class="btn btn-outline-secondary w-100">Các bài viết đã đăng</a>
+    </li>
+    <li id="ListComment">
+        <a asp-action="ListComment" class="btn btn-outline-secondary w-100">Các bình luận đã đăng</a>
+    </li>
+    <li class="mt-4">
+        <a asp-action="LogOut" asp-controller="Account" class="btn btn-outline-secondary w-100">Đăng xuất</a>
+    </li>
+</ul>
+
+@*Implement change color when choose an option (which is currently choosing has btn-primary, others are btn-outline-primary)*@
+<script>
+    $(document).ready(function () {
+        var targetAction = '@ViewContext.RouteData.Values["action"].ToString()';        
+        var targetNode = $(`#MemberNavigation #${targetAction} a`);
+        console.log(targetNode);
+        targetNode.removeClass('btn-outline-secondary');
+        targetNode.addClass('btn-secondary');
+    });
+</script>
