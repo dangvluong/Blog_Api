@@ -5,7 +5,7 @@ using WebApp.Interfaces;
 
 namespace WebApp.Areas.Dashboard.Controllers
 {
-    [Area("Dashboard")]
+    [Area("Manage")]
     public class CommentController : BaseController
     {
         public CommentController(IRepositoryManager repository) : base(repository)

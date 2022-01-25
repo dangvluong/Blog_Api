@@ -18,7 +18,7 @@ app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 //app.MapControllerRoute("default", "{controller=Post}/{action=Index}/{id?}");
-app.MapControllerRoute("dashboard", "{area:exists}/{controller=category}/{action=index}/{id?}");
+app.MapControllerRoute("manage", "{area:exists}/{controller=Home}/{action=index}/{id?}");
 app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
 
 

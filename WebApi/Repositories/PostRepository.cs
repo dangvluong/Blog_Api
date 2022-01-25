@@ -18,7 +18,7 @@ namespace WebApi.Repositories
         {
             return (int)Math.Floor(await FindAll(trackChanges).CountAsync() / (float)pageSize);
         }
-        public async Task<Post> GetPost(int id, bool trackChanges, bool countView = false)
+        public async Task<Post> GetPostById(int id, bool trackChanges, bool countView = false)
         {
             //if countView == true, enable trackChange, otherwise keep disable
             Post post = await FindByCondition(p => p.Id == id, trackChanges).Include(p => p.Author).Include(p => p.Category).FirstOrDefaultAsync();
@@ -49,7 +49,7 @@ namespace WebApi.Repositories
 
         public void DeletePost(Post post)
         {
-            post.IsDeleted = true;
+            post.IsDeleted = !post.IsDeleted;
         }
 
         public void AddRange(List<Post> posts)

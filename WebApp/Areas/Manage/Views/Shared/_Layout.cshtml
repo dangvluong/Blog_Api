@@ -21,6 +21,7 @@ Author URL: http://w3layouts.com
     <link href="~/css/style.css" rel="stylesheet" />
     <link href="~/css/style-liberty.css" rel="stylesheet" />
     <link href="~/css/tlpfoodmenu.css" rel="stylesheet" />
+    <link href="~/css/customstyle.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -53,10 +54,10 @@ Author URL: http://w3layouts.com
                             <a class="nav-link" asp-area="Dashboard" asp-controller="Category" asp-action="Index">Category</a>
                         </li>
                         <li class="nav-item active">
-                            <a class="nav-link" asp-area="Dashboard" asp-controller="Comment" asp-action="Index">Comment</a>
+                            <a class="nav-link" asp-area="Manage" asp-controller="Home" asp-action="Index">Manage</a>
                         </li>
                         <li class="nav-item active">
-                            <a class="nav-link" asp-area="" asp-controller="SeedData" asp-action="Index">Manage Data</a>
+                            <a class="nav-link" asp-controller="SeedData" asp-action="Index">Manage Data</a>
                         </li>
                         <li class="nav-item dropdown @@category__active">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -94,55 +95,25 @@ Author URL: http://w3layouts.com
                     <!-- author -->
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <div class="header-author d-flex ml-lg-4 pl-2 mt-lg-0 mt-3">
-                            <a class="img-circle img-circle-sm" href="#author">
-                                <img src="~/images/author.jpg" class="img-fluid" alt="...">
-                            </a>
-                            <div class="align-self ml-3">
-                                <a href="#author">
-                                    <h5>Alexander</h5>
-                                </a>
-                                <span>Blog Writer</span>
-                            </div>
-                        </div>
+                        @await Component.InvokeAsync("UserNavigation")
+
                     }
                     else
                     { <div class="header-author d-flex ml-lg-4 pl-2 mt-lg-0 mt-3">
-                            <a asp-action="Login" asp-controller="Member" class="btn btn-info mr-3">Login</a>
-                            <a asp-action="Register" asp-controller="Member" class="btn btn-primary">Register</a>
+                            <a asp-action="Login" asp-controller="Account" class="btn btn-info mr-3">Login</a>
+                            <a asp-action="Register" asp-controller="Account" class="btn btn-primary">Register</a>
                         </div>
                     }
 
                     <!-- // author-->
                 </div>
 
-                <!-- toggle switch for light and dark theme -->
-                <!--<div class="mobile-position">
-                    <nav class="navigation">
-                        <div class="theme-switch-wrapper">
-                            <label class="theme-switch" for="checkbox">
-                                <input type="checkbox" id="checkbox">
-                                <div class="mode-container">
-                                    <i class="gg-sun"></i>
-                                    <i class="gg-moon"></i>
-                                </div>
-                            </label>
-                        </div>
-                    </nav>
-                </div>-->
-                <!-- //toggle switch for light and dark theme -->
             </div>
         </nav>
         <!--//nav-->
     </header>
     <!-- //header -->
     @RenderBody()
-    @*<div class="w3l-homeblock1 py-5">
-            <div class="container">
-
-            </div>
-        </div>*@
-    <!-- footer -->
     <footer class="w3l-footer-16">
         <div class="footer-content py-lg-5 py-4 text-center">
             <div class="container">
@@ -198,6 +169,9 @@ Author URL: http://w3layouts.com
     <script src="~/js/theme-change.js"></script>
 
     <script src="~/js/jquery-3.3.1.min.js"></script>
+    @*script for client-side validation*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
 
     <!-- disable body scroll which navbar is in active -->
     <script>
@@ -210,7 +184,7 @@ Author URL: http://w3layouts.com
     <!-- disable body scroll which navbar is in active -->
 
     <script src="~/js/bootstrap.min.js"></script>
-
+    @await RenderSectionAsync("script", required: false)
 </body>
 
 </html>

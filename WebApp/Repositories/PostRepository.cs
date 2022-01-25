@@ -59,5 +59,10 @@ namespace WebApp.Repositories
         {
             return await Get<List<Post>>("/api/post/getfeaturedposts");
         }
+
+        public async Task<int> Approve(int postId)
+        {            
+            return await Post($"/api/post/approve/{postId}");
+        }
     }
 }

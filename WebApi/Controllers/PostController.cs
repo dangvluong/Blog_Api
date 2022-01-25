@@ -36,7 +36,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult<PostDto>> GetPost(int id, [FromQuery] bool countView = false)
         {
             bool trackChanges = countView ? true : false;
-            Post post = await _repository.Post.GetPost(id, trackChanges, countView);
+            Post post = await _repository.Post.GetPostById(id, trackChanges, countView);
             if (post == null)
                 return NotFound();
             PostDto postDto = _mapper.Map<PostDto>(post);
@@ -72,7 +72,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePost(int id)
         {
-            var post = await _repository.Post.GetPost(id, trackChanges: false);
+            var post = await _repository.Post.GetPostById(id, trackChanges: false);
             if (post == null)
             {
                 return NotFound();
@@ -126,6 +126,18 @@ namespace WebApi.Controllers
                 return NotFound();            
             return Ok(MapPosts(posts));
         }
+        [HttpPost("approve/{postId}")]
+        public async Task<IActionResult> ApprovePost(int postId)
+        {
+            Post post = await _repository.Post.GetPostById(postId, trackChanges: true);
+            if (post == null)
+                return NotFound();
+            post.IsActive = !post.IsActive;
+            await _repository.SaveChanges();
+            return NoContent();
+        }
+
+
         private List<PostDto> MapPosts(IEnumerable<Post> posts)
         {
             List<PostDto> postDtos = new List<PostDto>();

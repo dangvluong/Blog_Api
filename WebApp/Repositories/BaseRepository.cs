@@ -30,7 +30,7 @@ namespace WebApp.Repositories
                 return await message.Content.ReadAsAsync<int>();
             return -1;
         }
-        protected async Task<int> Post(string url, HttpContent obj, string token = null)
+        protected async Task<int> Post(string url, HttpContent obj = null, string token = null)
         {
             if (token != null)
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);

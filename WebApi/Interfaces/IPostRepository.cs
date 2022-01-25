@@ -5,7 +5,7 @@ namespace WebApi.Interfaces
 {
     public interface IPostRepository
     {
-        Task<Post> GetPost(int id, bool trackChanges, bool countView = false);
+        Task<Post> GetPostById(int id, bool trackChanges, bool countView = false);
         Task<IEnumerable<Post>> GetPosts(int page,int pageSize, bool trackChanges);
         Task<int> CountTotalPage(int pageSize,bool trackChanges = false);
         Task<IEnumerable<Post>> GetPostsByMember(int memberId, bool trackChanges);

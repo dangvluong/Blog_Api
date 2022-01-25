@@ -51,7 +51,10 @@ Author URL: http://w3layouts.com
                             <a class="nav-link" asp-area="" asp-controller="Post" asp-action="Index">Post</a>
                         </li>
                         <li class="nav-item active">
-                            <a class="nav-link" asp-area="Dashboard" asp-controller="Category" asp-action="Index">Category</a>
+                            <a class="nav-link" asp-area="Manage" asp-controller="Category" asp-action="Index">Category</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" asp-area="Manage" asp-controller="Home" asp-action="Index">Manage</a>
                         </li>
                         <li class="nav-item active">
                             <a class="nav-link" asp-controller="SeedData" asp-action="Index">Manage Data</a>
@@ -93,29 +96,7 @@ Author URL: http://w3layouts.com
                     @if (User.Identity.IsAuthenticated)
                     {
                         @await Component.InvokeAsync("UserNavigation")
-                        @*<div class="navbar-nav">
-                                <div class="dropdown">
-                                    <div class="header-author d-flex ml-lg-4 pl-2 mt-lg-0 mt-3 dropdown-toggle" id="navbarDropdown2" role="button"
-                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <a class="img-circle img-circle-sm" href="#author">
-                                            <img src="~/images/author.jpg" class="img-fluid" alt="...">
-                                        </a>
-                                        <div class="align-self ml-3">
-                                            <a href="#author">
-                                                <h5>Alexander</h5>
-                                            </a>
-                                            <span>Blog Writer</span>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown2" id="dropdown-menu2">
-                                        <a class="dropdown-item" asp-action="Index" asp-controller="Member">Xem thông tin cá nhân</a>
-                                        <a class="dropdown-item" asp-action="ChangePassword" asp-controller="Member">Đổi mật khẩu</a>
-                                        <a class="dropdown-item" asp-action="ChangeAvatar" asp-controller="Member">Đổi avatar</a>
-                                        <a class="dropdown-item" asp-action="ListPostByMember" asp-controller="Post">Danh sách bài viết</a>
-                                        <a class="dropdown-item" asp-action="Logout" asp-controller="Account">Đăng xuất</a>
-                                    </div>
-                                </div>
-                            </div>*@
+                        
                     }
                     else
                     { <div class="header-author d-flex ml-lg-4 pl-2 mt-lg-0 mt-3">
@@ -126,34 +107,13 @@ Author URL: http://w3layouts.com
 
                     <!-- // author-->
                 </div>
-
-                <!-- toggle switch for light and dark theme -->
-                <!--<div class="mobile-position">
-                    <nav class="navigation">
-                        <div class="theme-switch-wrapper">
-                            <label class="theme-switch" for="checkbox">
-                                <input type="checkbox" id="checkbox">
-                                <div class="mode-container">
-                                    <i class="gg-sun"></i>
-                                    <i class="gg-moon"></i>
-                                </div>
-                            </label>
-                        </div>
-                    </nav>
-                </div>-->
-                <!-- //toggle switch for light and dark theme -->
+              
             </div>
         </nav>
         <!--//nav-->
     </header>
     <!-- //header -->
     @RenderBody()
-    @*<div class="w3l-homeblock1 py-5">
-            <div class="container">
-
-            </div>
-        </div>*@
-    <!-- footer -->
     <footer class="w3l-footer-16">
         <div class="footer-content py-lg-5 py-4 text-center">
             <div class="container">

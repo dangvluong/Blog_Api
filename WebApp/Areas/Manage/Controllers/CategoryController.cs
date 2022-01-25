@@ -7,7 +7,7 @@ using WebApp.Models;
 
 namespace WebApp.Areas.Dashboard.Controllers
 {
-    [Area("dashboard")]
+    [Area("Manage")]
     public class CategoryController : BaseController
     {
         public CategoryController(IRepositoryManager repository) : base(repository)
