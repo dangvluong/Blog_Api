@@ -15,6 +15,6 @@ namespace WebApp.Interfaces
         Task<IEnumerable<Post>> GetMostRecentPosts();
         Task<IEnumerable<Post>> GetTodayHighlightPosts();
         Task<List<Post>> GetFeaturedPosts();
-        Task<int> Approve(int postId);
+        Task<int> Approve(int postId, string token);
     }
 }

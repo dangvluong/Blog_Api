@@ -22,6 +22,13 @@ Author URL: http://w3layouts.com
     <link href="~/css/style-liberty.css" rel="stylesheet" />
     <link href="~/css/tlpfoodmenu.css" rel="stylesheet" />
     <link href="~/css/customstyle.css" rel="stylesheet" />
+
+    <script src="~/js/theme-change.js"></script>
+
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    @*script for client-side validation*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
 </head>
 
 <body>
@@ -113,7 +120,16 @@ Author URL: http://w3layouts.com
         <!--//nav-->
     </header>
     <!-- //header -->
-    @RenderBody()
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-3 mt-5">
+                <partial name="_ManageFunction" />
+            </div>
+            <div class="col-9">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
     <footer class="w3l-footer-16">
         <div class="footer-content py-lg-5 py-4 text-center">
             <div class="container">
@@ -166,13 +182,6 @@ Author URL: http://w3layouts.com
     </footer>
     <!-- //footer -->
     <!-- Template JavaScript -->
-    <script src="~/js/theme-change.js"></script>
-
-    <script src="~/js/jquery-3.3.1.min.js"></script>
-    @*script for client-side validation*@
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
-
     <!-- disable body scroll which navbar is in active -->
     <script>
         $(function () {

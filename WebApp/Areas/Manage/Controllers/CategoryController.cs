@@ -17,17 +17,30 @@ namespace WebApp.Areas.Dashboard.Controllers
         // GET: CategoryController
         public async Task<ActionResult> Index()
         {
-            return View(await _repository.Category.GetCategories());
-        }
+            IEnumerable<Category> categories = await _repository.Category.GetCategories();
+            Dictionary<int, Category> dictCategory = new Dictionary<int, Category>();
+            foreach (Category category in categories)
+            {
+                dictCategory[category.Id] = category;
+            }
+            List<Category> listCategory = new List<Category>();
 
-        // GET: CategoryController/Details/5
-        public async Task<ActionResult> Details(int id)
-        {
-            return View(await _repository.Category.GetCategoryById(id));
-        }
+            foreach (Category category in categories)
+            {
+                if(category.ParentCategoryId == null)
+                    listCategory.Add(category);
+                else
+                {
+                    if (dictCategory[category.ParentCategoryId.Value].ChildCategories == null)
+                        dictCategory[category.ParentCategoryId.Value].ChildCategories = new List<Category>();
+                    dictCategory[category.ParentCategoryId.Value].ChildCategories.Add(category);
+                }
+            }
+            return View(listCategory);
+        }        
 
         // GET: CategoryController/Create
-        public async Task<ActionResult> CreateAsync()
+        public async Task<ActionResult> Create()
         {
             ViewBag.categories = new SelectList(await _repository.Category.GetCategories(), "Id", "Name");
             return View();
@@ -73,18 +86,6 @@ namespace WebApp.Areas.Dashboard.Controllers
 
         // GET: CategoryController/Delete/5
         public async Task<ActionResult> Delete(int id)
-        {
-            Category category = await _repository.Category.GetCategoryById(id);
-            if (category == null)
-                return NotFound();
-            return View(category);
-        }
-
-        // POST: CategoryController/Delete/5
-        [HttpPost]
-        [ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirm(int id)
         {
             string token = User.FindFirstValue(ClaimTypes.Authentication);
             await _repository.Category.Delete(id, token);

@@ -16,7 +16,7 @@ namespace WebApi.Repositories
 
         public async Task<Category> GetCategory(int id, bool trackChanges)
         {
-            return await FindByCondition(category => category.Id == id, trackChanges).SingleOrDefaultAsync();
+            return await FindByCondition(category => category.Id == id, trackChanges).Include(c =>c.ParentCategory).SingleOrDefaultAsync();
         }
 
         public void AddRange(Category[] categories)
@@ -37,7 +37,7 @@ namespace WebApi.Repositories
         public void DeleteCategory(Category category)
         {
             //Delete(new Category { Id = categoryId });
-            category.IsDeleted = true;
+            category.IsDeleted = !category.IsDeleted;
         }
 
     }

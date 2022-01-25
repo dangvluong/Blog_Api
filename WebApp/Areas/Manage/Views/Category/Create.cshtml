@@ -1,20 +1,34 @@
 ﻿@model Category
-<div class="container">
+<h4 class="text-center">TẠO DANH MỤC MỚI</h4>
+<div class="my-4">
     <div class="contact-grids">
         <form method="post" class="signin-form">
             <div asp-validation-summary="All"></div>
             <div class="input-grids">
-                <label asp-for="Name"></label>
-                <input type="text" class="contact-input" asp-for="Name" />
-            </div>
-            <div>
-                <select asp-for="ParentCategoryId" asp-items="@ViewBag.categories" class="form-control">
-                    <option value="">Chọn danh mục</option>
-                </select>
-            </div>
-            <div class="my-3">
-                <button class="btn btn-style btn-outline">Create</button>
-            </div>
+                <div class="row">
+                    <div class="col-3 text-right">
+                        <label asp-for="Name"></label>
+                    </div>
+                    <div class="col-6">
+                        <input type="text" class="contact-input" asp-for="Name" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3 text-right">
+                        <label asp-for="ParentCategoryId"></label>
+                    </div>
+                    <div class="col-6">
+                        <select asp-for="ParentCategoryId" asp-items="@ViewBag.categories" class="form-control">
+                            <option value="">Chọn danh mục</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="my-3 mx-auto">
+                        <button class="btn btn-style btn-outline">Create</button>
+                    </div>
+                </div>
+            </div>            
         </form>
     </div>
-</div>
+</div>        

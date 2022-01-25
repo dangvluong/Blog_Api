@@ -72,15 +72,13 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePost(int id)
         {
-            var post = await _repository.Post.GetPostById(id, trackChanges: false);
+            var post = await _repository.Post.GetPostById(id, trackChanges: true);
             if (post == null)
             {
                 return NotFound();
-            }
-            //post.IsDeleted = true;
+            }            
             _repository.Post.DeletePost(post);
             await _repository.SaveChanges();
-
             return NoContent();
         }
         [HttpGet("getpostsbymember/{id}")]

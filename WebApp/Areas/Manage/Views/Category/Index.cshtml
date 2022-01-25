@@ -1,31 +1,43 @@
 ﻿@model List<Category>
-<a asp-action="Create">Create</a>
-@if (Model.Count > 0)
-{
-    <table class="table table-borderless">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>ParentCategoryId</th>
-                <th>IsDeleted</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var category in Model)
+@{
+    async Task RenderCategory(Category category, int level)
+    {
+        string prefix = string.Concat(Enumerable.Repeat("&emsp;", level));
+        <tr>
+            <td>@Html.Raw(prefix) @category.Name</td>
+            <td>@(category.IsDeleted ? "Đã xóa" : "")</td>
+            <td>
+                <a asp-action="Edit" asp-controller="Category" asp-area="Manage" asp-route-id="@category.Id">Chỉnh sửa</a> |
+                <a asp-action="Delete" asp-controller="Category" asp-area="Manage" asp-route-id="@category.Id">@(!category.IsDeleted ? "Xóa" : "Khôi phục")</a>
+            </td>
+        </tr>
+        if (category.ChildCategories != null)
+        {
+            foreach (Category childCategory in category.ChildCategories)
             {
-                <tr>
-                    <td>@category.Id</td>
-                    <td>@category.Name</td>
-                    <td>@category.ParentCategoryId</td>
-                    <td>@category.IsDeleted</td>
-                    <td>
-                        <a asp-action="Edit" asp-controller="Category" asp-area="Dashboard" asp-route-id="@category.Id">Edit</a>
-                        <a asp-action="Delete" asp-controller="Category" asp-area="Dashboard" asp-route-id="@category.Id">Delete</a>
-                    </td>
-                </tr>
+                await RenderCategory(childCategory, level++);
             }
-        </tbody>
-    </table>
+        }
+    }
 }
+<h4 class="text-center">QUẢN LÝ DANH MỤC</h4>
+<div id="">
+    <a asp-action="Create" class="btn btn-sm btn-primary">Tạo mới</a>
+    <div class="my-4">
+        <table>
+            <thead>
+                <tr>
+                    <th>Tên danh mục</th>
+                    <th style="width: 15%;">Đã xóa</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Category category in Model)
+                {
+                    await RenderCategory(category, 0);
+                }
+            </tbody>
+        </table>
+    </div>
+</div>        

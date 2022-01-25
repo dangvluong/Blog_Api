@@ -65,8 +65,7 @@ namespace WebApi.Controllers
             if (category == null)
             {
                 return NotFound();
-            }
-            //category.IsDeleted = true;
+            }            
             _repository.Category.DeleteCategory(category);
             await _repository.SaveChanges();
             return NoContent();

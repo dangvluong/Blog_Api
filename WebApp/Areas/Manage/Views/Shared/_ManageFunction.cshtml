@@ -1,22 +1,29 @@
-﻿<ul>
+﻿<ul id="ManageNavigation">
     <li>
-        <a asp-action="Index" asp-controller="Home" class="btn btn-secondary w-100">Tổng quan</a>
+        <a asp-action="Index" id="Home" asp-controller="Home" class="btn btn-outline-secondary w-100">Tổng quan</a>
     </li>
     <li>
-        <a asp-action="Index" asp-controller="Post" class="btn btn-outline-secondary w-100">Quản lý bài viết</a>
+        <a asp-action="Index" id="Post" asp-controller="Post" class="btn btn-outline-secondary w-100">Quản lý bài viết</a>
     </li>
     <li>
-        <a asp-action="Index" asp-controller="Category" class="btn btn-outline-secondary w-100">Quản lý danh mục</a>
+        <a asp-action="Index" id="Category" asp-controller="Category" class="btn btn-outline-secondary w-100">Quản lý danh mục</a>
     </li>
     <li>
-        <a asp-action="Index" asp-controller="Member" class="btn btn-outline-secondary w-100">Quản lý thành viên</a>
+        <a asp-action="Index" id="Member" asp-controller="Member" class="btn btn-outline-secondary w-100">Quản lý thành viên</a>
     </li>
     <li>
-        <a asp-action="Index" asp-controller="Comment" class="btn btn-outline-secondary w-100">Quản lý bình luận</a>
+        <a asp-action="Index" id="Comment" asp-controller="Comment" class="btn btn-outline-secondary w-100">Quản lý bình luận</a>
     </li>
     <li>
-        <a asp-action="Index" asp-controller="Role" class="btn btn-outline-secondary w-100">Quản lý role</a>
+        <a asp-action="Index" id="Role" asp-controller="Role" class="btn btn-outline-secondary w-100">Quản lý role</a>
     </li>
 </ul>
-
-@*Implement change color when choose an option (which is currently choosing has btn-primary, others are btn-outline-primary)*@
+<script>
+    $(document).ready(function () {
+        var targetController = '@ViewContext.RouteData.Values["controller"].ToString()';
+        console.log(targetController);
+        var targetNode = $(`#ManageNavigation #${targetController}`);
+        targetNode.removeClass('btn-outline-secondary');
+        targetNode.addClass('btn-secondary');
+    });
+</script>
