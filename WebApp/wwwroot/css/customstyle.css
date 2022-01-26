@@ -1,5 +1,5 @@
 ﻿#memberdetails tr th {
-    min-width: 170px;
+    width: 30%;
 }
 .validation-summary-errors ul li{
     color:red;

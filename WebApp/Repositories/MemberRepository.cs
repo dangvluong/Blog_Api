@@ -24,5 +24,14 @@ namespace WebApp.Repositories
         {
             return await PostJson<ChangeAboutMeModel>($"/api/member/changeaboutme", obj, token);
         }
+
+        public async Task<List<Member>> GetMembers(string token)
+        {
+            return await Get<List<Member>>("/api/member", token);
+        }
+        public async Task<int> BanAccount(int id, string token)
+        {
+            return await Post($"/api/member/banaccount/{id}",token: token);
+        }
     }
 }

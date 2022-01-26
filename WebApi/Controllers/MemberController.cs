@@ -19,6 +19,8 @@ namespace WebApi.Controllers
 
         }
         [HttpGet]
+        //Should only admin view all members
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Member>>> GetMembers()
         {
             IEnumerable<Member> members = await _repository.Member.GetMembers(trackChanges: false);
@@ -63,6 +65,17 @@ namespace WebApi.Controllers
             if (member == null || member.Id != obj.MemberId || obj.AvatarUpload == null)
                 return BadRequest();            
             member.AvatarUrl = SiteHelper.UploadFile(obj.AvatarUpload, UploadTypes.Avatar);
+            await _repository.SaveChanges();
+            return NoContent();
+        }
+        [HttpPost("banaccount/{id}")]
+        [Authorize]
+        public async Task<IActionResult> BanAccount(int id)
+        {
+            Member member = await _repository.Member.GetMemberByCondition(c => c.Id == id, trackChanges: true);
+            if (member == null)
+                return NotFound();
+            member.IsBanned = !member.IsBanned;
             await _repository.SaveChanges();
             return NoContent();
         }

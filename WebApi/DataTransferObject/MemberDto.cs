@@ -16,5 +16,7 @@ namespace WebApi.DataTransferObject
         public string Token { get; set; }
         public string AvatarUrl { get; set; }
         public string AboutMe { get; set; }
+        public int NumberOfPost { get; set; }
+        public int NumberOfComment { get; set; }
     }
 }

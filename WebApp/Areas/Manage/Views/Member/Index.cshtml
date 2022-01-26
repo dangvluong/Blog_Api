@@ -1,0 +1,38 @@
+﻿@model List<Member>
+<h4 class="text-center">QUẢN LÝ THÀNH VIÊN</h4>
+<div class="my-5">
+    @if (Model != null && Model.Count > 0)
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Tên tài khoản</th>
+                    <th>Ngày đăng kí</th>
+                    <th>Tình trạng hoạt động</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Member member in Model)
+                {
+                    <tr>
+                        <td>
+                            <a asp-action="Detail" asp-controller="Member" asp-area="Manage" asp-route-id="@member.Id">
+                                @member.Username
+                            </a>                            
+                        </td>
+                        <td>@member.DateCreate.ToShortDateString()</td>
+                        <td>
+                            @(member.IsBanned ? "Tài khoản bị khóa":"Đang hoạt động")
+                        </td>
+                        <td>
+                            <a asp-action="BanAccount" asp-route-id="@member.Id" class="btn btn-sm @(!member.IsBanned ? "btn-danger" : "btn-warning")">
+                                @(!member.IsBanned ? "Khóa tài khoản" : "Gỡ khóa tài khoản")
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
