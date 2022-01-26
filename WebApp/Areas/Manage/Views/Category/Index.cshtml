@@ -15,7 +15,7 @@
         {
             foreach (Category childCategory in category.ChildCategories)
             {
-                await RenderCategory(childCategory, level++);
+                await RenderCategory(childCategory, level + 1);
             }
         }
     }

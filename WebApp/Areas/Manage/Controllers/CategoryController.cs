@@ -61,12 +61,13 @@ namespace WebApp.Areas.Dashboard.Controllers
 
         // GET: CategoryController/Edit/5
         public async Task<ActionResult> Edit(int id)
-        {
-            
-            var category = await _repository.Category.GetCategoryById(id);
+        { 
+            List<Category> listCategory = await _repository.Category.GetCategories();
+            Category category = listCategory.Where(C => C.Id == id).FirstOrDefault();
             if (category == null)
                 return NotFound();
-            ViewBag.categories = new SelectList(await _repository.Category.GetCategories(), "Id", "Name");
+            listCategory.Remove(category);
+            ViewBag.categories = new SelectList(listCategory, "Id", "Name");
             return View(category);
         }
 

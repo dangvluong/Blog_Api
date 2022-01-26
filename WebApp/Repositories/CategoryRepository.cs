@@ -9,7 +9,7 @@ namespace WebApp.Repositories
         {
 
         }
-        public async Task<IEnumerable<Category>> GetCategories()
+        public async Task<List<Category>> GetCategories()
         {
             return await Get<List<Category>>("/api/category");            
         }
