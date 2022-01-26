@@ -14,15 +14,24 @@ namespace WebApi.Controllers
         public CommentController(IRepositoryManager repository, IMapper mapper) : base(repository, mapper)
         {
         }
+        // GET: api/Comment
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
+        {
+            IEnumerable<Comment> comments = await _repository.Comment.GetComments();
+            if(comments == null)
+                return NotFound();
+            return Ok(MapComments(comments));
+        }
 
         // GET: api/Comment/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Comment>> GetComment(int id)
+        public async Task<ActionResult<CommentDto>> GetComment(int id)
         {
             Comment comment = await _repository.Comment.GetCommentById(id, trackChanges: false);
             if (comment == null)
                 return NotFound();
-            return Ok(comment);
+            return Ok(_mapper.Map<CommentDto>(comment));
         }
 
         // GET: api/GetCommentsByPost/5
@@ -32,14 +41,8 @@ namespace WebApi.Controllers
         {
             IEnumerable<Comment> comments = await _repository.Comment.GetCommentsByPost(id, trackChanges: false);
             if (comments == null)
-                return NotFound();
-            List<CommentDto> commentsDtos = new List<CommentDto>();
-            foreach (var comment in comments)
-            {
-                CommentDto commentDto = _mapper.Map<CommentDto>(comment);
-                commentsDtos.Add(commentDto);
-            }
-            return Ok(commentsDtos);
+                return NotFound();           
+            return Ok(MapComments(comments));
         }
 
         // PUT: api/Comment/5
@@ -85,14 +88,18 @@ namespace WebApi.Controllers
         {
             var comments = await _repository.Comment.GetCommentsByMember(id, trackChanges: false);
             if (comments == null)
-                return NotFound();
+                return NotFound();            
+            return Ok(MapComments(comments));
+        }
+        private List<CommentDto> MapComments(IEnumerable<Comment> comments)
+        {
             List<CommentDto> commentsDtos = new List<CommentDto>();
             foreach (var comment in comments)
             {
                 CommentDto commentDto = _mapper.Map<CommentDto>(comment);
                 commentsDtos.Add(commentDto);
             }
-            return Ok(commentsDtos);
+            return commentsDtos;
         }
     }
 }

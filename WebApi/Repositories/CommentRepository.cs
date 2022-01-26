@@ -38,5 +38,9 @@ namespace WebApi.Repositories
             Update(comment);
         }
 
+        public async Task<IEnumerable<Comment>> GetComments()
+        {
+            return await FindAll(trackChanges: false).Include(comment => comment.Author).Include(c=>c.Post).OrderByDescending(c => c.DateCreate).ToListAsync();
+        }
     }
 }

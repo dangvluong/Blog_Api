@@ -4,7 +4,7 @@ namespace WebApp.Interfaces
 {
     public interface ICategoryRepository
     {
-        Task<IEnumerable<Category>> GetCategories();
+        Task<List<Category>> GetCategories();
         Task<Category> GetCategoryById(int id);
         Task<int> Create(Category category, string token);
         Task<int> Edit(Category category, string token);

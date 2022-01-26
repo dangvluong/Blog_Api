@@ -14,7 +14,7 @@ namespace WebApp.Areas.Dashboard.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var comments = (await _repository.Comment.GetComments()).OrderByDescending(p => p.DateCreate);           
+            var comments = await _repository.Comment.GetComments();    
             return View(comments);
         }
         public async Task<IActionResult> Delete(int id)
