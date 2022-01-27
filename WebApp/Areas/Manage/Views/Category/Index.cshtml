@@ -11,7 +11,7 @@
                 <a asp-action="Delete" asp-controller="Category" asp-area="Manage" asp-route-id="@category.Id">@(!category.IsDeleted ? "Xóa" : "Khôi phục")</a>
             </td>
         </tr>
-        if (category.ChildCategories != null)
+        if (category.ChildCategories?.Count > 0)
         {
             foreach (Category childCategory in category.ChildCategories)
             {
