@@ -23,7 +23,7 @@ namespace WebApi.Repositories
         public async Task<Member> GetMemberByCondition(Expression<Func<Member, bool>> condition, bool trackChanges)
         {
             //return await _context.Members.FirstOrDefaultAsync(p => p.Id == id);
-            return await FindByCondition(condition, trackChanges).FirstOrDefaultAsync();
+            return await FindByCondition(condition, trackChanges).Include(m => m.Roles).FirstOrDefaultAsync();
         }
         
         public void AddRange(Member[] member)

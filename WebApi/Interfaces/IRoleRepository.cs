@@ -8,7 +8,6 @@ namespace WebApi.Interfaces
         Task<IEnumerable<Role>> GetRoles(bool trackChanges);   
         void AddRole(Role role);
         void UpdateRole(Role role);
-        void DeleteRole(Role role);
         Task<Role> GetRoleByName(string roleName, bool trackChanges);
     }
 }

@@ -1,0 +1,44 @@
+﻿@model List<Role>
+<h4 class="text-center">QUẢN LÝ VAI TRÒ</h4>
+<div class="my-3">
+    <a asp-action="Create" class="btn btn-primary mb-2">Tạo vai trò mới</a>
+    @if (Model != null && Model.Count > 0)
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Vai trò</th>
+                    <th>Có thể chỉnh sửa</th>
+                    <th>Đã xóa</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Role role in Model)
+                {
+                    <tr>
+                        <td>
+                            <span class="badge @role.ColorDisplay">@role.Name</span>
+                        </td>
+                        <td>@(role.CanChange ? "Có" : "Không")</td>
+                        <td>@(role.IsDeleted ? "Đã xóa" : "")</td>
+                        <td>
+                            @if (role.CanChange)
+                            {
+                                <a asp-action="Edit" asp-route-id="@role.Id" class="btn btn-sm btn-info">Chỉnh sửa</a>
+                                <a asp-action="Delete" asp-route-id="@role.Id" class="btn btn-sm @(!role.IsDeleted? "btn-danger" : "btn-warning")">
+                                    @(role.IsDeleted? "Khôi phục" : "Xóa")
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <h5>Hiện không có vai trò nào</h5>
+    }
+</div>
+

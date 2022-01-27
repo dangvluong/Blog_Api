@@ -27,7 +27,7 @@ namespace WebApi.Models
             modelBuilder.Entity<Member>(entity =>
             {
                 entity.HasMany(p => p.Roles).WithMany(p => p.Members);
-            });
+            });           
         }
         
     }

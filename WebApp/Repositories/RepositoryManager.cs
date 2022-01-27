@@ -11,6 +11,7 @@ namespace WebApp.Repositories
         private ICommentRepository comment;
         private IAuthRepository auth;
         private ISeedDataRepository seedData;
+        private IRoleRepository role;        
        
         public ICategoryRepository Category
         {
@@ -73,6 +74,15 @@ namespace WebApp.Repositories
                     auth = new AuthRepository(Client);
                 return auth;
             }
-        }        
+        }
+        public IRoleRepository Role
+        {
+            get
+            {
+                if(role == null)
+                    role = new RoleRepository(Client);
+                return role;
+            }
+        }
     }
 }

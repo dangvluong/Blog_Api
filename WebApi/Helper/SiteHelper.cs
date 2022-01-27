@@ -18,15 +18,23 @@ namespace WebApi.Helper
         public static string CreateToken(Member obj, string serectkey)
         {
             byte[] key = Encoding.ASCII.GetBytes(serectkey);
+
+            //Get claims
+            var claims = new List<Claim>
+            {
+                  new Claim(ClaimTypes.NameIdentifier, obj.Id.ToString()),
+                    new Claim(ClaimTypes.Name, obj.Username),
+                    new Claim(ClaimTypes.Email, obj.Email)
+            };
+            foreach (var role in obj.Roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role.Name));
+            }
+
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
             SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, obj.Id.ToString()),
-                    new Claim(ClaimTypes.Name, obj.Username),
-                    new Claim(ClaimTypes.Email, obj.Email)
-                }),
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
@@ -52,7 +60,7 @@ namespace WebApi.Helper
             }
             string newFileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
             string avatarUrl = Path.Combine("images", targetFolder, newFileName);
-            string uploadLocation = Path.Combine(Directory.GetCurrentDirectory(),"wwwroot", avatarUrl);
+            string uploadLocation = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", avatarUrl);
             using (Stream stream = new FileStream(uploadLocation, FileMode.Create))
             {
                 file.CopyTo(stream);

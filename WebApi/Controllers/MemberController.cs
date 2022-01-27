@@ -20,7 +20,7 @@ namespace WebApi.Controllers
         }
         [HttpGet]
         //Should only admin view all members
-        [Authorize]
+        [Authorize(Roles ="Admin, Moderator")]
         public async Task<ActionResult<IEnumerable<Member>>> GetMembers()
         {
             IEnumerable<Member> members = await _repository.Member.GetMembers(trackChanges: false);
@@ -69,7 +69,7 @@ namespace WebApi.Controllers
             return NoContent();
         }
         [HttpPost("banaccount/{id}")]
-        [Authorize]
+        [Authorize(Roles ="Admin, Moderator")]
         public async Task<IActionResult> BanAccount(int id)
         {
             Member member = await _repository.Member.GetMemberByCondition(c => c.Id == id, trackChanges: true);

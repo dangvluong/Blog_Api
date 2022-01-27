@@ -1,5 +1,5 @@
 ﻿@model Member
-@{ 
+@{
     Layout = "_MemberLayout";
 }
 <h4 class="text-center"> THÔNG TIN CÁ NHÂN</h4>
@@ -8,6 +8,19 @@
         <tr>
             <th>Ngày gia nhập:</th>
             <td>@Model.DateCreate.ToShortDateString()</td>
+        </tr>
+        <tr>
+            <th>Vai trò:</th>
+            <td>
+                @{ 
+                    var roleNames = new List<string>();
+                    @foreach (var role in Model.Roles)
+                    {
+                        roleNames.Add(role.Name);
+                    }                    
+                }
+                @string.Join(", ",roleNames)
+            </td>
         </tr>
         <tr>
             <th>Tên tài khoản:</th>

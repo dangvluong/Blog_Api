@@ -6,7 +6,7 @@ namespace WebApp.Models
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "Bạn phải nhập tên danh mục")]
-        [StringLength(64,MinimumLength =3,ErrorMessage = "Tên danh mục phải dài từ 3 đến 64 ký tự")]
+        [StringLength(64,MinimumLength =3,ErrorMessage = "{0} phải dài từ {2} đến {1} ký tự")]
         [Display(Name ="Tên danh mục")]
         public string Name { get; set; }
         public bool IsDeleted { get; set; } = false;

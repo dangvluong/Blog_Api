@@ -1,0 +1,35 @@
+﻿@model Role
+<h4 class="text-center">CHỈNH SỬA VAI TRÒ </h4>
+<div class="my-4">
+    <div class="contact-grids">
+        <form method="post" class="signin-form">
+            <div asp-validation-summary="All"></div>
+            <div class="input-grids">
+                <div class="row">
+                    <div class="col-3 text-right">
+                        <label asp-for="Name"></label>
+                    </div>
+                    <div class="col-6">
+                        <input type="text" class="contact-input" asp-for="Name" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3 text-right">
+                        <label asp-for="ColorDisplay"></label>
+                    </div>
+                    <div class="col-6">
+                        <partial name="_ListColorDisplay" />                        
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="my-3 mx-auto">
+                        <button class="btn btn-style btn-outline">Create</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>        
+<script>
+    $('input[type="radio"][value="@Model.ColorDisplay"]').attr('checked','checked')
+</script>

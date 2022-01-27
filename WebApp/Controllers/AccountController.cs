@@ -79,6 +79,10 @@ namespace WebApp.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return Redirect(nameof(Login));
         }
+        public IActionResult Denied()
+        {
+            return View();
+        }
        
     }
 }

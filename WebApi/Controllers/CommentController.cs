@@ -16,6 +16,7 @@ namespace WebApi.Controllers
         }
         // GET: api/Comment
         [HttpGet]
+        [Authorize(Roles ="Admin, Moderator")]
         public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
         {
             IEnumerable<Comment> comments = await _repository.Comment.GetComments();
@@ -47,7 +48,7 @@ namespace WebApi.Controllers
 
         // PUT: api/Comment/5
         [HttpPut("{id}")]
-        [Authorize]
+        [Authorize]        
         public async Task<IActionResult> UpdateComment(Comment comment)
         {
             if (!ModelState.IsValid)
@@ -83,7 +84,7 @@ namespace WebApi.Controllers
             await _repository.SaveChanges();
             return NoContent();
         }
-        [HttpGet("getcommentsbymember/{id}")]
+        [HttpGet("getcommentsbymember/{id}")]        
         public async Task<ActionResult<IEnumerable<CommentDto>>> GetCommentsByMember(int id)
         {
             var comments = await _repository.Comment.GetCommentsByMember(id, trackChanges: false);

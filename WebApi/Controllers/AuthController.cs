@@ -37,7 +37,7 @@ namespace WebApi.Controllers
                 AboutMe = DefaultValue.About
             };
             member.Roles = new List<Role>();
-            var role = await _repository.Role.GetRoleByName("member", trackChanges: true);
+            var role = await _repository.Role.GetRoleByName("Member", trackChanges: true);
             member.Roles.Add(role);
             _repository.Member.AddMember(member);
             await _repository.SaveChanges();

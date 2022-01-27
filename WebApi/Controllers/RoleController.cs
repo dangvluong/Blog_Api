@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebApi.Interfaces;
 using WebApi.Models;
 
@@ -14,7 +15,7 @@ namespace WebApi.Controllers
 
         // GET: api/Role
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Role>>> GetRole()
+        public async Task<ActionResult<IEnumerable<Role>>> GetRoles()
         {
             IEnumerable<Role> roles = await _repository.Role.GetRoles(trackChanges: false);
             if(roles == null)
@@ -35,6 +36,7 @@ namespace WebApi.Controllers
         // PUT: api/Role/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> UpdateRole(Role role)
         {
             if (!ModelState.IsValid)
@@ -47,18 +49,19 @@ namespace WebApi.Controllers
         // POST: api/Role
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PostRole(Role role)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
             _repository.Role.AddRole(role);
             await _repository.SaveChanges();
-
             return NoContent();
         }
 
         // DELETE: api/Role/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteRole(int id)
         {
             var role = await _repository.Role.GetRole(id,trackChanges:true);
@@ -66,7 +69,7 @@ namespace WebApi.Controllers
             {
                 return NotFound();
             }
-            _repository.Role.DeleteRole(role);
+            role.IsDeleted = !role.IsDeleted;
             await _repository.SaveChanges();
             return NoContent();
         }        

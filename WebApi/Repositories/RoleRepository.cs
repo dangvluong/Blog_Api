@@ -35,11 +35,6 @@ namespace WebApi.Repositories
         public void AddRange(Role[] roles)
         {
             _context.Roles.AddRange(roles);
-        }
-        public void DeleteRole(Role role)
-        {
-            //should set IsDeleted
-            Delete(role);
-        }
+        }        
     }
 }

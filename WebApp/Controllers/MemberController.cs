@@ -9,26 +9,25 @@ using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class MemberController : BaseController
     {
         public MemberController(IRepositoryManager repository) : base(repository)
         {
 
         }
-        [Authorize]
+       
         public async Task<IActionResult> Index()
         {
             string token = User.FindFirstValue(ClaimTypes.Authentication);
             Member member = await _repository.Member.GetMemberById(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), token);
             return View(member);
-        }
-        [Authorize]
+        }       
         public IActionResult ChangePassword()
         {
             return View();
         }
-        [HttpPost]
-        [Authorize]
+        [HttpPost]     
         public async Task<IActionResult> ChangePassword(ChangePasswordModel obj)
         {
             if (!ModelState.IsValid)
@@ -52,7 +51,7 @@ namespace WebApp.Controllers
             }
             return View();
         }
-        [Authorize]
+       
         public async Task<IActionResult> ListPost(int? id = null)
         {
             if (id == null)
@@ -64,7 +63,7 @@ namespace WebApp.Controllers
             };
             return View(viewModel);
         }
-        [Authorize]
+      
         public async Task<IActionResult> ListComment(int? id = null)
         {
             if (id == null)
@@ -75,8 +74,7 @@ namespace WebApp.Controllers
                 Comments = await _repository.Comment.GetCommentsByMember(id.Value)
             };            
             return View(viewModel);
-        }
-        [Authorize]
+        }        
         public async Task<IActionResult> ChangeAboutMe()
         {
             string token = User.FindFirstValue(ClaimTypes.Authentication);
@@ -87,7 +85,6 @@ namespace WebApp.Controllers
                 AboutMe = member.AboutMe
             });
         }
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> ChangeAboutMe(ChangeAboutMeModel obj)
         {
@@ -98,7 +95,6 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-        [Authorize]
         public IActionResult ChangeAvatar()
         {
             int memberId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -107,7 +103,7 @@ namespace WebApp.Controllers
                 MemberId = memberId,
             });
         }
-        [Authorize, HttpPost]
+        [HttpPost]
         public async Task<IActionResult> ChangeAvatar(ChangeAvatarModel obj)
         {
             //Implement validation for IFormFile: size, extension (?)

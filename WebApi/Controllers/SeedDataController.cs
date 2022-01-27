@@ -20,7 +20,7 @@ namespace WebApi.Controllers
         [HttpGet("cleardata")]
         public async Task<bool> ClearData()
         {
-            return await _context.Database.EnsureDeletedAsync();           
+            return await _context.Database.EnsureDeletedAsync();
         }
         [HttpGet("migrate")]
         public async Task Migrate()
@@ -33,16 +33,17 @@ namespace WebApi.Controllers
             //seed roles
             var roles = new Role[]
             {
-                new Role{Name = "admin"},
-                new Role{Name = "member"}
+                new Role{Name = "Admin", CanChange = false,ColorDisplay="badge-danger"},
+                new Role{Name = "Moderator",CanChange  =false,ColorDisplay="badge-primary"},
+                new Role{Name = "Member",CanChange = false,ColorDisplay="badge-secondary"}
             };
             //context.Roles.Add(new Role
             //{
             //    Name = "admin1"
             //});
             _context.Roles.AddRange(roles);
-            
-            await _repository.SaveChanges();            
+
+            await _repository.SaveChanges();
             //seed member
             var members = new Member[]
             {
@@ -91,8 +92,8 @@ namespace WebApi.Controllers
                 AboutMe = DefaultValue.About
                 },
                 new Member{
-                Username = "vanluong96",
-                Password = SiteHelper.HashPassword("123123"),
+                Username = "string",
+                Password = SiteHelper.HashPassword("string"),
                 Gender = false,
                 DateOfBirth = DateTime.Now,
                 Email = "admin4@gmail.com",
@@ -104,11 +105,11 @@ namespace WebApi.Controllers
             };
             foreach (var member in members)
             {
-                member.Roles = new List<Role>();                
-                member.Roles.Add(await _repository.Role.GetRoleByName("admin", trackChanges: true));
-                member.Roles.Add(await _repository.Role.GetRoleByName("member", trackChanges: true));                
+                member.Roles = new List<Role>();
+                member.Roles.Add(await _repository.Role.GetRoleByName("Admin", trackChanges: true));
+                member.Roles.Add(await _repository.Role.GetRoleByName("Member", trackChanges: true));
             }
-            _context.Members.AddRange(members);            
+            _context.Members.AddRange(members);
             await _repository.SaveChanges();
             //seed posts and categories
             await SeedPostAndCategoryAsync();
@@ -121,8 +122,8 @@ namespace WebApi.Controllers
             var fk = new Faker<Comment>();
             fk.RuleFor(p => p.Content, f => $"Comment " + f.Lorem.Sentences(5));
             fk.RuleFor(p => p.DateCreate, f => f.Date.Between(new DateTime(2019, 12, 31), new DateTime(2021, 12, 31)));
-            var members = (await _repository.Member.GetMembers(trackChanges:true)).ToList();
-            var posts = (await _repository.Post.GetPosts(1,50,trackChanges:true)).ToList();
+            var members = (await _repository.Member.GetMembers(trackChanges: true)).ToList();
+            var posts = (await _repository.Post.GetPosts(1, 50, trackChanges: true)).ToList();
             var rand = new Random();
             var comments = new List<Comment>();
             for (int i = 0; i < 30; i++)
@@ -132,7 +133,7 @@ namespace WebApi.Controllers
                 comment.PostId = posts[0].Id;
                 comments.Add(comment);
             }
-            _context.Comments.AddRange(comments);            
+            _context.Comments.AddRange(comments);
             await _repository.SaveChanges();
             //comments.Clear();
             //var commentsInDb = _context.Comments.ToList();
@@ -164,7 +165,7 @@ namespace WebApi.Controllers
             category11.ParentCategory = category1;
             category31.ParentCategory = category3;
             var categories = new Category[] { category1, category11, category2, category3, category31, category4 };
-            _repository.Category.AddRange(categories);            
+            _repository.Category.AddRange(categories);
             await _repository.SaveChanges();
             var fakerPost = new Faker<Post>();
             var index = 1;
@@ -173,7 +174,7 @@ namespace WebApi.Controllers
             fakerPost.RuleFor(p => p.Title, fk => $"Post {index++} " + fk.Lorem.Sentence(3, 4).Trim('.'));
             fakerPost.RuleFor(p => p.Description, fk => fk.Lorem.Sentences(3));
             fakerPost.RuleFor(p => p.Content, fk => fk.Lorem.Paragraphs(10));
-            fakerPost.RuleFor(p => p.DateCreated, fk => fk.Date.Between(new DateTime(2019, 1, 1), new DateTime(2021, 12, 31)));           
+            fakerPost.RuleFor(p => p.DateCreated, fk => fk.Date.Between(new DateTime(2019, 1, 1), new DateTime(2021, 12, 31)));
 
             var posts = new List<Post>();
             var categoriesInDb = await _context.Categories.ToListAsync();
@@ -184,7 +185,7 @@ namespace WebApi.Controllers
                 post.AuthorId = members[rand.Next(members.Count)].Id;
                 posts.Add(post);
             }
-            _context.Posts.AddRange(posts);            
+            _context.Posts.AddRange(posts);
             await _repository.SaveChanges();
         }
     }

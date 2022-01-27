@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.DataTransferObject;
 using WebApi.Interfaces;
@@ -46,6 +47,7 @@ namespace WebApi.Controllers
         // PUT: api/Post/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
+        [Authorize]
         public async Task<IActionResult> UpdatePost(Post post)
         {
             if (!ModelState.IsValid)
@@ -58,6 +60,7 @@ namespace WebApi.Controllers
         // POST: api/Post
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<int>> PostPost(Post post)
         {
             if (ModelState.IsValid)
@@ -70,6 +73,7 @@ namespace WebApi.Controllers
 
         // DELETE: api/Post/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeletePost(int id)
         {
             var post = await _repository.Post.GetPostById(id, trackChanges: true);
@@ -125,6 +129,7 @@ namespace WebApi.Controllers
             return Ok(MapPosts(posts));
         }
         [HttpPost("approve/{postId}")]
+        [Authorize(Roles ="Admin, Moderator")]
         public async Task<IActionResult> ApprovePost(int postId)
         {
             Post post = await _repository.Post.GetPostById(postId, trackChanges: true);

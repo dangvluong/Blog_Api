@@ -8,7 +8,7 @@ using WebApp.Interfaces;
 namespace WebApp.Areas.Manage.Controllers
 {
     [Area("Manage")]
-    [Authorize]
+    [Authorize(Roles = "Admin, Moderator")]
     public class PostController : BaseController
     {
         public PostController(IRepositoryManager repository) : base(repository)

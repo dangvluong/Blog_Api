@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 using WebApp.Controllers;
@@ -8,6 +9,7 @@ using WebApp.Models;
 namespace WebApp.Areas.Dashboard.Controllers
 {
     [Area("Manage")]
+    [Authorize(Roles ="Admin")]
     public class CategoryController : BaseController
     {
         public CategoryController(IRepositoryManager repository) : base(repository)
