@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using WebApp.DataTransferObject;
 using WebApp.Interfaces;
 using WebApp.Models;
 
@@ -31,7 +32,12 @@ namespace WebApp.Repositories
         }
         public async Task<int> BanAccount(int id, string token)
         {
-            return await Post($"/api/member/banaccount/{id}",token: token);
+            return await Post($"/api/member/banaccount/{id}", token: token);
+        }
+
+        public Task<int> UpdateRolesOfMember(UpdateRolesOfMemberDto obj, string token)
+        {
+            return PostJson<UpdateRolesOfMemberDto>("/api/member/updaterolesofmember", obj, token);
         }
     }
 }

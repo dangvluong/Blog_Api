@@ -8,6 +8,7 @@
                 <tr>
                     <th>Tên tài khoản</th>
                     <th>Ngày đăng kí</th>
+                    <th>Vai trò</th>
                     <th>Tình trạng hoạt động</th>
                     <th></th>
                 </tr>
@@ -22,6 +23,12 @@
                             </a>                            
                         </td>
                         <td>@member.DateCreate.ToShortDateString()</td>
+                        <td>
+                            @foreach (var role in member.Roles)
+                            {
+                                <span class="badge @role.ColorDisplay">@role.Name</span>
+                            }
+                        </td>
                         <td>
                             @(member.IsBanned ? "Tài khoản bị khóa":"Đang hoạt động")
                         </td>

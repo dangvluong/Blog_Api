@@ -12,14 +12,14 @@
         <tr>
             <th>Vai trò:</th>
             <td>
-                @{ 
+                @{
                     var roleNames = new List<string>();
                     @foreach (var role in Model.Roles)
-                    {
-                        roleNames.Add(role.Name);
-                    }                    
+                    {                        
+                        <span class="badge @role.ColorDisplay">@role.Name</span>
+                    }
                 }
-                @string.Join(", ",roleNames)
+                @string.Join(", ", roleNames)
             </td>
         </tr>
         <tr>

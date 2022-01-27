@@ -15,7 +15,15 @@
             <th>Ngày gia nhập:</th>
             <td>@Model.Member.DateCreate.ToShortDateString()</td>
         </tr>
-
+        <tr>
+            <th>Vai trò:</th>
+            <td>
+                @foreach (var role in Model.Member.Roles)
+                {
+                    <span class="badge @role.ColorDisplay">@role.Name</span>
+                }                
+            </td>
+        </tr>
         <tr>
             <th>Tên đầy đủ:</th>
             <td>@Model.Member.FullName</td>
@@ -46,7 +54,8 @@
         </tr>
     </table>
 </div>
-<div class="my-3">
+<div class="my-3 d-flex">    
+    <a asp-action="UpdateRole" asp-route-id="@Model.Member.Id" class="btn btn-sm btn-info mr-3">Cập nhật vai trò</a>
     <a asp-action="BanAccount" asp-route-id="@Model.Member.Id" class="btn btn-sm  @(!Model.Member.IsBanned ? "btn-danger" : "btn-warning")" asp-route-returnUrl="@Context.Request.Path">
         @(!Model.Member.IsBanned ? "Khóa tài khoản" : "Gỡ khóa tài khoản")
     </a>

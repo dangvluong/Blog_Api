@@ -1,0 +1,30 @@
+﻿@model Member
+
+<h4 class="text-center">CHI TIẾT THÀNH VIÊN</h4>
+<div id="memberdetails">
+    <form method="post">
+        <table class="table table-bordered">
+            <tr class="bg-light">
+                <th>Tên tài khoản:</th>
+                <td>@Model.Username</td>
+            </tr>
+            <tr>
+                <th>Chọn vai trò:</th>
+                <td>
+
+                    <input type="hidden" name="memberId" value="@Model.Id" />
+                    @foreach (Role role in ViewBag.roles)
+                    {
+                        <div>
+                            <input type="checkbox" name="roleIds" value="@role.Id" @(Model.Roles.Any(r => r.Id ==role.Id) ? "checked" : "") />
+                            <span class="badge @role.ColorDisplay">@role.Name</span>
+                        </div>
+                    }
+                </td>
+            </tr>
+        </table>
+        <div class="d-flex">
+            <button class="btn btn-primary mx-auto">Save changes</button>
+        </div>
+    </form>
+</div>

@@ -14,13 +14,13 @@ namespace WebApi.Controllers
     [ApiController]
     public class MemberController : BaseController
     {
-        public MemberController(IRepositoryManager repository, IMapper mapper) : base(repository,mapper)
+        public MemberController(IRepositoryManager repository, IMapper mapper) : base(repository, mapper)
         {
 
         }
         [HttpGet]
         //Should only admin view all members
-        [Authorize(Roles ="Admin, Moderator")]
+        [Authorize(Roles = "Admin, Moderator")]
         public async Task<ActionResult<IEnumerable<Member>>> GetMembers()
         {
             IEnumerable<Member> members = await _repository.Member.GetMembers(trackChanges: false);
@@ -59,23 +59,42 @@ namespace WebApi.Controllers
         [HttpPost("changeavatar")]
         [Authorize]
         public async Task<IActionResult> ChangeAvatar([FromForm] ChangeAvatarModel obj)
-        {           
+        {
             int memberId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             Member member = await _repository.Member.GetMemberByCondition(m => m.Id == memberId, trackChanges: true);
             if (member == null || member.Id != obj.MemberId || obj.AvatarUpload == null)
-                return BadRequest();            
+                return BadRequest();
             member.AvatarUrl = SiteHelper.UploadFile(obj.AvatarUpload, UploadTypes.Avatar);
             await _repository.SaveChanges();
             return NoContent();
         }
         [HttpPost("banaccount/{id}")]
-        [Authorize(Roles ="Admin, Moderator")]
+        [Authorize(Roles = "Admin, Moderator")]
         public async Task<IActionResult> BanAccount(int id)
         {
             Member member = await _repository.Member.GetMemberByCondition(c => c.Id == id, trackChanges: true);
             if (member == null)
                 return NotFound();
             member.IsBanned = !member.IsBanned;
+            await _repository.SaveChanges();
+            return NoContent();
+        }
+        [HttpPost("updaterolesofmember")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateRolesOfMember(UpdateRolesOfMemberDto obj)
+        {
+            if (obj == null || obj.RoleIds.Length <= 0)
+                return BadRequest();
+            Member member = await _repository.Member.GetMemberByCondition(m => m.Id ==obj.MemberId, trackChanges: true);
+            if (member == null)
+                return NotFound();
+            member.Roles.Clear();
+            IEnumerable<Role> roles = await _repository.Role.GetRoles(trackChanges: true);
+            foreach (Role role in roles)
+            {
+                if(obj.RoleIds.Contains(role.Id))
+                    member.Roles.Add(role);
+            }
             await _repository.SaveChanges();
             return NoContent();
         }

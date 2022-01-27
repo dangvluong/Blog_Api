@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WebApp.Controllers;
+using WebApp.DataTransferObject;
 using WebApp.Interfaces;
 using WebApp.Models;
 using WebApp.ViewModels;
@@ -43,6 +44,22 @@ namespace WebApp.Areas.Manage.Controllers
                 NumberOfPost = (await _repository.Post.GetPostsByMember(id)).Count
             };
             return View(viewModel);
+        }
+        public async Task<IActionResult> UpdateRole(int id)
+        {
+            string token = User.FindFirst(ClaimTypes.Authentication).Value;
+            Member member = await _repository.Member.GetMemberById(id);
+            if (member == null)
+                return NotFound();
+            ViewBag.roles = await _repository.Role.GetRoles(token);
+            return View(member);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateRole(UpdateRolesOfMemberDto obj)
+        {
+            string token = User.FindFirst(ClaimTypes.Authentication).Value;
+            int result = await _repository.Member.UpdateRolesOfMember(obj, token);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

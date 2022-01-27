@@ -1,4 +1,5 @@
-﻿using WebApp.Models;
+﻿using WebApp.DataTransferObject;
+using WebApp.Models;
 
 namespace WebApp.Interfaces
 {
@@ -9,5 +10,6 @@ namespace WebApp.Interfaces
         Task<int> ChangeAvatar(MultipartFormDataContent content,string token);
         Task<List<Member>> GetMembers(string token);
         Task<int> BanAccount(int id, string token);
+        Task<int> UpdateRolesOfMember(UpdateRolesOfMemberDto obj, string token);
     }
 }
