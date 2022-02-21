@@ -25,7 +25,7 @@ namespace WebApp.Repositories
 
         public async Task<int> Create(Post post, string token)
         {
-            return await PostJson<Post>("/api/post", post, token);            
+            return await PostJson<Post,int>("/api/post", post, token);            
         }
         public async Task<int> Edit(Post post, string token)
         {
@@ -62,7 +62,7 @@ namespace WebApp.Repositories
 
         public async Task<int> Approve(int postId, string token)
         {            
-            return await Post($"/api/post/approve/{postId}",token: token);
+            return await Post<int>($"/api/post/approve/{postId}",token: token);
         }
 
         public async Task<ListPostDto> SearchPost(string keyword, int id)

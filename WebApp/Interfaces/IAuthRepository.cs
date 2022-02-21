@@ -1,4 +1,5 @@
-﻿using WebApp.Models;
+﻿using WebApp.DataTransferObject;
+using WebApp.Models;
 
 namespace WebApp.Interfaces
 {
@@ -7,5 +8,7 @@ namespace WebApp.Interfaces
         Task<Member> Login(LoginModel model);
         Task<int> Register(RegisterModel model);       
         Task<BadRequestResponse> ChangePassword(ChangePasswordModel obj, string token);
+        Task<ResetPasswordDto> ForgotPassword(HttpContent httpContent);
+        Task<int> ResetPassword(ResetPasswordDto obj);
     }
 }

@@ -3,6 +3,9 @@
     <div class="row">
         <div class="col-3"></div>
         <div class="contact-grids col-6">
+            <div class="d-flex mt-5">
+                <h4 class="mx-auto">THÀNH VIÊN ĐĂNG NHẬP</h4>
+            </div>
             <form method="post" class="signin-form">
                 <div asp-validation-summary="All"></div>
                 <div class="input-grids">
@@ -15,10 +18,11 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Remember"></label>
-                    <input type="checkbox" asp-for="Remember"/>
+                    <input type="checkbox" asp-for="Remember" />
                 </div>
-                <div class="d-flex my-3">
+                <div class="d-flex my-3 flex-column">
                     <button class="btn btn-style btn-outline mx-auto">Login</button>
+                    <a asp-action="ForgotPassword" asp-controller="Account" asp-area="" class="mx-auto mt-3">Quên mật khẩu</a>
                 </div>
             </form>
         </div>

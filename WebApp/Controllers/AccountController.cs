@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
+using WebApp.DataTransferObject;
 using WebApp.Interfaces;
 using WebApp.Models;
 
@@ -10,7 +13,7 @@ namespace WebApp.Controllers
 {
     public class AccountController : BaseController
     {
-        public AccountController(IRepositoryManager repository) : base(repository)
+        public AccountController(IRepositoryManager repository, IConfiguration configuration) : base(repository, configuration)
         {
         }
 
@@ -83,6 +86,69 @@ namespace WebApp.Controllers
         {
             return View();
         }
-       
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+                return BadRequest();
+            var httpContent = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("",email)
+            });
+            ResetPasswordDto result = await _repository.Auth.ForgotPassword(httpContent);
+            if (result != null)
+            {
+                IConfigurationSection section = _configuration.GetSection("Email:Outlook");
+                MailAddress addressFrom = new MailAddress(section["address"]);
+                MailAddress addressTo = new MailAddress(email.Trim());
+                MailMessage message = new MailMessage(addressFrom, addressTo);
+                message.IsBodyHtml = true;
+                message.Body = $"Vui lòng click vào <a href=\"https://localhost:7211/account/resetpassword?email={result.Email}&token={result.Token}\">ĐÂY</a> để thiết lập lại mật khẩu của bạn. ";
+                message.Subject = "CẬP NHẬT MẬT KHẨU";
+
+
+                SmtpClient client = new SmtpClient(section["host"], int.Parse(section["port"]))
+                {
+                    Credentials = new NetworkCredential(section["address"], section["password"]),
+                    EnableSsl = true
+                };
+
+                client.SendCompleted += (s, e) =>
+                {
+                    message.Dispose();
+                    client.Dispose();
+                };
+                try
+                {
+                    await client.SendMailAsync(message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            }
+            return RedirectToAction(nameof(Login));
+        }
+        [HttpGet]
+        public IActionResult ResetPassword(ResetPasswordDto obj)
+        {
+            if (obj == null)
+                return BadRequest();
+            ModelState.Clear();
+            return View(obj);
+        }
+        [HttpPost]
+        [ActionName("ResetPassword")]
+        public async Task<IActionResult> ResetPasswordConfirm(ResetPasswordDto obj)
+        {
+            if (!ModelState.IsValid)
+                return View();
+            int result = await _repository.Auth.ResetPassword(obj);
+            return RedirectToAction(nameof(Login));
+        }
     }
 }

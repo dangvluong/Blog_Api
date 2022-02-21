@@ -15,7 +15,7 @@ namespace WebApi.Helper
             HashAlgorithm algorithm = HashAlgorithm.Create("SHA-512");
             return algorithm.ComputeHash(Encoding.ASCII.GetBytes(plaintext));
         }
-        public static string CreateToken(Member obj, string serectkey)
+        public static string CreateJWToken(Member obj, string serectkey)
         {
             byte[] key = Encoding.ASCII.GetBytes(serectkey);
 
@@ -66,6 +66,17 @@ namespace WebApi.Helper
                 file.CopyTo(stream);
             }
             return avatarUrl;
+        }
+        public static string CreateToken(int length)
+        {
+            string pattern = "qwertyuiopasdfghjklzxcvbnm1234567890";
+            char[] arrayToken = new char[length];
+            Random rand = new Random();
+            for (int i = 0; i < length; i++)
+            {
+                arrayToken[i] = pattern[rand.Next(pattern.Length)];
+            }
+            return string.Join("", arrayToken);
         }
     };
 }

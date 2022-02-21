@@ -76,18 +76,18 @@ try
         app.UseSwaggerUI();
     }
 
-    using (var serviceScope = app.Services.CreateScope())
-    {
-        var services = serviceScope.ServiceProvider;
+    //using (var serviceScope = app.Services.CreateScope())
+    //{
+    //    var services = serviceScope.ServiceProvider;
 
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        app.ConfigureExceptionHandler(logger);        
-    }   
+    //    var logger = services.GetRequiredService<ILogger<Program>>();
+    //    app.ConfigureExceptionHandler(logger);        
+    //}   
     app.UseStaticFiles();
     app.UseSerilogRequestLogging();
     app.UseHttpsRedirection();
     app.UseAuthentication();
-    app.UseAuthorization();
+    app.UseAuthorization();    
     app.MapControllers();
 
     app.Run();

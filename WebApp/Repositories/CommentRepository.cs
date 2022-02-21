@@ -24,7 +24,7 @@ namespace WebApp.Repositories
         //Override more method to return comment after post (?)
         public async Task<int> PostComment(Comment comment, string token)
         {
-            return await PostJson<Comment>("/api/comment", comment, token);            
+            return await PostJson<Comment,int>("/api/comment", comment, token);            
         }
         public async Task<int> EditComment(Comment comment, string token)
         {

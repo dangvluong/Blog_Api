@@ -26,5 +26,6 @@ namespace WebApi.Models
         public List<Role> Roles { get; set; }
         public string AvatarUrl { get; set; }
         public string AboutMe { get; set; }
+        public string ResetPasswordToken { get; set; }
     }
 }

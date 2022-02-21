@@ -11,7 +11,7 @@ namespace WebApp.Repositories
 
         public Task<int> CreateRole(Role role, string token)
         {
-            return PostJson<Role>("/api/role", role, token);
+            return PostJson<Role,int>("/api/role", role, token);
         }
 
         public Task<int> DeleteRole(int roleId, string token)

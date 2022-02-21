@@ -1,6 +1,7 @@
 ﻿
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using WebApp.DataTransferObject;
 using WebApp.Interfaces;
 using WebApp.Models;
 
@@ -20,7 +21,7 @@ namespace WebApp.Repositories
         }
         public async Task<int> Register(RegisterModel model)
         {           
-            return await PostJson<RegisterModel>("/api/auth/register", model);
+            return await PostJson<RegisterModel, int>("/api/auth/register", model);
         }
        
         public async Task<BadRequestResponse> ChangePassword(ChangePasswordModel obj, string token)
@@ -31,6 +32,16 @@ namespace WebApp.Repositories
                 return null;            
             BadRequestResponse badRequest = JsonConvert.DeserializeObject<BadRequestResponse>(await message.Content.ReadAsStringAsync());
             return badRequest;                
+        }
+
+        public async Task<ResetPasswordDto> ForgotPassword(HttpContent httpContent)
+        {
+            return await Post<ResetPasswordDto>("/api/auth/forgotpassword", httpContent);
+        }
+
+        public async Task<int> ResetPassword(ResetPasswordDto obj)
+        {
+            return await PostJson<ResetPasswordDto, int>("/api/auth/resetpassword", obj);
         }
     }
 }
