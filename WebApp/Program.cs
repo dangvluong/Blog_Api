@@ -13,6 +13,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 });
 
 var app = builder.Build();
+app.UseExceptionHandler("/Error");
+app.UseStatusCodePagesWithRedirects("/Error/{0}");
 app.UseRouting();
 app.UseStaticFiles();
 app.UseAuthentication();

@@ -23,7 +23,7 @@ namespace WebApp.Controllers
 
         // GET: PostController/Detail/5
         public async Task<ActionResult> Detail(int id)
-        {
+        {            
             Post post = await _repository.Post.GetPostById(id, countView: true);
             if (post is null)
                 return NotFound();
