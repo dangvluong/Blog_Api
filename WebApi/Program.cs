@@ -7,6 +7,7 @@ using WebApi.Interfaces;
 using WebApi.Models;
 using WebApi.Repositories;
 using Serilog;
+using WebApi.Extensions;
 
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
 Log.Information("Starting up....");
@@ -74,6 +75,14 @@ try
         app.UseSwagger();
         app.UseSwaggerUI();
     }
+
+    using (var serviceScope = app.Services.CreateScope())
+    {
+        var services = serviceScope.ServiceProvider;
+
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        app.ConfigureExceptionHandler(logger);        
+    }   
     app.UseStaticFiles();
     app.UseSerilogRequestLogging();
     app.UseHttpsRedirection();

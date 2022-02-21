@@ -17,6 +17,7 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
         {             
+            //throw new NotImplementedException();
             IEnumerable<Category> categories = await _repository.Category.GetCategories(trackChanges: false);
             if (categories == null)
                 return NotFound();
