@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApi.Models;
 
@@ -11,9 +12,10 @@ using WebApi.Models;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220221020704_UpdateMemberModel")]
+    partial class UpdateMemberModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +36,7 @@ namespace WebApi.Migrations
 
                     b.HasIndex("RolesId");
 
-                    b.ToTable("MemberRole", (string)null);
+                    b.ToTable("MemberRole");
                 });
 
             modelBuilder.Entity("WebApi.Models.Category", b =>
@@ -59,7 +61,7 @@ namespace WebApi.Migrations
 
                     b.HasIndex("ParentCategoryId");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("WebApi.Models.Comment", b =>
@@ -89,7 +91,7 @@ namespace WebApi.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("WebApi.Models.Member", b =>
@@ -138,7 +140,7 @@ namespace WebApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Members", (string)null);
+                    b.ToTable("Members");
                 });
 
             modelBuilder.Entity("WebApi.Models.Post", b =>
@@ -186,7 +188,7 @@ namespace WebApi.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Posts", (string)null);
+                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("WebApi.Models.Role", b =>
@@ -211,7 +213,7 @@ namespace WebApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("MemberRole", b =>

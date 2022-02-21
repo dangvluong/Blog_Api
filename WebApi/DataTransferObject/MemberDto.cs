@@ -11,8 +11,7 @@ namespace WebApi.DataTransferObject
         public string FullName { get; set; }
         public string Email { get; set; }
         public DateTime DateCreate { get; set; }
-        public DateTime DateOfBirth { get; set; }
-        public bool IsActive { get; set; } = false;
+        public DateTime DateOfBirth { get; set; }       
         public bool IsBanned { get; set; } = false;
         public string Token { get; set; }
         public string AvatarUrl { get; set; }

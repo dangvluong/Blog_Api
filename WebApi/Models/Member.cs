@@ -21,8 +21,7 @@ namespace WebApi.Models
         [DataType(DataType.Date)]
         public DateTime DateCreate { get; set; }
         [DataType(DataType.Date)]
-        public DateTime DateOfBirth { get; set; }
-        public bool IsActive { get; set; } = false;
+        public DateTime DateOfBirth { get; set; }        
         public bool IsBanned { get; set; } = false;
         public List<Role> Roles { get; set; }
         public string AvatarUrl { get; set; }

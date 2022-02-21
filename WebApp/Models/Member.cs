@@ -11,7 +11,6 @@ namespace WebApp.Models
         public string Email { get; set; }
         public DateTime DateCreate { get; set; }
         public DateTime DateOfBirth { get; set; }
-        public bool IsActive { get; set; }
         public bool IsBanned { get; set; }
         public string Token { get; set; }
         public List<Role> Roles { get; set; }
