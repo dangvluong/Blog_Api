@@ -6,44 +6,50 @@ using System.Text;
 using WebApi.Interfaces;
 using WebApi.Models;
 using WebApi.Repositories;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+Log.Information("Starting up....");
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-
-builder.Services.AddAuthentication(option =>
+try
 {
-    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;    
-}).AddJwtBearer(option =>
-{
-    option.RequireHttpsMetadata = false;
-    option.SaveToken = true;
-    option.TokenValidationParameters = new TokenValidationParameters
+    var builder = WebApplication.CreateBuilder(args);
+    builder.Host.UseSerilog((ctx, lc) => lc
+        .WriteTo.Console()
+        .ReadFrom.Configuration(ctx.Configuration));
+    // Add services to the container.
+    builder.Services.AddControllers();
+
+    builder.Services.AddAuthentication(option =>
     {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("secretkey").ToString())),
-        ValidateIssuer = false,
-        ValidateAudience = false
-    };
-});
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    }).AddJwtBearer(option =>
     {
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Scheme = "Bearer",
-        Description = "Authorization Jwt (Bearer {token})"
+        option.RequireHttpsMetadata = false;
+        option.SaveToken = true;
+        option.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("secretkey").ToString())),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
     });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen(options =>
     {
+        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.Http,
+            Scheme = "Bearer",
+            Description = "Authorization Jwt (Bearer {token})"
+        });
+        options.AddSecurityRequirement(new OpenApiSecurityRequirement(){
         {
             new OpenApiSecurityScheme
             {
@@ -52,26 +58,38 @@ builder.Services.AddSwaggerGen(options =>
             new List<string>()
         }
     });
-});
-builder.Services.AddDbContext<AppDbContext>(option =>
-{
-    option.UseSqlServer(builder.Configuration.GetConnectionString("blog"));
-});
-builder.Services.AddScoped<IRepositoryManager,RepositoryManager>();
-builder.Services.AddAutoMapper(typeof(Program));
+    });
+    builder.Services.AddDbContext<AppDbContext>(option =>
+    {
+        option.UseSqlServer(builder.Configuration.GetConnectionString("blog"));
+    });
+    builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
+    builder.Services.AddAutoMapper(typeof(Program));
 
-var app = builder.Build();
+    var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+    app.UseStaticFiles();
+    app.UseSerilogRequestLogging();
+    app.UseHttpsRedirection();
+    app.UseAuthentication();
+    app.UseAuthorization();
+    app.MapControllers();
+
+    app.Run();
+
 }
-app.UseStaticFiles();
-app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
-app.MapControllers();
-
-app.Run();
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Unhandled exception");
+}
+finally
+{
+    Log.Information("Shut down complete");
+    Log.CloseAndFlush();
+}
