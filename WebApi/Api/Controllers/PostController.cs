@@ -11,10 +11,10 @@ namespace WebApi.Controllers
     [ApiController]
     public class PostController : BaseController
     {
-        private readonly int pageSize = 12;        
-        public PostController(IRepositoryManager repository, IMapper mapper) : base(repository,mapper)
+        private readonly int pageSize = 12;
+        public PostController(IRepositoryManager repository, IMapper mapper) : base(repository, mapper)
         {
-            
+
         }
 
         // GET: api/Post
@@ -80,7 +80,7 @@ namespace WebApi.Controllers
             if (post == null)
             {
                 return NotFound();
-            }            
+            }
             _repository.Post.DeletePost(post);
             await _repository.SaveChanges();
             return NoContent();
@@ -107,7 +107,7 @@ namespace WebApi.Controllers
         {
             var posts = await _repository.Post.GetMostRecentPosts();
             if (posts == null)
-                return NotFound();            
+                return NotFound();
             return Ok(MapPosts(posts));
         }
 
@@ -117,7 +117,7 @@ namespace WebApi.Controllers
             var posts = await _repository.Post.GetTodayHighlightPosts();
             if (posts == null)
                 return NotFound();
-            
+
             return Ok(MapPosts(posts));
         }
         [HttpGet("getfeaturedposts")]
@@ -125,11 +125,11 @@ namespace WebApi.Controllers
         {
             var posts = await _repository.Post.GetFeaturedPosts();
             if (posts == null)
-                return NotFound();            
+                return NotFound();
             return Ok(MapPosts(posts));
         }
         [HttpPost("approve/{postId}")]
-        [Authorize(Roles ="Admin, Moderator")]
+        [Authorize(Roles = "Admin, Moderator")]
         public async Task<IActionResult> ApprovePost(int postId)
         {
             Post post = await _repository.Post.GetPostById(postId, trackChanges: true);
@@ -139,8 +139,21 @@ namespace WebApi.Controllers
             await _repository.SaveChanges();
             return NoContent();
         }
-
-
+        [HttpGet("search")]
+        public async Task<ActionResult<ListPostDto>> Search(string keyword,int page = 1)
+        {
+            if (string.IsNullOrEmpty(keyword))
+                return BadRequest();
+            var posts = await _repository.Post.Search(keyword, page, pageSize, trackChanges: false);
+            if (posts == null)
+                return NotFound();
+            ListPostDto listPost = new ListPostDto
+            {
+                Posts = MapPosts(posts),
+                TotalPage = await _repository.Post.CountTotalPage(pageSize, trackChanges: false, p => p.Title.Contains(keyword))
+            };
+            return Ok(listPost);
+        }
         private List<PostDto> MapPosts(IEnumerable<Post> posts)
         {
             List<PostDto> postDtos = new List<PostDto>();

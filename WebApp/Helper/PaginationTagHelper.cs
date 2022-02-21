@@ -16,11 +16,11 @@ namespace WebApp.Helper
             sb.Append("<div class=\"page-pagination\"><ul class=\"page-numbers\">");
             if (CurrentPage == null)
             {
-                string uri = string.Format(Url, "");
+                string uri = string.Format(Url, "");                
                 sb.AppendFormat("<li><span aria-current=\"page\" class=\"page-numbers current\">{0}</span></li>", 1);
                 for (int i = 2; i <= TotalPage; i++)
                 {
-                    uri = string.Format(Url, i);
+                    uri = string.Format(Url, $"page={i}");
                     sb.AppendFormat("<li><a class=\"page-numbers\" href=\"{1}\">{0}</a></li>", i, uri);
                 }
                 if (TotalPage > 1)
@@ -35,7 +35,7 @@ namespace WebApp.Helper
                 sb.AppendFormat("<li><a class=\"page-numbers\" href=\"{1}\">{0}</a></li>", 1, uri);
                 for (int i = 2; i <= TotalPage; i++)
                 {
-                    uri = string.Format(Url, i);
+                    uri = string.Format(Url, $"page={i}");
                     if (currentPage == i)
                     {
                         sb.AppendFormat("<li><span aria-current=\"page\" class=\"page-numbers current\">{0}</span></li>", i, uri);
@@ -53,7 +53,7 @@ namespace WebApp.Helper
 
         private void AddNagivation(bool isNext, StringBuilder sb, int targetPage)
         {
-            string uri = string.Format(Url, targetPage);
+            string uri = string.Format(Url, $"page={targetPage}");
             string direction = isNext ? "Next" : "Prev";
             sb.AppendFormat($"<li><a class=\"{direction} page-numbers\" href=\"{uri}\">{direction}</a></li>");
         }

@@ -54,66 +54,7 @@
                 }
         </div>
         <div class="text-center">
-            <pagination total-page="@Model.TotalPage" current-page="@ViewContext.RouteData.Values["id"]" url="/post/index/{0}"></pagination>
-        </div>
-        @*<div class="pagination-wrapper mt-4">
-            <div class="page-pagination">
-                <ul class="page-numbers">
-                    <li>
-                        <span aria-current="page" class="page-numbers current">1</span>
-                    </li>
-                    <li>
-                        <a class="page-numbers"
-                           href="https://wp.w3layouts.com/designblog/blog-posts/page/2/">2</a>
-                    </li>
-                    <li>
-                        <a class="next page-numbers"
-                           href="https://wp.w3layouts.com/designblog/blog-posts/page/2/">Next</a>
-                    </li>
-                </ul>
-            </div>
-        </div>*@
+            <pagination total-page="@Model.TotalPage" current-page="@Context.Request.Query["page"].FirstOrDefault()" url="/post/index?{0}"></pagination>
+        </div>       
     </div>
 </section>
-@*@model List<Post>
-    <div class="container">
-        <a asp-action="Create">Create</a>
-        @if (Model.Count() > 0)
-        {
-
-            <table class="table table-borderless">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Title</th>
-                        <th>IsActive</th>
-                        <th>IsDeleted</th>
-                        <th>CategoryId</th>
-                        <th>AuthorId</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (Post post in Model)
-                    {
-                        <tr>
-                            <td>@post.Id</td>
-                            <td>@post.Title</td>
-                            <td>@post.IsActive</td>
-                            <td>@post.IsDeleted</td>
-                            <td>@post.CategoryId</td>
-                            <td>@post.AuthorId</td>
-                            <td>
-                                <a asp-action="Detail" asp-route-id="@post.Id">Details</a>
-                                <a asp-action="Edit" asp-route-id="@post.Id">Edit</a>
-                                <a asp-action="Delete" asp-route-id="@post.Id">Delete</a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table> }
-        else
-        {
-            <h5>Hiện không có bài viết nào</h5>
-        }
-    </div>*@

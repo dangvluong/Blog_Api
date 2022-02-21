@@ -108,5 +108,12 @@ namespace WebApp.Controllers
             await _repository.Post.Delete(id, token);
             return RedirectToAction(nameof(Index));
         }       
+        public async Task<IActionResult> Search(string keyword, int page = 1)
+        {
+            if (string.IsNullOrEmpty(keyword))
+                return BadRequest();
+           ListPostDto searchResult = await _repository.Post.SearchPost(keyword, page);
+            return View(searchResult);
+        }
     }
 }

@@ -16,5 +16,6 @@ namespace WebApp.Interfaces
         Task<IEnumerable<Post>> GetTodayHighlightPosts();
         Task<List<Post>> GetFeaturedPosts();
         Task<int> Approve(int postId, string token);
+        Task<ListPostDto> SearchPost(string keyword,int id);
     }
 }

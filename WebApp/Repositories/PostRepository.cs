@@ -64,5 +64,10 @@ namespace WebApp.Repositories
         {            
             return await Post($"/api/post/approve/{postId}",token: token);
         }
+
+        public async Task<ListPostDto> SearchPost(string keyword, int id)
+        {
+            return await Get<ListPostDto>($"/api/post/search?keyword={keyword}&page={id}");
+        }
     }
 }
