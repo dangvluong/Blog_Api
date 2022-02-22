@@ -83,13 +83,13 @@ namespace WebApi.Repositories
             return await FindAll(trackChanges).Where(p => p.Title.ToLower().Contains(keyword.ToLower())).Include(p => p.Author).Include(p => p.Category).OrderBy(p => p.Id).Skip(pageSize * (page - 1)).Take(pageSize).ToListAsync();
         }
 
-        public async Task<int> CountTotalPage(int pageSize, bool trackChanges = false, Expression<Func<Post, bool>> expression = null)
+        public async Task<int> CountTotalPage(int pageSize, bool trackChanges = false, Expression<Func<Post, bool>> conditionFilter = null)
         {
             int totalPost;
-            if (expression == null)
+            if (conditionFilter == null)
                 totalPost = await FindAll(trackChanges).CountAsync();
             else
-                totalPost = await FindByCondition(expression,trackChanges).CountAsync();
+                totalPost = await FindByCondition(conditionFilter, trackChanges).CountAsync();
             return (int)Math.Floor(totalPost / (float)pageSize);
 
         }
