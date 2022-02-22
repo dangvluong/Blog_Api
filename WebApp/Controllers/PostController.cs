@@ -15,9 +15,9 @@ namespace WebApp.Controllers
         }
 
         // GET: PostController
-        public async Task<ActionResult> Index(int id = 1)
+        public async Task<ActionResult> Index(int page = 1)
         {
-            ListPostDto listPost = await _repository.Post.GetPosts(id);
+            ListPostDto listPost = await _repository.Post.GetPosts(page);
             return View(listPost);
         }
 
