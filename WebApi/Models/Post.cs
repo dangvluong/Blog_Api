@@ -10,7 +10,6 @@ namespace WebApi.Models
         public int Id { get; set; }
         [Required]
         public string Title { get; set; }
-        public string Description { get; set; }
         public string Content { get; set; }
         [DataType(DataType.Date)]
         public DateTime DateCreated { get; set; }
@@ -27,5 +26,6 @@ namespace WebApi.Models
         public Member Author { get; set; }
         public List<Comment> Comments { get; set; }
         public int CountView { get; set; }
+        public string Thumbnail { get; set; }
     }
 }

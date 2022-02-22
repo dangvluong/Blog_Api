@@ -171,8 +171,7 @@ namespace WebApi.Controllers
             var index = 1;
             var members = await _context.Members.ToListAsync();
             var rand = new Random();
-            fakerPost.RuleFor(p => p.Title, fk => $"Post {index++} " + fk.Lorem.Sentence(3, 4).Trim('.'));
-            fakerPost.RuleFor(p => p.Description, fk => fk.Lorem.Sentences(3));
+            fakerPost.RuleFor(p => p.Title, fk => $"Post {index++} " + fk.Lorem.Sentence(3, 4).Trim('.'));            
             fakerPost.RuleFor(p => p.Content, fk => fk.Lorem.Paragraphs(10));
             fakerPost.RuleFor(p => p.DateCreated, fk => fk.Date.Between(new DateTime(2019, 1, 1), new DateTime(2021, 12, 31)));
 
@@ -181,6 +180,7 @@ namespace WebApi.Controllers
             for (int i = 0; i < 50; i++)
             {
                 var post = fakerPost.Generate();
+                post.Thumbnail = "/images/thumbnails/default.jpg";
                 post.CategoryId = categoriesInDb[rand.Next(categoriesInDb.Count)].Id;
                 post.AuthorId = members[rand.Next(members.Count)].Id;
                 posts.Add(post);

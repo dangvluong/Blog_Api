@@ -1,4 +1,8 @@
 ﻿@model ListPostDto
+@inject IConfiguration configuration
+@{
+    var hostAddress = configuration.GetSection("ApiServer").Value;
+}
 @if (Model != null && Model.Posts.Count > 0)
 {
     <main id="primary" class="site-main">
@@ -6,73 +10,71 @@
             <div class="container py-lg-5 mb-lg-4 BlogHomeLayout">
                 @*<div class="row img-block-mobile">
                     <div class="col-lg-12 most-recent">*@
-                        <header class="page-header">
-                            <h3 class="section-title-left mb-5">
-                                Search Results for : <span>@Context.Request.Query["keyword"]</span>
-                            </h3>
-                        </header><!-- .page-header -->
-                        <div class="row">
-                            @foreach (Post post in Model.Posts)
-                            {
-                                <div class="col-lg-4 col-md-6 item mb-4">
-                                    <article id="post-137" class="post-137 post type-post status-publish format-standard has-post-thumbnail hentry category-lifestyle">
+                <header class="page-header">
+                    <h3 class="section-title-left mb-5">
+                        Search Results for : <span>@Context.Request.Query["keyword"]</span>
+                    </h3>
+                </header><!-- .page-header -->
+                <div class="row">
+                    @foreach (Post post in Model.Posts)
+                    {
+                        <div class="col-lg-4 col-md-6 item mb-4">
+                            <article id="post-137" class="post-137 post type-post status-publish format-standard has-post-thumbnail hentry category-lifestyle">
 
-                                        <div class="card">
-                                            <div class="card-header p-0 position-relative blog-post-thumb">
-                                                <a class="post-thumbnail"
-                                                   href="https://wp.w3layouts.com/designblog/2021/05/31/before-you-start-writing-your-first-blog-post-you-should-make-a-content-plan/"
-                                                   aria-hidden="true" tabindex="-1">
-                                                    <img width="560" height="370"
-                                                         src="./Search Results for “writing” – Design Blog – Blogging Category WordPress Theme_files/p1.jpg"
-                                                         class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
-                                                         alt="Before you start writing your first blog post, you should make a content plan."
-                                                         loading="lazy"
-                                                         srcset="https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/p1.jpg 560w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/p1-300x198.jpg 300w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/p1-360x238.jpg 360w"
-                                                         sizes="(max-width: 560px) 100vw, 560px">
-                                                </a>
+                                <div class="card">
+                                    <div class="card-header p-0 position-relative blog-post-thumb">
+                                        <a class="post-thumbnail"
+                                           href="https://wp.w3layouts.com/designblog/2021/05/31/before-you-start-writing-your-first-blog-post-you-should-make-a-content-plan/"
+                                           aria-hidden="true" tabindex="-1">
+                                            <img width="560" height="370"
+                                                 src="@(hostAddress + "/" + post.Thumbnail)"
+                                                 class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
+                                                 alt="@post.Title"
+                                                 loading="lazy">
+                                        </a>
 
 
-                                            </div>
-                                            <div class="card-body p-0 blog-details">
-                                                <a asp-controller="Post" asp-action="Detail" asp-area="" asp-route-id="@post.Id" rel="bookmark" class="blog-desc">
-                                                    @post.Title
-                                                </a>
-                                                <div>
-                                                </div>
-
-                                                <div class="author align-items-center mt-3 mb-1">
-                                                    <a class="url fn n"
-                                                       href="#">@post.Author.Username</a>
-                                                    in<a href="#" rel="category tag">@post.Category.Name</a>
-                                                </div>
-
-
-                                                <ul class="blog-meta">
-
-                                                    <li class="meta-item blog-lesson">
-                                                        <span class="meta-value"> @post.DateCreated.ToShortDateString() </span>
-
-                                                    </li>
-                                                    <li class="meta-item blog-students">
-                                                        <span class="meta-value"> @post.DateCreated.ToShortTimeString()</span>
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                    </div>
+                                    <div class="card-body p-0 blog-details">
+                                        <a asp-controller="Post" asp-action="Detail" asp-area="" asp-route-id="@post.Id" rel="bookmark" class="blog-desc">
+                                            @post.Title
+                                        </a>
+                                        <div>
                                         </div>
-                                    </article>
-                                </div>
-                            }
-                        </div>
-                        <!-- pagination -->
-                        <div class="text-center">
-                            <pagination total-page="@Model.TotalPage" current-page="@Context.Request.Query["page"].FirstOrDefault()" url="/post/search?keyword=@Context.Request.Query["keyword"]&{0}"></pagination>
-                        </div>
-                        <!-- //pagination -->
-                    </div>
-                                          
-                    @*</div>
 
-            </div>*@
+                                        <div class="author align-items-center mt-3 mb-1">
+                                            <a class="url fn n"
+                                               href="#">@post.Author.Username</a>
+                                            in<a href="#" rel="category tag">@post.Category.Name</a>
+                                        </div>
+
+
+                                        <ul class="blog-meta">
+
+                                            <li class="meta-item blog-lesson">
+                                                <span class="meta-value"> @post.DateCreated.ToShortDateString() </span>
+
+                                            </li>
+                                            <li class="meta-item blog-students">
+                                                <span class="meta-value"> @post.DateCreated.ToShortTimeString()</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    }
+                </div>
+                <!-- pagination -->
+                <div class="text-center">
+                    <pagination total-page="@Model.TotalPage" current-page="@Context.Request.Query["page"].FirstOrDefault()" url="/post/search?keyword=@Context.Request.Query["keyword"]&{0}"></pagination>
+                </div>
+                <!-- //pagination -->
+            </div>
+
+            @*</div>
+
+                </div>*@
 
         </section>
     </main>

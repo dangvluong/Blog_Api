@@ -7,9 +7,7 @@ namespace WebApp.Models
         public int Id { get; set; }
         [Required]
         [Display(Name ="Tên bài viết")]
-        public string Title { get; set; }
-        [Display(Name = "Mô tả ngắn")]
-        public string Description { get; set; }
+        public string Title { get; set; }       
         [Required]
         [Display(Name = "Nội dung")]
         public string Content { get; set; }
@@ -26,5 +24,6 @@ namespace WebApp.Models
         public Member Author { get; set; }
         public List<Comment> Comments { get; set; }
         public int CountView { get; set; }
+        public string Thumbnail { get; set; }
     }
 }

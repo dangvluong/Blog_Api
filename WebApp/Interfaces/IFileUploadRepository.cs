@@ -2,6 +2,6 @@
 {
     public interface IFileUploadRepository
     {
-        Task<string> Image(HttpContent content);
+        Task<string> Upload(HttpContent content, string url);
     }
 }

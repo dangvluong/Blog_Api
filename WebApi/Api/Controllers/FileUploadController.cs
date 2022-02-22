@@ -21,5 +21,13 @@ namespace WebApi.Api.Controllers
             string imageUrl = SiteHelper.UploadFile(image, UploadTypes.PostImages);            
             return Ok(imageUrl);
         }
+        [HttpPost("postthumbnail")]
+        public ActionResult<string> PostThumbnail([FromForm] IFormFile thumbnailImage)
+        {
+            if (thumbnailImage == null || string.IsNullOrEmpty(thumbnailImage.FileName))
+                return BadRequest();
+            string imageUrl = SiteHelper.UploadFile(thumbnailImage, UploadTypes.PostThumbnail);
+            return Ok(imageUrl);
+        }
     }
 }

@@ -11,13 +11,15 @@ namespace WebApp.Controllers
         [HttpPost]
         public async Task<string> Image(IFormFile image)
         {            
-            MultipartFormDataContent content = new MultipartFormDataContent();
             if (image != null || !string.IsNullOrEmpty(image.FileName))
-            {                
-                content.Add(new StreamContent(image.OpenReadStream()),nameof(image),image.FileName);
-            }            
-            string imageUrl = await _repository.FileUpload.Image(content);
-            return imageUrl;
+            {
+                MultipartFormDataContent content = new MultipartFormDataContent();
+                content.Add(new StreamContent(image.OpenReadStream()), nameof(image), image.FileName);
+                string url = "/api/fileupload/postimage";
+                string imageUrl = await _repository.FileUpload.Upload(content,url);
+                return imageUrl;                
+            }
+            return null;
         }
     }
 }

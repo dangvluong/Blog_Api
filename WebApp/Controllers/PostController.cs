@@ -43,13 +43,17 @@ namespace WebApp.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Post post)
+        public async Task<ActionResult> Create(Post post, IFormFile thumbnailImage)
         {
             if (!ModelState.IsValid)
                 return View(post);
             string token = User.FindFirstValue(ClaimTypes.Authentication);
             post.AuthorId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             post.DateCreated = DateTime.Now;
+            if(thumbnailImage != null && !string.IsNullOrEmpty(thumbnailImage.FileName))
+            {
+                post.Thumbnail = await this.UploadThumbnail(thumbnailImage);
+            }
             var result = await _repository.Post.Create(post, token);
             return RedirectToAction(nameof(Index));
         }
@@ -72,7 +76,7 @@ namespace WebApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<ActionResult> Edit(int id, Post post)
+        public async Task<ActionResult> Edit(int id, Post post, IFormFile thumbnailImage)
         {
             if (post.Id != id)
                 return BadRequest();
@@ -80,8 +84,20 @@ namespace WebApp.Controllers
                 return View(post);
             string token = User.FindFirstValue(ClaimTypes.Authentication);
             post.DateModifier = DateTime.Now;
+            if(thumbnailImage != null && !string.IsNullOrEmpty(thumbnailImage.FileName))
+            {
+                post.Thumbnail = await this.UploadThumbnail(thumbnailImage);
+            }
             await _repository.Post.Edit(post, token);
             return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<string> UploadThumbnail(IFormFile thumbnailImage)
+        {
+            MultipartFormDataContent content = new MultipartFormDataContent();
+            content.Add(new StreamContent(thumbnailImage.OpenReadStream()), nameof(thumbnailImage), thumbnailImage.FileName);
+            string url = "/api/fileupload/postthumbnail";
+            return await _repository.FileUpload.Upload(content, url);
         }
 
         // GET: PostController/Delete/5

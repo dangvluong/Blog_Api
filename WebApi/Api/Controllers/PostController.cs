@@ -65,6 +65,8 @@ namespace WebApi.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (string.IsNullOrEmpty(post.Thumbnail))
+                    post.Thumbnail = "/images/thumbnails/default.jpg";
                 _repository.Post.AddPost(post);
                 return await _repository.SaveChanges();
             }

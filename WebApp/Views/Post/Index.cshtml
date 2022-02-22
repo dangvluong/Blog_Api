@@ -1,4 +1,9 @@
 ﻿@model ListPostDto
+@inject IConfiguration configuration
+@{
+    var hostAddress = configuration.GetSection("ApiServer").Value;
+}
+
 <nav id="breadcrumbs" class="breadcrumbs">
     <div class="container page-wrapper AllBreadcrumbs">
         <a asp-action="Index" asp-controller="Home" rel="homepage">Home</a>&nbsp;&nbsp;»&nbsp;&nbsp;
@@ -6,7 +11,7 @@
     </div>
 </nav>
 <section class="w3l-blog-block2 mt-md-5">
-    <div class="container mb-lg-4 BlogHomeLayout my-5">          
+    <div class="container mb-lg-4 BlogHomeLayout my-5">
         <div class="row my-3">
             <div class="col-md-9">
                 <h3 class="section-title-left">All posts </h3>
@@ -15,7 +20,7 @@
                 <a asp-action="Create" asp-controller="Post" asp-area="" class="btn btn-style btn-outline ml-auto">Create new post</a>
             </div>
         </div>
-        
+
         <div class="row">
             @foreach (Post post in Model.Posts)
             {
@@ -25,11 +30,9 @@
                             <a href="https://wp.w3layouts.com/designblog/2021/05/31/how-to-write-a-blog-post-a-step-by-step-guide/"></a>
                             <a class="post-thumbnail" asp-action="Detail" asp-route-id="@post.Id" aria-hidden="true" tabindex="-1">
                                 <img width="340" height="284"
-                                     src="./Blog posts – Design Blog – Blogging Category WordPress Theme_files/16.jpg"
+                                     src="@(hostAddress + "/" + post.Thumbnail)"
                                      class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
-                                     alt="How to Write a Blog Post: A Step-by-Step Guide" loading="lazy"
-                                     srcset="https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/05/16.jpg 340w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/05/16-300x251.jpg 300w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/05/16-287x240.jpg 287w"
-                                     sizes="(max-width: 340px) 100vw, 340px">
+                                     alt="@post.Title" loading="lazy">
                             </a>
 
 
@@ -63,6 +66,6 @@
         </div>
         <div class="text-center">
             <pagination total-page="@Model.TotalPage" current-page="@Context.Request.Query["page"].FirstOrDefault()" url="/post/index?{0}"></pagination>
-        </div>       
+        </div>
     </div>
 </section>

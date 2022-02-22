@@ -1,4 +1,8 @@
 ﻿@model List<Post>
+@inject IConfiguration configuration
+@{
+    var hostAddress = configuration.GetSection("ApiServer").Value;
+}
 <h3 class="section-title-left">
     Featured posts
 </h3>
@@ -12,10 +16,8 @@
 
                         <div class="post-thumbnail">
                             <img width="560" height="370"
-                                 src="./Design Blog – Blogging Category WordPress Theme – Just another W3Layouts free WordPress Demo Sites site_files/blog.jpg"
-                                 class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" loading="lazy"
-                                 srcset="https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/blog.jpg 560w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/blog-300x198.jpg 300w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/blog-360x238.jpg 360w"
-                                 sizes="(max-width: 560px) 100vw, 560px">
+                                 src="@(hostAddress + "/" + Model[0].Thumbnail)"
+                                 class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" loading="lazy">
                         </div><!-- .post-thumbnail -->
 
                     </a>
@@ -66,10 +68,8 @@
 
                                 <div class="post-thumbnail">
                                     <img width="340" height="284"
-                                         src="./Design Blog – Blogging Category WordPress Theme – Just another W3Layouts free WordPress Demo Sites site_files/16.jpg"
-                                         class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" loading="lazy"
-                                         srcset="https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/05/16.jpg 340w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/05/16-300x251.jpg 300w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/05/16-287x240.jpg 287w"
-                                         sizes="(max-width: 340px) 100vw, 340px">
+                                         src="@(hostAddress + "/" + Model[i].Thumbnail)"
+                                         class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" loading="lazy">
                                 </div><!-- .post-thumbnail -->
 
                             </a>

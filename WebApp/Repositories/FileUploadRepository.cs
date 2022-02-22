@@ -8,9 +8,9 @@ namespace WebApp.Repositories
         {
         }
 
-        public async Task<string> Image(HttpContent content)
+        public async Task<string> Upload(HttpContent content, string url)
         {
-            return await PostImage("/api/fileupload/postimage", content);
+            return await PostImage(url, content);
         }
     }
 }

@@ -9,7 +9,7 @@
 </nav>
 <div class="container my-3">   
     <div class="contact-grids">
-        <form method="post" class="signin-form">
+        <form method="post" class="signin-form" enctype="multipart/form-data">
             <div asp-validation-summary="All"></div>
             <div class="input-grids">
                 <label asp-for="Title"></label>
@@ -19,10 +19,10 @@
                 <label asp-for="CategoryId"></label>
                 <select asp-for="CategoryId" asp-items="@ViewBag.categories" class="form-control">
                 </select>
-            </div>
-            <div class="form-input">
-                <label asp-for="Description"></label>
-                <textarea asp-for="Description"></textarea>
+            </div>     
+            <div class="form-input my-3">
+                <label>Hình ảnh đại diện: </label>
+                <input type="file" name="thumbnailImage" accept="image/png, image/gif, image/jpeg,image/jpg"/>
             </div>
             <div class="form-input">
                 <label asp-for="Content"></label>

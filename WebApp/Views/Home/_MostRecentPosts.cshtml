@@ -1,5 +1,8 @@
 ﻿@model IEnumerable<Post>
-
+@inject IConfiguration configuration
+@{
+    var hostAddress = configuration.GetSection("ApiServer").Value;
+}
 <h3 class="section-title-left">
     Most Recent Posts
 </h3>
@@ -42,10 +45,8 @@
 
                 <div class="post-thumbnail">
                     <img width="560" height="370"
-                         src="./Design Blog – Blogging Category WordPress Theme – Just another W3Layouts free WordPress Demo Sites site_files/p2.jpg"
-                         class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" loading="lazy"
-                         srcset="https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/p2.jpg 560w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/p2-300x198.jpg 300w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/p2-360x238.jpg 360w"
-                         sizes="(max-width: 560px) 100vw, 560px">
+                         src="@(hostAddress + "/" + post.Thumbnail)"
+                         class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" loading="lazy">
                 </div>
             </a>
         </div>
