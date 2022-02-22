@@ -90,7 +90,7 @@ namespace WebApi.Repositories
                 totalPost = await FindAll(trackChanges).CountAsync();
             else
                 totalPost = await FindByCondition(conditionFilter, trackChanges).CountAsync();
-            return (int)Math.Floor(totalPost / (float)pageSize);
+            return (int)Math.Ceiling(totalPost / (float)pageSize);
 
         }
         //public async Task<int> CountTotalPage(int pageSize, bool trackChanges = false)
