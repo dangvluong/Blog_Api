@@ -58,14 +58,17 @@ namespace WebApi.Helper
                 default:
                     break;
             }
+            string folderUpload = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot","images", targetFolder);
+            if(!Directory.Exists(folderUpload))
+                Directory.CreateDirectory(folderUpload);
             string newFileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-            string avatarUrl = Path.Combine("images", targetFolder, newFileName);
-            string uploadLocation = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", avatarUrl);
+            string imageUrl = Path.Combine("images", targetFolder, newFileName);            
+            string uploadLocation = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", imageUrl);
             using (Stream stream = new FileStream(uploadLocation, FileMode.Create))
             {
                 file.CopyTo(stream);
             }
-            return avatarUrl;
+            return imageUrl;
         }
         public static string CreateToken(int length)
         {

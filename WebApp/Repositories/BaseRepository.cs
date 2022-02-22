@@ -38,12 +38,31 @@ namespace WebApp.Repositories
         {
             if (token != null)
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            //recheck this
+            HttpResponseMessage message = await client.PostAsync(url, obj);
+            if (message.IsSuccessStatusCode)
+            {                
+                return await message.Content.ReadAsAsync<TOut>();
+            }                
+
+            return default(TOut);
+        }
+
+
+        protected async Task<string> PostImage(string url, HttpContent obj, string token = null)
+        {
+            if (token != null)
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             HttpResponseMessage message = await client.PostAsync(url, obj);
             if (message.IsSuccessStatusCode)
-                return await message.Content.ReadAsAsync<TOut>();
-            return default(TOut);
+            {
+                return await message.Content.ReadAsStringAsync();
+            }
+
+            return null;
         }
+
         protected async Task<int> Put<T>(string url, T obj, string token = null)
         {
             if (token != null)

@@ -12,7 +12,18 @@ namespace WebApp.Repositories
         private IAuthRepository auth;
         private ISeedDataRepository seedData;
         private IRoleRepository role;        
-       
+       private IFileUploadRepository fileUpload;
+        public IFileUploadRepository FileUpload
+        {
+            get
+            {
+                if(fileUpload is null)
+                {
+                    fileUpload = new FileUploadRepository(Client);
+                }
+                return fileUpload;
+            }
+        }
         public ICategoryRepository Category
         {
             get

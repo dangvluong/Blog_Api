@@ -9,5 +9,6 @@
         public IPostRepository Post { get; }
         public IRoleRepository Role { get; }
         public ISeedDataRepository SeedData { get; }
+        public IFileUploadRepository FileUpload { get; }
     }
 }
