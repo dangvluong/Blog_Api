@@ -1,14 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApp.DataTransferObject
+namespace WebApp.Models
 {
-    public class ResetPasswordDto
+    public class ResetPasswordModel
     {
         [Required]
         public string Token { get; set; }
-        [Required]
-        [Display(Name ="Địa chỉ email")]
-        [EmailAddress(ErrorMessage ="Định dạng email không đúng")]
+        [Required]       
         public string Email { get; set; }
         [Required]        
         [Display(Name = "Mật khẩu mới")]

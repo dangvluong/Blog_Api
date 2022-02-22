@@ -34,14 +34,14 @@ namespace WebApp.Repositories
             return badRequest;                
         }
 
-        public async Task<ResetPasswordDto> ForgotPassword(HttpContent httpContent)
+        public async Task<ResetPasswordModel> ForgotPassword(HttpContent httpContent)
         {
-            return await Post<ResetPasswordDto>("/api/auth/forgotpassword", httpContent);
+            return await Post<ResetPasswordModel>("/api/auth/forgotpassword", httpContent);
         }
 
-        public async Task<int> ResetPassword(ResetPasswordDto obj)
+        public async Task<int> ResetPassword(ResetPasswordModel obj)
         {
-            return await PostJson<ResetPasswordDto, int>("/api/auth/resetpassword", obj);
+            return await PostJson<ResetPasswordModel, int>("/api/auth/resetpassword", obj);
         }
     }
 }

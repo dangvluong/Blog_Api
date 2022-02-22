@@ -8,7 +8,7 @@ namespace WebApp.Interfaces
         Task<Member> Login(LoginModel model);
         Task<int> Register(RegisterModel model);       
         Task<BadRequestResponse> ChangePassword(ChangePasswordModel obj, string token);
-        Task<ResetPasswordDto> ForgotPassword(HttpContent httpContent);
-        Task<int> ResetPassword(ResetPasswordDto obj);
+        Task<ResetPasswordModel> ForgotPassword(HttpContent httpContent);
+        Task<int> ResetPassword(ResetPasswordModel obj);
     }
 }

@@ -7,6 +7,7 @@ namespace WebApp.Controllers
     {
         protected readonly IRepositoryManager _repository;
         protected readonly IConfiguration _configuration;
+        protected readonly ILogger _logger;
         public BaseController(IRepositoryManager repository)
         {
             _repository = repository;
@@ -15,6 +16,10 @@ namespace WebApp.Controllers
         protected BaseController(IRepositoryManager repository, IConfiguration configuration) : this(repository)
         {
             _configuration = configuration;
+        }
+        protected BaseController(IRepositoryManager repository, IConfiguration configuration, ILogger logger) : this(repository,configuration)
+        {
+            _logger = logger;
         }
     }
 }

@@ -8,12 +8,13 @@ using System.Security.Claims;
 using WebApp.DataTransferObject;
 using WebApp.Interfaces;
 using WebApp.Models;
+using WebApp.Services;
 
 namespace WebApp.Controllers
 {
     public class AccountController : BaseController
     {
-        public AccountController(IRepositoryManager repository, IConfiguration configuration) : base(repository, configuration)
+        public AccountController(IRepositoryManager repository, IConfiguration configuration, ILogger<AccountController> logger) : base(repository, configuration, logger)
         {
         }
 
@@ -99,42 +100,17 @@ namespace WebApp.Controllers
             {
                 new KeyValuePair<string, string>("",email)
             });
-            ResetPasswordDto result = await _repository.Auth.ForgotPassword(httpContent);
+            ResetPasswordModel result = await _repository.Auth.ForgotPassword(httpContent);
             if (result != null)
             {
-                IConfigurationSection section = _configuration.GetSection("Email:Outlook");
-                MailAddress addressFrom = new MailAddress(section["address"]);
-                MailAddress addressTo = new MailAddress(email.Trim());
-                MailMessage message = new MailMessage(addressFrom, addressTo);
-                message.IsBodyHtml = true;
-                message.Body = $"Vui lòng click vào <a href=\"https://localhost:7211/account/resetpassword?email={result.Email}&token={result.Token}\">ĐÂY</a> để thiết lập lại mật khẩu của bạn. ";
-                message.Subject = "CẬP NHẬT MẬT KHẨU";
-
-
-                SmtpClient client = new SmtpClient(section["host"], int.Parse(section["port"]))
-                {
-                    Credentials = new NetworkCredential(section["address"], section["password"]),
-                    EnableSsl = true
-                };
-
-                client.SendCompleted += (s, e) =>
-                {
-                    message.Dispose();
-                    client.Dispose();
-                };
-                try
-                {
-                    await client.SendMailAsync(message);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }
+                //Skip waiting for email sending
+                MailServices.SendEmailResetPassword(_configuration, result.Email,result.Token,_logger);
             }
+            //Add notification 
             return RedirectToAction(nameof(Login));
         }
         [HttpGet]
-        public IActionResult ResetPassword(ResetPasswordDto obj)
+        public IActionResult ResetPassword(ResetPasswordModel obj)
         {
             if (obj == null)
                 return BadRequest();
@@ -143,7 +119,7 @@ namespace WebApp.Controllers
         }
         [HttpPost]
         [ActionName("ResetPassword")]
-        public async Task<IActionResult> ResetPasswordConfirm(ResetPasswordDto obj)
+        public async Task<IActionResult> ResetPasswordConfirm(ResetPasswordModel obj)
         {
             if (!ModelState.IsValid)
                 return View();
