@@ -6,23 +6,31 @@
         {
             <table class="table table-borderless">
                 <thead>
-                    <tr>                      
-                        <th>Tiêu đề</th>                        
+                    <tr>
+                        <th>Tiêu đề</th>
                         <th>Ngày tạo</th>
                         <th>Thuộc danh mục</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (Post post in Model.Posts)
                     {
-                        <tr>                          
+                        <tr>
                             <td>
                                 <a asp-action="Detail" asp-controller="Post" asp-route-id="@post.Id">
                                     @post.Title
                                 </a>
-                            </td>                           
+                            </td>
                             <td>@post.DateCreated.ToShortDateString()</td>
                             <td>@post.Category.Name</td>
+                            <td>
+                                @if (User.Identity.Name == Model.Member.Username)
+                                {
+                                    <a asp-action="Edit" asp-controller="Post" asp-route-id="@post.Id" asp-area="">Chỉnh sửa</a>
+                                    <a asp-action="Delete" asp-controller="Post" asp-route-id="@post.Id" asp-area="">Xóa</a>
+                                }
+                            </td>
                         </tr>
                     }
                 </tbody>

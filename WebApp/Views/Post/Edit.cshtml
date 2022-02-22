@@ -1,5 +1,13 @@
 ﻿@model Post
-<div class="container">
+<nav id="breadcrumbs" class="breadcrumbs">
+    <div class="container page-wrapper AllBreadcrumbs">
+        <a asp-action="Index" asp-controller="Home" rel="homepage">Home</a>&nbsp;&nbsp;»&nbsp;&nbsp;
+        <a asp-action="Index" asp-controller="Post" rel="post">Post</a>
+        &nbsp;&nbsp;»&nbsp;&nbsp;
+        Edit post
+    </div>
+</nav>
+<div class="container my-3">
     <div class="contact-grids">
         <form method="post" class="signin-form">
             <div asp-validation-summary="All"></div>
@@ -11,7 +19,7 @@
             </div>
             <div>
                 <label asp-for="CategoryId"></label>
-                <select asp-for="CategoryId" asp-items="@ViewBag.categories" class="form-control">                    
+                <select asp-for="CategoryId" asp-items="@ViewBag.categories" class="form-control">
                 </select>
             </div>
             <div class="form-input">
@@ -25,7 +33,11 @@
             <div class="d-flex my-3">
                 <button class="btn btn-primary ml-auto mr-2">Edit</button>
                 <a asp-action="Index" class="btn btn-secondary mr-auto ml-2">Back</a>
-            </div>            
+            </div>
         </form>
     </div>
 </div>
+@{
+    var summerNote = new SummerNoteViewModel("#Content");
+}
+<partial name="_SummerNoteEditor" model="@summerNote" />

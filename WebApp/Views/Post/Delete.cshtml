@@ -4,7 +4,7 @@
         <a asp-action="Index" asp-controller="Home" rel="homepage">Home</a>&nbsp;&nbsp;»&nbsp;&nbsp;
         <a asp-action="Index" asp-controller="Post" rel="post">Post</a>
         &nbsp;&nbsp;»&nbsp;&nbsp;
-        @Model.Title
+        Delete post
     </div>
 </nav>
 <!-- //breadcrumb -->
@@ -12,7 +12,7 @@
 <div class="py-5 w3l-homeblock1 text-center">
     <div class="container mt-md-3 w3BlogLayout">
         <h3 class="blog-desc-big text-center mb-4">
-            Your Blog Posts are Boring: 9 Tips for Making your Writing more Interesting
+            @Model.Title
         </h3>
         <div class="blog-post-align">
 
@@ -48,87 +48,11 @@
         <!--/blog-post-->
         <div class="blog-content-inf pb-5">
             <div class="container pb-lg-4 w3BlogLayout">
-                <div class="single-post-image mb-5">
-                    <!--post's thumbnail-->
-                    <!--<div class="post-content">
-
-                        <div class="post-thumbnail">
-                            <img width="560" height="370"
-                                 src="./Your Blog Posts are Boring_ 9 Tips for Making your Writing more Interesting – Design Blog – Blogging Category WordPress Theme_files/p3.jpg"
-                                 class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt=""
-                                 loading="lazy"
-                                 srcset="https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/p3.jpg 560w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/p3-300x198.jpg 300w, https://wp.w3layouts.com/designblog/wp-content/uploads/sites/48/2021/04/p3-360x238.jpg 360w"
-                                 sizes="(max-width: 560px) 100vw, 560px">
-                        </div>-->
-                    <!-- .post-thumbnail -->
-                    <!--</div>-->
+                <div class="single-post-image mb-5">                   
                 </div>
                 <div class="single-post-content">
                     <!--post content-->
-                    @Model.Content
-                    @*<p>
-                            Maecenas vitae lacus sit amet turpis consequat eleifend. Cras odio purus, venenatis et
-                            vehicula sit amet, dictum cursus mauris.
-                        </p>
-                        <p>
-                            Integer suscipit lectus quis est dictum, at imperdiet urna ullamcorper. Aliquam ac
-                            consectetur nisl, id semper dolor. Duis iaculis lacus est, sed malesuada arcu
-                            pellentesque et. Donec aliquet lectus non mi cursus euismod. Suspendisse aliquam sem
-                            metus, eget mattis leo pharetra non. Nulla finibus ultrices massa ut vestibulum.
-                            Curabitur nec tortor lectus. Fusce porttitor massa eget augue tempus fringilla. Donec
-                            gravida, mauris at tristique semper, ipsum libero lobortis lectus, quis commodo augue mi
-                            ac ante. Nullam gravida enim nec velit tempus suscipit. Donec convallis molestie ex,
-                            luctus laoreet magna commodo ut. Suspendisse mauris erat, volutpat nec fermentum id,
-                            ullamcorper vitae est. Sed luctus, tortor non hendrerit commodo, metus sem eleifend sem,
-                            sed feugiat odio nisi quis justo.
-                        </p>
-                        <p>
-                            Quisque tortor libero, consequat sed lacinia a, facilisis ac dui. Donec vulputate purus
-                            mauris, sit amet volutpat arcu condimentum at. Sed sed lobortis mi. Maecenas ac sodales
-                            massa. Aenean sapien enim, commodo et scelerisque sit amet, efficitur ut diam. In ut
-                            lacinia orci, in ultrices sem. Integer hendrerit volutpat nulla, non ornare mi ultricies
-                            quis.&nbsp;
-                        </p>*@
-                    <!--about author-->
-                    <div class="author-card author-listhny my-lg-5 my-sm-4 w3ArticleAuth">
-                        <div class="row">
-                            <div class="author-left col-sm-3 mb-sm-0 mb-4">
-                                <a href="https://wp.w3layouts.com/designblog/author/w3layouts/">
-                                    <!--author's avatar-->
-                                    <img class="img-fluid"
-                                         src="~/images/328cc1f23e4a3b73aa60ee6ced1897a1(2).jpeg"
-                                         alt="W3Layouts">
-                                </a>
-                            </div>
-                            <div class="author-right col-sm-9 position-relative align-self">
-
-                                <h4>
-                                    <a href="https://wp.w3layouts.com/designblog/author/w3layouts/"
-                                       class="title-team-28">@Model.AuthorId</a>
-                                </h4>
-                                <p class="para-team mb-0">
-                                    We help developers, designers and website owner's
-                                    create stunning websites. We have been building a huge collection of website
-                                    templates for every business and industry needs. Simply select your
-                                    favourite template, edit, download and launc
-                                </p>
-
-                                <div class="share-icons mt-4">
-                                    <a href="https://twitter.com/w3layouts">
-                                        <span class="fa fa-twitter"></span>
-                                    </a>
-
-                                    <a href="https://www.facebook.com/w3layouts">
-                                        <span class="fa fa-facebook"></span>
-                                    </a>
-
-                                    <a href="https://www.instagram.com/w3layouts_/">
-                                        <span class="fa fa-instagram"></span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>                   
+                    @Html.Raw(Model.Content)
                 </div>
             </div>
         </div>

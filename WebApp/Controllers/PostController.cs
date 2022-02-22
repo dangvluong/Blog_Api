@@ -59,10 +59,10 @@ namespace WebApp.Controllers
         public async Task<ActionResult> Edit(int id)
         {   
             Post post = await _repository.Post.GetPostById(id);
-            if (post is null)
+            if (post == null)
                 return NotFound();
             //only author of post or admin can edit post            
-            if (post.AuthorId != int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)))
+            if (post.Author.Id != int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)))
                 return BadRequest();
             ViewBag.categories = new SelectList(await _repository.Category.GetCategories(), "Id", "Name");
             return View(post);
@@ -92,7 +92,7 @@ namespace WebApp.Controllers
             if (post is null)
                 return NotFound();
             //only author of post or admin can delete post            
-            if (post.AuthorId != int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)))
+            if (post.Author.Id != int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)))
                 return BadRequest();
             return View(post);           
         }

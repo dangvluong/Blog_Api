@@ -1,0 +1,21 @@
+﻿@model SummerNoteViewModel
+
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="~/js/summernote.js"></script>
+<script>
+        $(document).ready(function () {
+            $('@Model.TargetElementId').summernote({
+                height: 300,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['height', ['height']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+        });
+</script>

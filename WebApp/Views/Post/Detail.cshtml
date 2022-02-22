@@ -17,7 +17,7 @@
 <div class="py-5 w3l-homeblock1 text-center">
     <div class="container mt-md-3 w3BlogLayout">
         <h3 class="blog-desc-big text-center mb-4">
-            Your Blog Posts are Boring: 9 Tips for Making your Writing more Interesting
+            @Model.Title
         </h3>
         <div class="blog-post-align">
 
@@ -68,7 +68,7 @@
                 </div>
                 <div class="single-post-content">
                     <!--post content-->
-                    @Model.Content
+                    @Html.Raw(Model.Content)
                    
                     <!--about author-->
                     <div class="author-card author-listhny my-lg-5 my-sm-4 w3ArticleAuth">
