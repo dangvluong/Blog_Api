@@ -9,25 +9,21 @@ namespace WebApp.Middlewares
 {
     public class ValidateAccessTokenMiddleware
     {
-        private readonly RequestDelegate _next;
-        //private readonly TokenValidator _tokenValidator;        
+        private readonly RequestDelegate _next;       
         public ValidateAccessTokenMiddleware(RequestDelegate next)
         {
-            _next = next;
-            //_tokenValidator = tokenValidator;
+            _next = next;        
         }
 
         public async Task Invoke(HttpContext context, TokenValidator tokenValidator, IRepositoryManager repository)
         {
             Console.WriteLine("Middleware was called");
             if(context.User.Identity.IsAuthenticated){
-                var accessToken = context.User.FindFirstValue("AccessToken");
-                Console.WriteLine("Access Token: " + accessToken);
+                var accessToken = context.User.FindFirstValue("AccessToken");               
                 bool isValid = tokenValidator.ValidateAccessToken(accessToken);
                 if (!isValid)
                 {
-                    var refreshToken = context.User.FindFirstValue("RefreshToken");
-                    Console.WriteLine("Refresh token: " + refreshToken);
+                    var refreshToken = context.User.FindFirstValue("RefreshToken");                    
                     TokensDto tokensDto = await repository.Auth.RefreshTokens(new TokensDto { RefreshToken = refreshToken});
                     if(tokensDto != null)
                     {
@@ -40,19 +36,17 @@ namespace WebApp.Middlewares
                                 var existingClaim = identity.FindFirst(key);
                                 if (existingClaim != null)
                                     identity.RemoveClaim(existingClaim);
-                            }
-                            //var newClaims = new List<Claim>()
-                            //{
-                            //    new Claim("AccessToken",tokensDto.AccessToken),
-                            //    new Claim("RefreshToken",tokensDto.RefreshToken),
-                            //};
-                            //var newIdentities = new ClaimsIdentity(newClaims);
+                            }                           
                             identity.AddClaim(new Claim("AccessToken", tokensDto.AccessToken));
                             identity.AddClaim(new Claim("RefreshToken", tokensDto.RefreshToken));
                             context.User.AddIdentity(identity);
                             //Persist updated claims
                             await context.SignInAsync(new ClaimsPrincipal(identity));
                         }
+                    }
+                    else
+                    {
+                        await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                     }
                 }                
             }

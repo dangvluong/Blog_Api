@@ -144,7 +144,7 @@ namespace WebApi.Controllers
 
         [HttpPost("refreshtoken")]
         public async Task<IActionResult> RefreshToken(TokensDto tokensDto)
-        {
+        {            
             if (string.IsNullOrEmpty(tokensDto?.RefreshToken))
                 return BadRequest();
             bool isValidRefreshToken = _tokenValidator.ValidateRefreshToken(tokensDto.RefreshToken);
