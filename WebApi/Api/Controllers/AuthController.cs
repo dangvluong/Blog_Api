@@ -14,9 +14,15 @@ namespace WebApi.Controllers
     public class AuthController : BaseController
     {
         private readonly IConfiguration _configuration;
-        public AuthController(IRepositoryManager repository, IMapper mapper, IConfiguration configuration) : base(repository, mapper)
+        private readonly ITokenGenerator _tokenGenerator;
+        private readonly ITokenValidator _tokenValidator;
+        private readonly IAuthenticator _authenticator;
+        public AuthController(IRepositoryManager repository, IMapper mapper, IConfiguration configuration, ITokenGenerator tokenGenerator, ITokenValidator tokenValidator,IAuthenticator authenticator) : base(repository, mapper)
         {
             _configuration = configuration;
+            _tokenGenerator = tokenGenerator;
+            _tokenValidator = tokenValidator;
+            _authenticator = authenticator;
         }
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterModel model)
@@ -52,10 +58,10 @@ namespace WebApi.Controllers
             Member member = await _repository.Member.GetMemberByCondition(member =>
                 member.Username == loginModel.Username && member.Password == SiteHelper.HashPassword(loginModel.Password)
             , trackChanges: false);
+
             if (member != null)
             {
-                MemberDto memberDto = _mapper.Map<MemberDto>(member);
-                memberDto.Token = SiteHelper.CreateJWToken(member, _configuration.GetSection("secretkey").ToString());
+                MemberDto memberDto = await _authenticator.Authenticate(member);
                 return Ok(memberDto);
             }
             return BadRequest();
@@ -100,7 +106,7 @@ namespace WebApi.Controllers
             }
             else
             {
-                member.ResetPasswordToken = SiteHelper.CreateToken(32);
+                member.ResetPasswordToken = _tokenGenerator.CreateResetPasswordToken(32);
                 await _repository.SaveChanges();
                 ResetPasswordDto resetPasswordDto = new ResetPasswordDto
                 {
@@ -123,6 +129,25 @@ namespace WebApi.Controllers
             member.ResetPasswordToken = null;
             await _repository.SaveChanges();
             return NoContent();
+        }
+
+        [HttpPost("refreshAccessToken")]
+        public async Task<IActionResult> RefreshAccessToken(string token)
+        {
+            if (string.IsNullOrEmpty(token))
+                return BadRequest();
+            bool isValidRefreshToken = _tokenValidator.ValidateRefreshToken(token);
+            if (!isValidRefreshToken)
+                return BadRequest("Invalid refresh token.");
+            RefreshToken refreshTokenDto = await _repository.RefreshToken.GetByToken(token);
+            if (refreshTokenDto == null)
+                return NotFound("Invalid refresh token");
+
+            Member member = await _repository.Member.GetMemberByCondition(m => m.Id == refreshTokenDto.MemberId, trackChanges: false);
+            if (member == null)
+                return NotFound("Member not found");
+            MemberDto memberDto  = await _authenticator.Authenticate(member);
+            return Ok(memberDto);
         }
     }
 

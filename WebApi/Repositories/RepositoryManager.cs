@@ -23,6 +23,16 @@ namespace WebApi.Repositories
         private ICommentRepository comment;
         private IRoleRepository role;
         private IMemberRepository member;
+        private IRefreshTokenRepository refreshToken;
+        public IRefreshTokenRepository RefreshToken
+        {
+            get
+            {
+                if (refreshToken == null)
+                    refreshToken = new RefreshTokenRepository(_context);
+                return refreshToken;
+            }
+        }
         public IMemberRepository Member
         {
             get
@@ -70,5 +80,7 @@ namespace WebApi.Repositories
                 return post;
             }
         }
+
+        
     }   
 }

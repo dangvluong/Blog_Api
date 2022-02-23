@@ -15,32 +15,7 @@ namespace WebApi.Helper
             HashAlgorithm algorithm = HashAlgorithm.Create("SHA-512");
             return algorithm.ComputeHash(Encoding.ASCII.GetBytes(plaintext));
         }
-        public static string CreateJWToken(Member obj, string serectkey)
-        {
-            byte[] key = Encoding.ASCII.GetBytes(serectkey);
-
-            //Get claims
-            var claims = new List<Claim>
-            {
-                  new Claim(ClaimTypes.NameIdentifier, obj.Id.ToString()),
-                    new Claim(ClaimTypes.Name, obj.Username),
-                    new Claim(ClaimTypes.Email, obj.Email)
-            };
-            foreach (var role in obj.Roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role.Name));
-            }
-
-            JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
-            SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(30),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = handler.CreateToken(descriptor);
-            return handler.WriteToken(token);
-        }
+        
         public static string UploadFile(IFormFile file, UploadTypes uploadType)
         {
             string targetFolder = string.Empty;
@@ -69,17 +44,6 @@ namespace WebApi.Helper
                 file.CopyTo(stream);
             }
             return imageUrl;
-        }
-        public static string CreateToken(int length)
-        {
-            string pattern = "qwertyuiopasdfghjklzxcvbnm1234567890";
-            char[] arrayToken = new char[length];
-            Random rand = new Random();
-            for (int i = 0; i < length; i++)
-            {
-                arrayToken[i] = pattern[rand.Next(pattern.Length)];
-            }
-            return string.Join("", arrayToken);
-        }
+        }        
     };
 }

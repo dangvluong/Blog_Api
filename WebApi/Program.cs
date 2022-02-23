@@ -2,12 +2,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using System.Text;
 using WebApi.Interfaces;
 using WebApi.Models;
 using WebApi.Repositories;
-using Serilog;
-using WebApi.Extensions;
+using WebApi.Services;
 
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
 Log.Information("Starting up....");
@@ -34,7 +34,8 @@ try
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("secretkey").ToString())),
             ValidateIssuer = false,
-            ValidateAudience = false
+            ValidateAudience = false,
+            ClockSkew = TimeSpan.Zero
         };
     });
 
@@ -65,6 +66,9 @@ try
         option.UseSqlServer(builder.Configuration.GetConnectionString("blog"));
     });
     builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
+    builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
+    builder.Services.AddScoped<ITokenValidator, TokenValidator>();
+    builder.Services.AddScoped<IAuthenticator, Authenticator>();
     builder.Services.AddAutoMapper(typeof(Program));
 
     var app = builder.Build();
