@@ -14,8 +14,10 @@ namespace WebApp.Controllers
 {
     public class AccountController : BaseController
     {
-        public AccountController(IRepositoryManager repository, IConfiguration configuration, ILogger<AccountController> logger) : base(repository, configuration, logger)
+        private IMailServices _mailServices;
+        public AccountController(IRepositoryManager repository, IConfiguration configuration, IMailServices mailServices,ILogger<AccountController> logger) : base(repository, configuration, logger)
         {
+            _mailServices = mailServices;
         }
 
         public IActionResult Login()
@@ -104,7 +106,7 @@ namespace WebApp.Controllers
             if (result != null)
             {
                 //Skip waiting for email sending
-                MailServices.SendEmailResetPassword(_configuration, result.Email,result.Token,_logger);
+                _mailServices.SendEmailResetPassword(result.Email,result.Token,_logger);
             }
             //Add notification 
             return RedirectToAction(nameof(Login));

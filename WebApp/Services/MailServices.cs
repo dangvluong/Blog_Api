@@ -1,13 +1,21 @@
 ﻿using System.Net;
 using System.Net.Mail;
+using WebApp.Interfaces;
 
 namespace WebApp.Services
 {
-    public static class MailServices
+    public class MailServices : IMailServices
     {
-        public static async Task SendEmailResetPassword(IConfiguration configuration, string addressTo, string resetPasswordToken, ILogger logger)
+        private readonly IConfiguration _configuration;
+
+        public MailServices(IConfiguration configuration)
         {
-            IConfigurationSection section = configuration.GetSection("Email:Outlook");
+            _configuration = configuration;
+        }
+
+        public async Task SendEmailResetPassword(string addressTo, string resetPasswordToken, ILogger logger)
+        {
+            IConfigurationSection section = _configuration.GetSection("Email:Outlook");
             MailAddress emailFrom = new MailAddress(section["address"]);
             MailAddress emailTo = new MailAddress(addressTo.Trim());
 

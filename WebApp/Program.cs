@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Serilog;
 using WebApp.Interfaces;
 using WebApp.Repositories;
+using WebApp.Services;
 
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
 Log.Information("Starting up....");
@@ -13,6 +14,7 @@ try
        .ReadFrom.Configuration(ctx.Configuration));
     builder.Services.AddMvc();
     builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
+    builder.Services.AddScoped<IMailServices,MailServices>();
     builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
     {
         option.LoginPath = "/account/login";
