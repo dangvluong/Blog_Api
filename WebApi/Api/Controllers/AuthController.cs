@@ -17,12 +17,14 @@ namespace WebApi.Controllers
         private readonly ITokenGenerator _tokenGenerator;
         private readonly ITokenValidator _tokenValidator;
         private readonly IAuthenticator _authenticator;
-        public AuthController(IRepositoryManager repository, IMapper mapper, IConfiguration configuration, ITokenGenerator tokenGenerator, ITokenValidator tokenValidator,IAuthenticator authenticator) : base(repository, mapper)
+        private ILogger<AuthController> _logger;
+        public AuthController(IRepositoryManager repository, IMapper mapper, IConfiguration configuration, ITokenGenerator tokenGenerator, ITokenValidator tokenValidator,IAuthenticator authenticator, ILogger<AuthController> logger) : base(repository, mapper)
         {
             _configuration = configuration;
             _tokenGenerator = tokenGenerator;
             _tokenValidator = tokenValidator;
             _authenticator = authenticator;
+            _logger = logger;
         }
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterModel model)
@@ -150,17 +152,21 @@ namespace WebApi.Controllers
                 return BadRequest("Invalid refresh token.");
             RefreshToken refreshToken = await _repository.RefreshToken.GetByToken(tokensDto.RefreshToken, trackChanges:true);
             if (refreshToken == null)
+            {
+                _logger.LogError("Khong tim thay refresh token trong Db");
                 return NotFound("Invalid refresh token");
+            }                
             _repository.RefreshToken.DeleteToken(refreshToken);   
             await _repository.SaveChanges();
             Member member = await _repository.Member.GetMemberByCondition(m => m.Id == refreshToken.MemberId, trackChanges: false);
             if (member == null)
                 return NotFound("Member not found");
             TokensDto newTokens  = await _authenticator.RefreshAuthentication(member);
+            _logger.LogInformation("Refreshed token");
             return Ok(newTokens);
         }
         [Authorize]
-        [HttpDelete("LogOut")]
+        [HttpDelete("logout")]
         public async Task<IActionResult> Logout()
         {
             var memberId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));

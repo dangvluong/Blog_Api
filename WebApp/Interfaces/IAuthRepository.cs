@@ -10,7 +10,7 @@ namespace WebApp.Interfaces
         Task<BadRequestResponse> ChangePassword(ChangePasswordModel obj, string token);
         Task<ResetPasswordModel> ForgotPassword(HttpContent httpContent);
         Task<int> ResetPassword(ResetPasswordModel obj);
-        Task Logout();
+        Task<int> Logout(string token);
         Task<TokensDto> RefreshTokens(TokensDto refreshToken);
     }
 }

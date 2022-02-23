@@ -83,8 +83,9 @@ namespace WebApp.Controllers
         [Authorize]
         public async Task<IActionResult> Logout()
         {
+            string token = User.FindFirst("AccessToken").Value;
             //Remove refresh tokens at api server
-            await _repository.Auth.Logout();
+            await _repository.Auth.Logout(token);
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return Redirect(nameof(Login));
         }
