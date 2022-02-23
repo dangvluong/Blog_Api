@@ -43,5 +43,19 @@ namespace WebApp.Repositories
         {
             return await PostJson<ResetPasswordModel, int>("/api/auth/resetpassword", obj);
         }
+
+        public async Task Logout()
+        {
+            await Delete("/api/auth/logout");
+        }
+
+        public async Task<TokensDto> RefreshTokens(TokensDto refreshToken)
+        {
+            if (!string.IsNullOrEmpty(refreshToken?.RefreshToken))
+            {
+                return await PostJson<TokensDto,TokensDto>("/api/auth/refreshtoken", refreshToken);
+            }
+            return null;
+        }
     }
 }

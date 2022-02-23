@@ -14,8 +14,7 @@ namespace WebApi.Controllers
         }
 
         // GET: api/Category
-        [HttpGet]
-        [Authorize]
+        [HttpGet]     
         public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
         {             
             //throw new NotImplementedException();

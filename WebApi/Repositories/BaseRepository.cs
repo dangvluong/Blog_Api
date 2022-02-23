@@ -23,6 +23,10 @@ namespace WebApi.Repositories
         {
             _context.Set<T>().Remove(entity);
         }
+        protected void DeleteRange(IEnumerable<T> entities)
+        {
+            _context.Set<T>().RemoveRange(entities);
+        }
         protected IQueryable<T> FindAll(bool trackChanges)
         {
             return trackChanges ? _context.Set<T>() : _context.Set<T>().AsNoTracking();

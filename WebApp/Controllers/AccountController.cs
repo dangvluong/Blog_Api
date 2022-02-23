@@ -41,7 +41,8 @@ namespace WebApp.Controllers
                     new Claim(ClaimTypes.Email, member.Email),
                     new Claim(ClaimTypes.Gender, member.Gender ? "Nam" : "Nữ"),
                     //Save token to this claimtype
-                    new Claim(ClaimTypes.Authentication, member.Token),
+                    new Claim("AccessToken", member.AccessToken),
+                    new Claim("RefreshToken", member.RefreshToken),
                 };
 
                 //Get roles of member and save to claims
@@ -82,6 +83,8 @@ namespace WebApp.Controllers
         [Authorize]
         public async Task<IActionResult> Logout()
         {
+            //Remove refresh tokens at api server
+            await _repository.Auth.Logout();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return Redirect(nameof(Login));
         }

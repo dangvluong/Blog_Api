@@ -18,20 +18,22 @@ namespace WebApi.Services
             _tokenGenerator = tokenGenerator;
         }
 
-        public async Task<MemberDto> Authenticate(Member member)
+        public async Task<TokensDto> RefreshAuthentication(Member member)
         {
-            MemberDto memberDto = _mapper.Map<MemberDto>(member);
-            memberDto.AccessToken = _tokenGenerator.CreateAccessToken(member);
-            memberDto.RefreshToken = _tokenGenerator.CreateRefreshToken();
+            TokensDto tokensDto = new TokensDto()
+            {
+                AccessToken = _tokenGenerator.CreateAccessToken(member),
+                RefreshToken = _tokenGenerator.CreateRefreshToken()
+            };            
             //Save refresh token to Db
             RefreshToken refreshTokenDto = new RefreshToken()
             {
-                Token = memberDto.RefreshToken,
-                MemberId = memberDto.Id
+                Token = tokensDto.RefreshToken,
+                MemberId = member.Id
             };
-            _repository.RefreshToken.Create(refreshTokenDto);
+            _repository.RefreshToken.AddToken(refreshTokenDto);
             await _repository.SaveChanges();
-            return memberDto;
+            return tokensDto;
         }
     }
 }

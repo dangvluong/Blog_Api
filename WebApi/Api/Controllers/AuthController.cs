@@ -61,7 +61,16 @@ namespace WebApi.Controllers
 
             if (member != null)
             {
-                MemberDto memberDto = await _authenticator.Authenticate(member);
+                MemberDto memberDto = _mapper.Map<MemberDto>(member);
+                memberDto.AccessToken = _tokenGenerator.CreateAccessToken(member);
+                memberDto.RefreshToken = _tokenGenerator.CreateRefreshToken();
+                RefreshToken refreshToken = new RefreshToken()
+                {
+                    MemberId = member.Id,
+                    Token = memberDto.RefreshToken
+                };
+                _repository.RefreshToken.AddToken(refreshToken);
+                await _repository.SaveChanges();
                 return Ok(memberDto);
             }
             return BadRequest();
@@ -131,23 +140,37 @@ namespace WebApi.Controllers
             return NoContent();
         }
 
-        [HttpPost("refreshAccessToken")]
-        public async Task<IActionResult> RefreshAccessToken(string token)
+        [HttpPost("refreshtoken")]
+        public async Task<IActionResult> RefreshToken(TokensDto tokensDto)
         {
-            if (string.IsNullOrEmpty(token))
+            if (string.IsNullOrEmpty(tokensDto?.RefreshToken))
                 return BadRequest();
-            bool isValidRefreshToken = _tokenValidator.ValidateRefreshToken(token);
+            bool isValidRefreshToken = _tokenValidator.ValidateRefreshToken(tokensDto.RefreshToken);
             if (!isValidRefreshToken)
                 return BadRequest("Invalid refresh token.");
-            RefreshToken refreshTokenDto = await _repository.RefreshToken.GetByToken(token);
-            if (refreshTokenDto == null)
+            RefreshToken refreshToken = await _repository.RefreshToken.GetByToken(tokensDto.RefreshToken, trackChanges:true);
+            if (refreshToken == null)
                 return NotFound("Invalid refresh token");
-
-            Member member = await _repository.Member.GetMemberByCondition(m => m.Id == refreshTokenDto.MemberId, trackChanges: false);
+            _repository.RefreshToken.DeleteToken(refreshToken);   
+            await _repository.SaveChanges();
+            Member member = await _repository.Member.GetMemberByCondition(m => m.Id == refreshToken.MemberId, trackChanges: false);
             if (member == null)
                 return NotFound("Member not found");
-            MemberDto memberDto  = await _authenticator.Authenticate(member);
-            return Ok(memberDto);
+            TokensDto newTokens  = await _authenticator.RefreshAuthentication(member);
+            return Ok(newTokens);
+        }
+        [Authorize]
+        [HttpDelete("LogOut")]
+        public async Task<IActionResult> Logout()
+        {
+            var memberId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var tokens = await _repository.RefreshToken.GetByMember(memberId, trackChanges: true);
+            if(tokens != null)
+            {
+                _repository.RefreshToken.DeleteTokens(tokens);
+                await _repository.SaveChanges();
+            }            
+            return NoContent();
         }
     }
 

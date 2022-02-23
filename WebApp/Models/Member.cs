@@ -12,7 +12,8 @@ namespace WebApp.Models
         public DateTime DateCreate { get; set; }
         public DateTime DateOfBirth { get; set; }
         public bool IsBanned { get; set; }
-        public string Token { get; set; }
+        public string AccessToken { get; set; }
+        public string RefreshToken { get; set; }
         public List<Role> Roles { get; set; }
         public string AvatarUrl { get; set; }
         public string AboutMe { get; set; }

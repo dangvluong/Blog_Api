@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Serilog;
 using WebApp.Interfaces;
+using WebApp.Middlewares;
 using WebApp.Repositories;
 using WebApp.Services;
 
@@ -15,6 +16,7 @@ try
     builder.Services.AddMvc();
     builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
     builder.Services.AddScoped<IMailServices,MailServices>();
+    builder.Services.AddScoped<TokenValidator>();
     builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
     {
         option.LoginPath = "/account/login";
@@ -30,6 +32,7 @@ try
     app.UseSerilogRequestLogging();
     app.UseAuthentication();
     app.UseAuthorization();
+    app.UseMiddleware<ValidateAccessTokenMiddleware>();
     //app.MapControllerRoute("default", "{controller=Post}/{action=Index}/{id?}");
     app.MapControllerRoute("manage", "{area:exists}/{controller=Home}/{action=index}/{id?}");
     app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");

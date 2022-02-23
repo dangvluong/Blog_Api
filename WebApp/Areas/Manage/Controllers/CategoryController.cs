@@ -42,7 +42,7 @@ namespace WebApp.Areas.Dashboard.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
+            string token = User.FindFirstValue("AccessToken");
             var result = await _repository.Category.Create(category, token);
             return RedirectToAction(nameof(Index));
 

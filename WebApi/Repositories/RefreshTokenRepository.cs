@@ -10,15 +10,30 @@ namespace WebApi.Repositories
         {
         }
 
-        public void Create(RefreshToken obj)
+        public void AddToken(RefreshToken obj)
         {
             obj.Id = new Guid();
             Add(obj);      
         }
 
-        public async Task<RefreshToken> GetByToken(string token)
+        public void DeleteToken(RefreshToken obj)
         {
-            return await FindByCondition(t => t.Token == token, trackChanges: false).FirstOrDefaultAsync();
+            Delete(obj);
+        }        
+
+        public async Task<IEnumerable<RefreshToken>> GetByMember(int memberId, bool trackChanges)
+        {
+            return await FindByCondition(t => t.MemberId == memberId, trackChanges:trackChanges).ToListAsync();
+        }
+
+        public async Task<RefreshToken> GetByToken(string token, bool trackChanges)
+        {
+            return await FindByCondition(t => t.Token == token, trackChanges: trackChanges).FirstOrDefaultAsync();
+        }
+
+        void IRefreshTokenRepository.DeleteTokens(IEnumerable<RefreshToken> tokens)
+        {
+            DeleteRange(tokens);
         }
     }
 }

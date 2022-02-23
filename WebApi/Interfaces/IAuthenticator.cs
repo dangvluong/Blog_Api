@@ -5,6 +5,6 @@ namespace WebApi.Interfaces
 {
     public interface IAuthenticator
     {
-        Task<MemberDto> Authenticate(Member member);
+        Task<TokensDto> RefreshAuthentication(Member member);
     }
 }
