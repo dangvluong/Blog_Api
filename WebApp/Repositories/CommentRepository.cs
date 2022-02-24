@@ -8,9 +8,9 @@ namespace WebApp.Repositories
         public CommentRepository(HttpClient client) : base(client)
         {
         }
-        public async Task<List<Comment>> GetComments()
+        public async Task<List<Comment>> GetComments(string token)
         {
-            return await Get<List<Comment>>("/api/comment");            
+            return await Get<List<Comment>>("/api/comment",token);            
         }
         public async Task<List<Comment>> GetCommentsByPostId(int id)
         {
