@@ -47,7 +47,7 @@ namespace WebApp.Controllers
         {
             if (!ModelState.IsValid)
                 return View(post);
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
+            string token = User.FindFirstValue(Data.ClaimTypes.AccessToken);
             post.AuthorId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             post.DateCreated = DateTime.Now;
             if(thumbnailImage != null && !string.IsNullOrEmpty(thumbnailImage.FileName))
@@ -82,7 +82,7 @@ namespace WebApp.Controllers
                 return BadRequest();
             if (!ModelState.IsValid)
                 return View(post);
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
+            string token = User.FindFirstValue(Data.ClaimTypes.AccessToken);
             post.DateModifier = DateTime.Now;
             if(thumbnailImage != null && !string.IsNullOrEmpty(thumbnailImage.FileName))
             {
@@ -120,7 +120,7 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirm(int id)
         {
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
+            string token = User.FindFirstValue(Data.ClaimTypes.AccessToken);
             await _repository.Post.Delete(id, token);
             return RedirectToAction(nameof(Index));
         }       

@@ -19,7 +19,7 @@ namespace WebApp.Controllers
        
         public async Task<IActionResult> Index()
         {
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
+            string token = User.FindFirstValue(Data.ClaimTypes.AccessToken);
             Member member = await _repository.Member.GetMemberById(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), token);
             return View(member);
         }       
@@ -32,13 +32,7 @@ namespace WebApp.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
-            //bool isOldPasswordValid = await _repository.Auth.CheckOldPasswordValid(changePasswordModel.OldPassword, token);
-            //if (!isOldPasswordValid)
-            //{
-            //    ModelState.AddModelError(string.Empty, "Mật khẩu cũ không đúng");
-            //    return View();
-            //}                
+            string token = User.FindFirstValue(Data.ClaimTypes.AccessToken);                   
             BadRequestResponse response = await _repository.Auth.ChangePassword(obj, token);
             if (response == null)
                 return RedirectToAction("Logout", "Account");
@@ -77,7 +71,7 @@ namespace WebApp.Controllers
         }        
         public async Task<IActionResult> ChangeAboutMe()
         {
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
+            string token = User.FindFirstValue(Data.ClaimTypes.AccessToken);
             Member member = await _repository.Member.GetMemberById(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), token);
             return View(new ChangeAboutMeModel
             {
@@ -90,7 +84,7 @@ namespace WebApp.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
+            string token = User.FindFirstValue(Data.ClaimTypes.AccessToken);
             int result = await _repository.Member.ChangeAboutMe(obj, token);
             return RedirectToAction(nameof(Index));
 
@@ -115,7 +109,7 @@ namespace WebApp.Controllers
                 content.Add(new StringContent(obj.MemberId.ToString()), nameof(obj.MemberId));
                 content.Add(new StreamContent(obj.AvatarUpload.OpenReadStream()), nameof(obj.AvatarUpload), obj.AvatarUpload.FileName);
             }
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
+            string token = User.FindFirstValue(Data.ClaimTypes.AccessToken);
             int result = await _repository.Member.ChangeAvatar(content, token);
 
             return RedirectToAction(nameof(Index));

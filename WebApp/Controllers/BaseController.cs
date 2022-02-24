@@ -8,6 +8,15 @@ namespace WebApp.Controllers
         protected readonly IRepositoryManager _repository;
         protected readonly IConfiguration _configuration;
         protected readonly ILogger _logger;
+        private string accessToken;
+        public string AccessToken
+        {
+            get { 
+                if(string.IsNullOrEmpty(accessToken))
+                    accessToken = User.FindFirst(Data.ClaimTypes.AccessToken).Value;
+                return accessToken;
+            }
+        }
         public BaseController(IRepositoryManager repository)
         {
             _repository = repository;

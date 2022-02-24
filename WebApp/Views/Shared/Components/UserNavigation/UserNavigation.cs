@@ -19,7 +19,7 @@ namespace WebApp.Views.Shared.Components.UserNavigation
         {
             var user = User as ClaimsPrincipal;
             int memberId = int.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier));
-            string token = user.FindFirstValue(ClaimTypes.Authentication);
+            string token = user.FindFirstValue(Data.ClaimTypes.AccessToken);
             Member member = await _repository.Member.GetMemberById(memberId, token);
             return View(member);
         }

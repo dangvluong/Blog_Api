@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
+using WebApp.Data;
 using WebApp.DataTransferObject;
 using WebApp.Interfaces;
 using WebApp.Models;
@@ -35,14 +36,14 @@ namespace WebApp.Controllers
             {
                 List<Claim> claims = new List<Claim>()
                 {
-                    new Claim(ClaimTypes.NameIdentifier,member.Id.ToString()),
-                    new Claim(ClaimTypes.Name, member.Username),
-                    new Claim(ClaimTypes.GivenName, member.FullName),
-                    new Claim(ClaimTypes.Email, member.Email),
-                    new Claim(ClaimTypes.Gender, member.Gender ? "Nam" : "Nữ"),
+                    new Claim(System.Security.Claims.ClaimTypes.NameIdentifier,member.Id.ToString()),
+                    new Claim(System.Security.Claims.ClaimTypes.Name, member.Username),
+                    new Claim(System.Security.Claims.ClaimTypes.GivenName, member.FullName),
+                    new Claim(System.Security.Claims.ClaimTypes.Email, member.Email),
+                    new Claim(System.Security.Claims.ClaimTypes.Gender, member.Gender ? "Nam" : "Nữ"),
                     //Save token to this claimtype
-                    new Claim("AccessToken", member.AccessToken),
-                    new Claim("RefreshToken", member.RefreshToken),
+                    new Claim(Data.ClaimTypes.AccessToken, member.AccessToken),
+                    new Claim(Data.ClaimTypes.RefreshToken, member.RefreshToken),
                 };
 
                 //Get roles of member and save to claims
@@ -50,7 +51,7 @@ namespace WebApp.Controllers
                 {
                     foreach (var role in member.Roles)
                     {
-                        claims.Add(new Claim(ClaimTypes.Role, role.Name));
+                        claims.Add(new Claim(System.Security.Claims.ClaimTypes.Role, role.Name));
                     }
                 }
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -83,9 +84,9 @@ namespace WebApp.Controllers
         [Authorize]
         public async Task<IActionResult> Logout()
         {
-            string token = User.FindFirst("AccessToken").Value;
+            //string token = User.FindFirst(Data.ClaimTypes.AccessToken).Value;
             //Remove refresh tokens at api server
-            await _repository.Auth.Logout(token);
+            await _repository.Auth.Logout(AccessToken);
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return Redirect(nameof(Login));
         }
