@@ -22,14 +22,12 @@ namespace WebApp.Areas.Manage.Controllers
         }
         public async Task<IActionResult> Approve(int id)
         {
-            //string token = User.FindFirst(Data.ClaimTypes.AccessToken).Value;
             int result = await _repository.Post.Approve(id, AccessToken);
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Delete(int id)
         {
-            //string token = User.FindFirst(Data.ClaimTypes.AccessToken).Value;
-            int result = await _repository.Post.Delete(id,AccessToken);            
+            int result = await _repository.Post.Delete(id, AccessToken);
             return RedirectToAction(nameof(Index));
         }
     }

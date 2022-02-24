@@ -30,11 +30,11 @@ namespace WebApp.Repositories
 
         protected async Task<int> Put<T>(string url, T obj, string token = null)
         {           
-            return await SendRequest<T, int>(url, obj, (client, url, obj) => client.PutAsJsonAsync<T>(url, obj), message => message.Content.ReadAsAsync<int>());
+            return await SendRequest<T, int>(url, obj, (client, url, obj) => client.PutAsJsonAsync<T>(url, obj), message => message.Content.ReadAsAsync<int>(), token);
         }
         protected async Task<int> Delete(string url, string token = null)
         {           
-            return await SendRequest<int>(url, (client,url) => client.DeleteAsync(url),message => message.Content.ReadAsAsync<int>());            
+            return await SendRequest<int>(url, (client,url) => client.DeleteAsync(url),message => message.Content.ReadAsAsync<int>(), token);            
         }
 
         private async Task<TOUt> SendRequest<TIn, TOUt>(string url, TIn obj, Func<HttpClient, string, TIn, Task<HttpResponseMessage>> sendRequest, Func<HttpResponseMessage, Task<TOUt>> getResponseResult, string token = null)

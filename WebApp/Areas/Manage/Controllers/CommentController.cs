@@ -20,9 +20,8 @@ namespace WebApp.Areas.Dashboard.Controllers
             return View(comments);
         }
         public async Task<IActionResult> Delete(int id)
-        {
-            string token = User.FindFirstValue(Data.ClaimTypes.AccessToken);
-            await _repository.Comment.DeleteComment(id, token);
+        {            
+            await _repository.Comment.DeleteComment(id, AccessToken);
             return RedirectToAction(nameof(Index));
         }
     }

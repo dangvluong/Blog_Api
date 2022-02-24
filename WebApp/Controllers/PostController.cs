@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 using WebApp.DataTransferObject;
+using WebApp.Helper;
 using WebApp.Interfaces;
 using WebApp.Models;
 
@@ -35,7 +36,8 @@ namespace WebApp.Controllers
         [Authorize]
         public async Task<ActionResult> Create()
         {
-            ViewBag.categories = new SelectList(await _repository.Category.GetCategories(), "Id", "Name");
+            List<Category> selectListCategories = await CreateSelectListCategories();
+            ViewBag.categories = new SelectList(selectListCategories, "Id", "Name");
             return View();
         }
 
@@ -67,8 +69,18 @@ namespace WebApp.Controllers
             //only author of post or admin can edit post            
             if (post.Author.Id != int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)))
                 return BadRequest();
-            ViewBag.categories = new SelectList(await _repository.Category.GetCategories(), "Id", "Name");
+            List<Category> selectListCategories = await CreateSelectListCategories();
+            ViewBag.categories = new SelectList(selectListCategories, "Id", "Name");
             return View(post);
+        }
+
+        private async Task<List<Category>> CreateSelectListCategories()
+        {
+            var sourceCategories = await _repository.Category.GetCategories();
+            var treeLevelCategories = CategoryHelper.CreateTreeLevelCategory(sourceCategories);
+            var selectListCategories = new List<Category>();
+            CategoryHelper.CreateSelectListItem(treeLevelCategories, selectListCategories, 0);
+            return selectListCategories;
         }
 
         // POST: PostController/Edit/5
@@ -127,6 +139,20 @@ namespace WebApp.Controllers
                 return BadRequest();
             ListPostDto searchResult = await _repository.Post.SearchPost(keyword, page);
             return View(searchResult);
+        }
+
+        private void CreateSelectItems(List<Category> source, List<Category> des, int level)
+        {
+            string prefix = string.Concat(Enumerable.Repeat("----;", level));
+            foreach (var category in source)
+            {
+                category.Name = prefix + category.Name;
+                des.Add(category);
+                if (category.ChildCategories?.Count > 0)
+                {
+                  CreateSelectItems(category.ChildCategories, des, level + 1);
+                }
+            }            
         }
     }
 }

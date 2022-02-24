@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 using WebApp.Controllers;
+using WebApp.Helper;
 using WebApp.Interfaces;
 using WebApp.Models;
 
@@ -20,7 +21,7 @@ namespace WebApp.Areas.Dashboard.Controllers
         public async Task<ActionResult> Index()
         {
             List<Category> categories = await _repository.Category.GetCategories();
-            List<Category> listCategory = CreateTreeLevelCategory(categories);
+            List<Category> listCategory = CategoryHelper.CreateTreeLevelCategory(categories);
             return View(listCategory);
         }
 
@@ -28,9 +29,9 @@ namespace WebApp.Areas.Dashboard.Controllers
         public async Task<ActionResult> Create()
         {
             List<Category> sourceCategories = await _repository.Category.GetCategories();
-            sourceCategories = CreateTreeLevelCategory(sourceCategories);
+            sourceCategories = CategoryHelper.CreateTreeLevelCategory(sourceCategories);
             List<Category> selectListItems = new List<Category>();
-            CreateSelectListItem(sourceCategories, selectListItems, 0);
+            CategoryHelper.CreateSelectListItem(sourceCategories, selectListItems, 0);
             ViewBag.categories = new SelectList(selectListItems, "Id", "Name");
             return View();
         }
@@ -41,9 +42,8 @@ namespace WebApp.Areas.Dashboard.Controllers
         public async Task<ActionResult> Create(Category category)
         {
             if (!ModelState.IsValid)
-                return View();
-            string token = User.FindFirstValue("AccessToken");
-            var result = await _repository.Category.Create(category, token);
+                return View();            
+            var result = await _repository.Category.Create(category, AccessToken);
             return RedirectToAction(nameof(Index));
 
         }
@@ -55,10 +55,11 @@ namespace WebApp.Areas.Dashboard.Controllers
             Category targetCategory = categories.Where(c => c.Id == id).FirstOrDefault();
             if (targetCategory == null)
                 return NotFound();
+            //A category cannot select itself or it's child as parent
             categories.Remove(targetCategory);
-            categories = CreateTreeLevelCategory(categories);
+            categories = CategoryHelper.CreateTreeLevelCategory(categories);
             var selectListItems = new List<Category>();
-            CreateSelectListItem(categories, selectListItems, 0);
+            CategoryHelper.CreateSelectListItem(categories, selectListItems, 0);
 
             ViewBag.categories = new SelectList(selectListItems, "Id", "Name");
             return View(targetCategory);
@@ -73,61 +74,16 @@ namespace WebApp.Areas.Dashboard.Controllers
             if (category.Id != id)
                 return BadRequest();
             if (!ModelState.IsValid)
-                return View();
-            string token = User.FindFirstValue(Data.ClaimTypes.AccessToken);
-            await _repository.Category.Edit(category, token);
+                return View();            
+            await _repository.Category.Edit(category, AccessToken);
             return RedirectToAction(nameof(Index));
         }
 
         // GET: CategoryController/Delete/5
         public async Task<ActionResult> Delete(int id)
-        {
-            string token = User.FindFirstValue(Data.ClaimTypes.AccessToken);
-            await _repository.Category.Delete(id, token);
+        {            
+            await _repository.Category.Delete(id, AccessToken);
             return RedirectToAction(nameof(Index));
-        }
-
-
-
-        private static List<Category> CreateTreeLevelCategory(List<Category> source)
-        {
-            Dictionary<int, Category> dictCategory = new Dictionary<int, Category>();
-            foreach (Category category in source)
-            {
-                dictCategory[category.Id] = category;
-            }
-            List<Category> listCategory = new List<Category>();
-
-            foreach (Category category in source)
-            {
-                if (category.ParentCategoryId == null)
-                    listCategory.Add(category);
-                else
-                {
-                    if (dictCategory.ContainsKey(category.ParentCategoryId.Value))
-                    {
-                        if (dictCategory[category.ParentCategoryId.Value].ChildCategories == null)
-                            dictCategory[category.ParentCategoryId.Value].ChildCategories = new List<Category>();
-                        dictCategory[category.ParentCategoryId.Value].ChildCategories.Add(category);
-                    }
-                }
-            }
-
-            return listCategory;
-        }
-
-        private void CreateSelectListItem(List<Category> source, List<Category> des, int level)
-        {
-            string prefix = string.Concat(Enumerable.Repeat("----", level));
-            foreach (var category in source)
-            {
-                category.Name = prefix + category.Name;
-                des.Add(category);
-                if (category.ChildCategories?.Count > 0)
-                {
-                    CreateSelectListItem(category.ChildCategories, des, level + 1);
-                }
-            }
         }
     }
 }

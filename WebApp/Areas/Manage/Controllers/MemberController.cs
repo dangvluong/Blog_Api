@@ -19,21 +19,18 @@ namespace WebApp.Areas.Manage.Controllers
 
         public async Task<IActionResult> Index()
         {
-            //string token = User.FindFirst(Data.ClaimTypes.AccessToken).Value;
             List<Member> members = await _repository.Member.GetMembers(AccessToken);
             return View(members);
         }
         public async Task<IActionResult> BanAccount(int id, string returnUrl = "")
         {
-            //string token = User.FindFirst(Data.ClaimTypes.AccessToken).Value;
             int result = await _repository.Member.BanAccount(id, AccessToken);
-            if(!string.IsNullOrEmpty(returnUrl))
+            if (!string.IsNullOrEmpty(returnUrl))
                 return Redirect(returnUrl);
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Detail(int id)
         {
-            //string token = User.FindFirst(Data.ClaimTypes.AccessToken).Value;
             Member member = await _repository.Member.GetMemberById(id);
             if (member == null)
                 return NotFound();
@@ -47,7 +44,6 @@ namespace WebApp.Areas.Manage.Controllers
         }
         public async Task<IActionResult> UpdateRole(int id)
         {
-            //string token = User.FindFirst(Data.ClaimTypes.AccessToken).Value;
             Member member = await _repository.Member.GetMemberById(id);
             if (member == null)
                 return NotFound();
@@ -56,8 +52,7 @@ namespace WebApp.Areas.Manage.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> UpdateRole(UpdateRolesOfMemberDto obj)
-        {
-            //string token = User.FindFirst(Data.ClaimTypes.AccessToken).Value;
+        {            
             int result = await _repository.Member.UpdateRolesOfMember(obj, AccessToken);
             return RedirectToAction(nameof(Index));
         }
