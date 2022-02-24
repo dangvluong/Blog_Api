@@ -98,15 +98,11 @@ namespace WebApp.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> ForgotPassword(string email)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordModel obj)
         {
-            if (string.IsNullOrEmpty(email))
-                return BadRequest();
-            var httpContent = new FormUrlEncodedContent(new[]
-            {
-                new KeyValuePair<string, string>("",email)
-            });
-            ResetPasswordModel result = await _repository.Auth.ForgotPassword(httpContent);
+            if (!ModelState.IsValid)
+                return BadRequest();            
+            ResetPasswordModel result = await _repository.Auth.ForgotPassword(obj);
             if (result != null)
             {
                 //Skip waiting for email sending

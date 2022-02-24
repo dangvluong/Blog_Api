@@ -100,14 +100,14 @@ namespace WebApi.Controllers
             return NoContent();
         }
         [HttpPost("forgotpassword")]
-        public async Task<IActionResult> ForgotPassword([FromForm]string email)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordModel obj)
         {
-            if (string.IsNullOrEmpty(email))
+            if (!ModelState.IsValid)
                 return BadRequest();
-            Member member = await _repository.Member.GetMemberByCondition(m => m.Email == email, trackChanges: true);
+            Member member = await _repository.Member.GetMemberByCondition(m => m.Email == obj.Email, trackChanges: true);
             if (member == null)
             {
-                ModelState.AddModelError(nameof(member.Email), "Email không tồn tại");
+                ModelState.AddModelError(nameof(obj.Email), "Email không tồn tại");
                 return ValidationProblem(ModelState);
             }
             if (member.IsBanned)
@@ -122,11 +122,10 @@ namespace WebApi.Controllers
                 ResetPasswordDto resetPasswordDto = new ResetPasswordDto
                 {
                     Token = member.ResetPasswordToken,
-                    Email = email,
+                    Email = obj.Email,
                 };
                 return Ok(resetPasswordDto);
             }
-
         }
         [HttpPost("resetpassword")]
         public async Task<IActionResult> ResetPassword(ResetPasswordDto obj)

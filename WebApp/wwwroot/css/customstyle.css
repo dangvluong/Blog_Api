@@ -3,6 +3,7 @@
 }
 .validation-summary-errors ul li{
     color:red;
+    list-style:none;
 }
 .recent-posts-widget-with-thumbnails ul li{
     list-style:none;

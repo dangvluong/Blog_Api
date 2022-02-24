@@ -34,9 +34,9 @@ namespace WebApp.Repositories
             return badRequest;                
         }
 
-        public async Task<ResetPasswordModel> ForgotPassword(HttpContent httpContent)
+        public async Task<ResetPasswordModel> ForgotPassword(ForgotPasswordModel obj)
         {
-            return await Post<ResetPasswordModel>("/api/auth/forgotpassword", httpContent);
+            return await PostJson<ForgotPasswordModel,ResetPasswordModel>("/api/auth/forgotpassword", obj);
         }
 
         public async Task<int> ResetPassword(ResetPasswordModel obj)

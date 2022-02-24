@@ -5,10 +5,10 @@ namespace WebApp.Models
     public class Post
     {
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Bạn phải nhập {0}")]
         [Display(Name ="Tên bài viết")]
         public string Title { get; set; }       
-        [Required]
+        [Required(ErrorMessage = "Bạn phải nhập {0}")]
         [Display(Name = "Nội dung")]
         public string Content { get; set; }
         [DataType(DataType.Date)]

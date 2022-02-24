@@ -5,7 +5,7 @@ namespace WebApp.Models
     public class Comment
     {
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage ="Bạn phải nhập nội dung bình luận")]
         public string Content { get; set; }
         public int AuthorId { get; set; }
         public Member Author{ get; set; }
