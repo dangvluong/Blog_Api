@@ -3,7 +3,8 @@
 @{
     var hostAddress = configuration.GetSection("ApiServer").Value;
 }
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+@*<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">*@
+<link href="~/css/summernote.css" rel="stylesheet" />
 <script src="~/js/summernote.js"></script>
 <script>
     function uploadImage(image) {

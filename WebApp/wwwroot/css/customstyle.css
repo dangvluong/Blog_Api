@@ -5,6 +5,6 @@
     color:red;
     list-style:none;
 }
-.recent-posts-widget-with-thumbnails ul li{
-    list-style:none;
+.recent-posts-widget-with-thumbnails ul li, ul#MemberNavigation li, ul#ManageNavigation li {
+    list-style: none;
 }

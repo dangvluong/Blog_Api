@@ -48,7 +48,11 @@ namespace WebApp.Controllers
         public async Task<ActionResult> Create(Post post, IFormFile thumbnailImage)
         {
             if (!ModelState.IsValid)
+            {
+                List<Category> selectListCategories = await CreateSelectListCategories();
+                ViewBag.categories = new SelectList(selectListCategories, "Id", "Name");
                 return View(post);
+            }                
             post.AuthorId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             post.DateCreated = DateTime.Now;
             if (thumbnailImage != null && !string.IsNullOrEmpty(thumbnailImage.FileName))
