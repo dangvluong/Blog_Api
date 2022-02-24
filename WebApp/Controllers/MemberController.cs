@@ -70,7 +70,7 @@ namespace WebApp.Controllers
         }
         public async Task<IActionResult> ChangeAboutMe()
         {
-            Member member = await _repository.Member.GetMemberById(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), token);
+            Member member = await _repository.Member.GetMemberById(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), AccessToken);
             return View(new ChangeAboutMeModel
             {
                 MemberId = member.Id,
