@@ -106,7 +106,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult<IEnumerable<PostDto>>> GetPostsByMember(int id)
         {
             bool includeInActivePosts = false;
-            var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (User.Identity.IsAuthenticated && int.Parse(currentUserId) == id)
                 includeInActivePosts = true;
             IEnumerable<Post> posts = await _repository.Post.GetPostsByMember(id, trackChanges: false,includeInActivePosts);
