@@ -17,8 +17,7 @@ namespace WebApp.Areas.Manage.Controllers
 
         public async Task<IActionResult> Index()
         {
-            string token = User.FindFirst(ClaimTypes.Authentication).Value;
-            var roles =await _repository.Role.GetRoles(token);
+            var roles = await _repository.Role.GetRoles(AccessToken);
             return View(roles);
         }
         public IActionResult Create()
@@ -30,14 +29,12 @@ namespace WebApp.Areas.Manage.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-            string token = User.FindFirst(ClaimTypes.Authentication).Value;
-            int result = await _repository.Role.CreateRole(obj, token);
+            int result = await _repository.Role.CreateRole(obj, AccessToken);
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Edit(int id)
         {
-            string token = User.FindFirst(ClaimTypes.Authentication).Value;
-            Role role = await _repository.Role.GetRoleById(id, token);
+            Role role = await _repository.Role.GetRoleById(id, AccessToken);
             if (role == null)
                 return NotFound();
             return View(role);
@@ -47,14 +44,12 @@ namespace WebApp.Areas.Manage.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-            string token = User.FindFirst(ClaimTypes.Authentication).Value;
-            int result = await _repository.Role.UpdateRole(role, token);
+            int result = await _repository.Role.UpdateRole(role, AccessToken);
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Delete(int id)
         {
-            string token = User.FindFirst(ClaimTypes.Authentication).Value;
-            int result = await _repository.Role.DeleteRole(id, token);
+            int result = await _repository.Role.DeleteRole(id, AccessToken);
             return RedirectToAction(nameof(Index));
 
         }

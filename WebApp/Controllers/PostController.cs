@@ -23,7 +23,7 @@ namespace WebApp.Controllers
 
         // GET: PostController/Detail/5
         public async Task<ActionResult> Detail(int id)
-        {            
+        {
             Post post = await _repository.Post.GetPostById(id, countView: true);
             if (post is null)
                 return NotFound();
@@ -34,7 +34,7 @@ namespace WebApp.Controllers
         // GET: PostController/Create
         [Authorize]
         public async Task<ActionResult> Create()
-        {            
+        {
             ViewBag.categories = new SelectList(await _repository.Category.GetCategories(), "Id", "Name");
             return View();
         }
@@ -47,21 +47,20 @@ namespace WebApp.Controllers
         {
             if (!ModelState.IsValid)
                 return View(post);
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
             post.AuthorId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             post.DateCreated = DateTime.Now;
-            if(thumbnailImage != null && !string.IsNullOrEmpty(thumbnailImage.FileName))
+            if (thumbnailImage != null && !string.IsNullOrEmpty(thumbnailImage.FileName))
             {
                 post.Thumbnail = await this.UploadThumbnail(thumbnailImage);
             }
-            var result = await _repository.Post.Create(post, token);
+            var result = await _repository.Post.Create(post, AccessToken);
             return RedirectToAction(nameof(Index));
         }
 
         // GET: PostController/Edit/5
         [Authorize]
         public async Task<ActionResult> Edit(int id)
-        {   
+        {
             Post post = await _repository.Post.GetPostById(id);
             if (post == null)
                 return NotFound();
@@ -82,13 +81,12 @@ namespace WebApp.Controllers
                 return BadRequest();
             if (!ModelState.IsValid)
                 return View(post);
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
             post.DateModifier = DateTime.Now;
-            if(thumbnailImage != null && !string.IsNullOrEmpty(thumbnailImage.FileName))
+            if (thumbnailImage != null && !string.IsNullOrEmpty(thumbnailImage.FileName))
             {
                 post.Thumbnail = await this.UploadThumbnail(thumbnailImage);
             }
-            await _repository.Post.Edit(post, token);
+            await _repository.Post.Edit(post, AccessToken);
             return RedirectToAction(nameof(Index));
         }
 
@@ -103,14 +101,14 @@ namespace WebApp.Controllers
         // GET: PostController/Delete/5
         [Authorize]
         public async Task<ActionResult> Delete(int id)
-        {            
+        {
             Post post = await _repository.Post.GetPostById(id);
             if (post is null)
                 return NotFound();
             //only author of post or admin can delete post            
             if (post.Author.Id != int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)))
                 return BadRequest();
-            return View(post);           
+            return View(post);
         }
 
         // POST: PostController/Delete/5
@@ -120,15 +118,14 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirm(int id)
         {
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
-            await _repository.Post.Delete(id, token);
+            await _repository.Post.Delete(id, AccessToken);
             return RedirectToAction(nameof(Index));
-        }       
+        }
         public async Task<IActionResult> Search(string keyword, int page = 1)
         {
             if (string.IsNullOrEmpty(keyword))
                 return BadRequest();
-           ListPostDto searchResult = await _repository.Post.SearchPost(keyword, page);
+            ListPostDto searchResult = await _repository.Post.SearchPost(keyword, page);
             return View(searchResult);
         }
     }

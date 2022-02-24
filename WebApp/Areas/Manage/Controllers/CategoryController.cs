@@ -74,7 +74,7 @@ namespace WebApp.Areas.Dashboard.Controllers
                 return BadRequest();
             if (!ModelState.IsValid)
                 return View();
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
+            string token = User.FindFirstValue(Data.ClaimTypes.AccessToken);
             await _repository.Category.Edit(category, token);
             return RedirectToAction(nameof(Index));
         }
@@ -82,7 +82,7 @@ namespace WebApp.Areas.Dashboard.Controllers
         // GET: CategoryController/Delete/5
         public async Task<ActionResult> Delete(int id)
         {
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
+            string token = User.FindFirstValue(Data.ClaimTypes.AccessToken);
             await _repository.Category.Delete(id, token);
             return RedirectToAction(nameof(Index));
         }

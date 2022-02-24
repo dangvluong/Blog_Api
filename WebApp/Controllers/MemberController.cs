@@ -16,30 +16,23 @@ namespace WebApp.Controllers
         {
 
         }
-       
+
         public async Task<IActionResult> Index()
         {
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
-            Member member = await _repository.Member.GetMemberById(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), token);
+            Member member = await _repository.Member.GetMemberById(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), AccessToken);
             return View(member);
-        }       
+        }
         public IActionResult ChangePassword()
         {
             return View();
         }
-        [HttpPost]     
+        [HttpPost]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel obj)
         {
             if (!ModelState.IsValid)
                 return View();
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
-            //bool isOldPasswordValid = await _repository.Auth.CheckOldPasswordValid(changePasswordModel.OldPassword, token);
-            //if (!isOldPasswordValid)
-            //{
-            //    ModelState.AddModelError(string.Empty, "Mật khẩu cũ không đúng");
-            //    return View();
-            //}                
-            BadRequestResponse response = await _repository.Auth.ChangePassword(obj, token);
+
+            BadRequestResponse response = await _repository.Auth.ChangePassword(obj, AccessToken);
             if (response == null)
                 return RedirectToAction("Logout", "Account");
             foreach (var errorMessage in response.Errors)
@@ -51,7 +44,7 @@ namespace WebApp.Controllers
             }
             return View();
         }
-       
+
         public async Task<IActionResult> ListPost(int? id = null)
         {
             if (id == null)
@@ -63,7 +56,7 @@ namespace WebApp.Controllers
             };
             return View(viewModel);
         }
-      
+
         public async Task<IActionResult> ListComment(int? id = null)
         {
             if (id == null)
@@ -72,12 +65,11 @@ namespace WebApp.Controllers
             {
                 Member = await _repository.Member.GetMemberById(id.Value),
                 Comments = await _repository.Comment.GetCommentsByMember(id.Value)
-            };            
+            };
             return View(viewModel);
-        }        
+        }
         public async Task<IActionResult> ChangeAboutMe()
         {
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
             Member member = await _repository.Member.GetMemberById(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), token);
             return View(new ChangeAboutMeModel
             {
@@ -90,8 +82,7 @@ namespace WebApp.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
-            int result = await _repository.Member.ChangeAboutMe(obj, token);
+            int result = await _repository.Member.ChangeAboutMe(obj, AccessToken);
             return RedirectToAction(nameof(Index));
 
         }
@@ -115,8 +106,7 @@ namespace WebApp.Controllers
                 content.Add(new StringContent(obj.MemberId.ToString()), nameof(obj.MemberId));
                 content.Add(new StreamContent(obj.AvatarUpload.OpenReadStream()), nameof(obj.AvatarUpload), obj.AvatarUpload.FileName);
             }
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
-            int result = await _repository.Member.ChangeAvatar(content, token);
+            int result = await _repository.Member.ChangeAvatar(content, AccessToken);
 
             return RedirectToAction(nameof(Index));
         }

@@ -17,11 +17,10 @@ namespace WebApp.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-            string token = User.FindFirst(ClaimTypes.Authentication).Value;
             int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             comment.AuthorId = userId;
             comment.DateCreate = DateTime.UtcNow;            
-            int result = await _repository.Comment.PostComment(comment, token);
+            int result = await _repository.Comment.PostComment(comment, AccessToken);
             if (result >= 0)
                 return RedirectToAction("Detail", "Post",new {Id = comment.PostId}, "comments");
             return BadRequest();

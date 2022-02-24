@@ -21,7 +21,7 @@ namespace WebApp.Areas.Dashboard.Controllers
         }
         public async Task<IActionResult> Delete(int id)
         {
-            string token = User.FindFirstValue(ClaimTypes.Authentication);
+            string token = User.FindFirstValue(Data.ClaimTypes.AccessToken);
             await _repository.Comment.DeleteComment(id, token);
             return RedirectToAction(nameof(Index));
         }
