@@ -2,7 +2,7 @@
 <h4 class="text-center">QUẢN LÝ VAI TRÒ</h4>
 <div class="my-3">
     <a asp-action="Create" class="btn btn-primary mb-2">Tạo vai trò mới</a>
-    @if (Model != null && Model.Count > 0)
+    @if (Model?.Count > 0)
     {
         <table class="table table-bordered">
             <thead>
@@ -38,7 +38,7 @@
     }
     else
     {
-        <h5>Hiện không có vai trò nào</h5>
+        <h5 class="text-center">Hiện không có vai trò nào</h5>
     }
 </div>
 
