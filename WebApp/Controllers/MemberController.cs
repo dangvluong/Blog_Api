@@ -52,7 +52,7 @@ namespace WebApp.Controllers
             ListPostByMemberViewModel viewModel = new ListPostByMemberViewModel
             {
                 Member = await _repository.Member.GetMemberById(id.Value),
-                Posts = await _repository.Post.GetPostsByMember(id.Value)
+                Posts = await _repository.Post.GetPostsByMember(id.Value,AccessToken)
             };
             return View(viewModel);
         }

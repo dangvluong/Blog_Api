@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using WebApi.DataTransferObject;
 using WebApi.Interfaces;
 using WebApi.Models;
@@ -21,7 +22,21 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<ListPostDto>> GetPosts([FromQuery] int page = 1)
         {
-            var posts = await _repository.Post.GetPosts(page, pageSize, trackChanges: false);
+            var posts = await _repository.Post.GetPosts(page, pageSize, trackChanges: false, isManager: false);
+            if (posts == null)
+                return NotFound();
+            ListPostDto listPost = new ListPostDto
+            {
+                Posts = MapPosts(posts),
+                TotalPage = await _repository.Post.CountTotalPage(pageSize, p => p.IsActive == true && p.IsDeleted == false)
+            };
+            return Ok(listPost);
+        }
+        [HttpGet("managergetposts")]
+        [Authorize(Roles = "Admin, Moderator")]
+        public async Task<ActionResult<ListPostDto>> ManagerGetPosts([FromQuery] int page = 1)
+        {
+            var posts = await _repository.Post.GetPosts(page, pageSize, trackChanges: false, isManager: true);
             if (posts == null)
                 return NotFound();
             ListPostDto listPost = new ListPostDto
@@ -30,12 +45,12 @@ namespace WebApi.Controllers
                 TotalPage = await _repository.Post.CountTotalPage(pageSize)
             };
             return Ok(listPost);
-        }
+        }       
 
         // GET: api/Post/5
         [HttpGet("{id}")]
         public async Task<ActionResult<PostDto>> GetPost(int id, [FromQuery] bool countView = false)
-        {
+        {            
             bool trackChanges = countView ? true : false;
             Post post = await _repository.Post.GetPostById(id, trackChanges, countView);
             if (post == null)
@@ -90,7 +105,11 @@ namespace WebApi.Controllers
         [HttpGet("getpostsbymember/{id}")]
         public async Task<ActionResult<IEnumerable<PostDto>>> GetPostsByMember(int id)
         {
-            IEnumerable<Post> posts = await _repository.Post.GetPostsByMember(id, trackChanges: false);
+            bool includeInActivePosts = false;
+            var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (User.Identity.IsAuthenticated && int.Parse(currentUserId) == id)
+                includeInActivePosts = true;
+            IEnumerable<Post> posts = await _repository.Post.GetPostsByMember(id, trackChanges: false,includeInActivePosts);
             if (posts == null)
                 return NotFound();
             return Ok(MapPosts(posts));
@@ -152,7 +171,7 @@ namespace WebApi.Controllers
             ListPostDto listPost = new ListPostDto
             {
                 Posts = MapPosts(posts),
-                TotalPage = await _repository.Post.CountTotalPage(pageSize, trackChanges: false, p => p.Title.Contains(keyword))
+                TotalPage = await _repository.Post.CountTotalPage(pageSize,p => p.Title.Contains(keyword))
             };
             return Ok(listPost);
         }

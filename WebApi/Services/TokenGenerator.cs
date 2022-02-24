@@ -29,12 +29,12 @@ namespace WebApi.Services
             {
                 claims.Add(new Claim(ClaimTypes.Role, role.Name));
             }
-            return this.CreateToken(_configuration.GetSection("AccessTokenSecret").ToString(), 0.25, claims);
+            return this.CreateToken(_configuration.GetSection("AccessTokenSecret").ToString(), 30, claims);
         }
 
         public string CreateRefreshToken()
         {
-            return this.CreateToken(_configuration.GetSection("RefreshTokenSecret").ToString(), 30);
+            return this.CreateToken(_configuration.GetSection("RefreshTokenSecret").ToString(), 120);
         }
 
         private string CreateToken(string secretkey, double expirationMinutes, List<Claim> claims = null)

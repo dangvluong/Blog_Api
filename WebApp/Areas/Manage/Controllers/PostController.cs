@@ -15,9 +15,9 @@ namespace WebApp.Areas.Manage.Controllers
         {
         }
 
-        public async Task<IActionResult> Index(int id = 1)
+        public async Task<IActionResult> Index(int page = 1)
         {
-            ListPostDto listPostDto = await _repository.Post.GetPosts(id);
+            ListPostDto listPostDto = await _repository.Post.ManagerGetPosts(page, AccessToken);
             return View(listPostDto);
         }
         public async Task<IActionResult> Approve(int id)

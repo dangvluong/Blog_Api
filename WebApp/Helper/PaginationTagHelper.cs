@@ -24,7 +24,7 @@ namespace WebApp.Helper
                     sb.AppendFormat("<li><a class=\"page-numbers\" href=\"{1}\">{0}</a></li>", i, uri);
                 }
                 if (TotalPage > 1)
-                    AddNagivation(isNext: true,sb,targetPage: 1);
+                    AddNagivation(isNext: true,sb,targetPage: 2);
             }
             else
             {

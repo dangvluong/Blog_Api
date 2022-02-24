@@ -14,7 +14,10 @@ namespace WebApp.Repositories
         {
             return await Get<ListPostDto>($"/api/post?page={page}");
         }
-
+        public async Task<ListPostDto> ManagerGetPosts(int page, string token)
+        {
+            return await Get<ListPostDto>($"/api/post/managergetposts?page={page}", token);
+        }
         public async Task<Post> GetPostById(int id, bool countView = false)
         {
             string countViewParam = string.Empty;
@@ -35,9 +38,9 @@ namespace WebApp.Repositories
         {
             return await Delete($"/api/post/{id}", token);            
         }
-        public async Task<List<Post>> GetPostsByMember(int id)
+        public async Task<List<Post>> GetPostsByMember(int id, string token = null)
         {
-            return await Get<List<Post>>($"/api/post/getpostsbymember/{id}");            
+            return await Get<List<Post>>($"/api/post/getpostsbymember/{id}",token);            
         }
 
         public async Task<IEnumerable<Post>> GetTrendingPost()

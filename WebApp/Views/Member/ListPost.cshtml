@@ -9,6 +9,10 @@
                     <tr>
                         <th>Tiêu đề</th>
                         <th>Ngày tạo</th>
+                        @if (int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) == Model.Member.Id)
+                        {
+                            <th>Đã duyệt</th>
+                        }
                         <th>Thuộc danh mục</th>
                         <th></th>
                     </tr>
@@ -23,6 +27,10 @@
                                 </a>
                             </td>
                             <td>@post.DateCreated.ToShortDateString()</td>
+                            @if (int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) == Model.Member.Id)
+                            {
+                                <td>@(post.IsActive ? "Đã duyệt" : "Chưa duyệt")</td>
+                            }
                             <td>@post.Category.Name</td>
                             <td>
                                 @if (User.Identity.Name == Model.Member.Username)

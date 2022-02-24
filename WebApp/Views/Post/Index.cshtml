@@ -3,7 +3,6 @@
 @{
     var hostAddress = configuration.GetSection("ApiServer").Value;
 }
-
 <nav id="breadcrumbs" class="breadcrumbs">
     <div class="container page-wrapper AllBreadcrumbs">
         <a asp-action="Index" asp-controller="Home" rel="homepage">Home</a>&nbsp;&nbsp;»&nbsp;&nbsp;
@@ -20,52 +19,62 @@
                 <a asp-action="Create" asp-controller="Post" asp-area="" class="btn btn-style btn-outline ml-auto">Create new post</a>
             </div>
         </div>
+        @if (Model?.Posts?.Count > 0)
+        {
+            <div class="row">
+                @foreach (Post post in Model.Posts)
+                {
+                    <div class="col-lg-4 col-md-6 item mb-4">
+                        <div class="card">
+                            <div class="card-header p-0 position-relative blog-post-thumb">
+                                <a href="https://wp.w3layouts.com/designblog/2021/05/31/how-to-write-a-blog-post-a-step-by-step-guide/"></a>
+                                <a class="post-thumbnail" asp-action="Detail" asp-route-id="@post.Id" aria-hidden="true" tabindex="-1">
+                                    <img width="340" height="284"
+                                         src="@(hostAddress + "/" + post.Thumbnail)"
+                                         class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
+                                         alt="@post.Title" loading="lazy">
+                                </a>
 
-        <div class="row">
-            @foreach (Post post in Model.Posts)
-            {
-                <div class="col-lg-4 col-md-6 item mb-4">
-                    <div class="card">
-                        <div class="card-header p-0 position-relative blog-post-thumb">
-                            <a href="https://wp.w3layouts.com/designblog/2021/05/31/how-to-write-a-blog-post-a-step-by-step-guide/"></a>
-                            <a class="post-thumbnail" asp-action="Detail" asp-route-id="@post.Id" aria-hidden="true" tabindex="-1">
-                                <img width="340" height="284"
-                                     src="@(hostAddress + "/" + post.Thumbnail)"
-                                     class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
-                                     alt="@post.Title" loading="lazy">
-                            </a>
 
+                            </div>
+                            <div class="card-body p-0 blog-details">
+                                <a asp-action="Detail" asp-route-id="@post.Id" rel="bookmark" class="blog-desc">
+                                    @post.Title
+                                </a>
+                                <div class="author align-items-center mt-3 mb-1">
+                                    <a href="https://wp.w3layouts.com/designblog/author/w3layouts/">
+                                    </a><a class="url fn n"
+                                           href="#">@post.AuthorId</a>
 
-                        </div>
-                        <div class="card-body p-0 blog-details">
-                            <a asp-action="Detail" asp-route-id="@post.Id" rel="bookmark" class="blog-desc">
-                                @post.Title
-                            </a>
-                            <div class="author align-items-center mt-3 mb-1">
-                                <a href="https://wp.w3layouts.com/designblog/author/w3layouts/">
-                                </a><a class="url fn n"
-                                       href="#">@post.AuthorId</a>
+                                        in <a asp-action="Index" asp-route-category="@post.CategoryId" rel="category tag">Category @post.CategoryId</a>
 
-                                    in <a asp-action="Index" asp-route-category="@post.CategoryId" rel="category tag">Category @post.CategoryId</a>
+                                    </div>
 
+                                    <ul class="blog-meta">
+                                        <li class="meta-item blog-lesson">
+                                            <span class="meta-value"> @post.DateCreated.ToShortDateString()</span>
+
+                                        </li>
+                                        <li class="meta-item blog-students">
+                                            <span class="meta-value">at @post.DateCreated.ToShortTimeString()</span>
+                                        </li>
+                                    </ul>
                                 </div>
-
-                                <ul class="blog-meta">
-                                    <li class="meta-item blog-lesson">
-                                        <span class="meta-value"> @post.DateCreated.ToShortDateString()</span>
-
-                                    </li>
-                                    <li class="meta-item blog-students">
-                                        <span class="meta-value">at @post.DateCreated.ToShortTimeString()</span>
-                                    </li>
-                                </ul>
                             </div>
                         </div>
-                    </div>
-                }
-        </div>
-        <div class="text-center">
-            <pagination total-page="@Model.TotalPage" current-page="@Context.Request.Query["page"].FirstOrDefault()" url="/post/index?{0}"></pagination>
-        </div>
+                    }
+            </div>}
+        else
+        {
+            <div class="text-center">
+                <h5>Hiện không có bài viết nào</h5>
+            </div>
+        }
+
+        @if (Model?.TotalPage > 1)
+        {<div class="text-center">
+                <pagination total-page="@Model.TotalPage" current-page="@Context.Request.Query["page"].FirstOrDefault()" url="/post/index?{0}"></pagination>
+            </div>
+        }
     </div>
 </section>
