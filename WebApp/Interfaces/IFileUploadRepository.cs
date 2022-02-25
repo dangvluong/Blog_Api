@@ -1,7 +1,9 @@
-﻿namespace WebApp.Interfaces
+﻿using WebApp.Models.Response;
+
+namespace WebApp.Interfaces
 {
     public interface IFileUploadRepository
     {
-        Task<string> Upload(HttpContent content, string url);
+        Task<ResponseModel> Upload(HttpContent content, string url, string token);
     }
 }

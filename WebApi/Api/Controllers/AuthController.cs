@@ -134,7 +134,11 @@ namespace WebApi.Controllers
                 return BadRequest();
             Member member = await _repository.Member.GetMemberByCondition(m => m.Email == obj.Email && m.ResetPasswordToken == obj.Token, trackChanges: true);
             if (member == null)
-                return BadRequest();
+            {
+                //ModelState.AddModelError(string.Empty, "Liên kết đã hết hạn.");
+                //return ValidationProblem(ModelState);
+                return BadRequest("Liên kết đã hết hạn.");
+            }                
             member.Password = SiteHelper.HashPassword(obj.NewPassword);
             member.ResetPasswordToken = null;
             await _repository.SaveChanges();

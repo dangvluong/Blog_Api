@@ -32,7 +32,7 @@ namespace WebApp.Helper
             return listCategory;
         }
 
-        public static void CreateSelectListItem(List<Category> source, List<Category> des, int level)
+        public static void CreateSelectListCategory(List<Category> source, List<Category> des, int level)
         {
             string prefix = string.Concat(Enumerable.Repeat("----", level));
             foreach (var category in source)
@@ -41,7 +41,7 @@ namespace WebApp.Helper
                 des.Add(category);
                 if (category.ChildCategories?.Count > 0)
                 {
-                    CreateSelectListItem(category.ChildCategories, des, level + 1);
+                    CreateSelectListCategory(category.ChildCategories, des, level + 1);
                 }
             }
         }

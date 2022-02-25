@@ -6,6 +6,7 @@ using WebApp.DataTransferObject;
 using WebApp.Helper;
 using WebApp.Interfaces;
 using WebApp.Models;
+using WebApp.Models.Response;
 
 namespace WebApp.Controllers
 {
@@ -26,7 +27,7 @@ namespace WebApp.Controllers
         public async Task<ActionResult> Detail(int id)
         {
             Post post = await _repository.Post.GetPostById(id, countView: true);
-            if (post is null)
+            if (post == null)
                 return NotFound();
             post.Comments = await _repository.Comment.GetCommentsByPostId(post.Id);
             return View(post);
@@ -45,22 +46,31 @@ namespace WebApp.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Post post, IFormFile thumbnailImage)
+        public async Task<IActionResult> Create(Post post, IFormFile thumbnailImage)
         {
             if (!ModelState.IsValid)
             {
-                List<Category> selectListCategories = await CreateSelectListCategories();
-                ViewBag.categories = new SelectList(selectListCategories, "Id", "Name");
+                List<Category> selectListCategory = await CreateSelectListCategory();
+                ViewBag.categories = new SelectList(selectListCategory, "Id", "Name");
                 return View(post);
-            }                
+            }
             post.AuthorId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             post.DateCreated = DateTime.Now;
             if (thumbnailImage != null && !string.IsNullOrEmpty(thumbnailImage.FileName))
             {
                 post.Thumbnail = await this.UploadThumbnail(thumbnailImage);
             }
-            var result = await _repository.Post.Create(post, AccessToken);
-            return RedirectToAction(nameof(Index));
+            ResponseModel response = await _repository.Post.Create(post, AccessToken);
+            if (response is SuccessResponseModel)
+            {
+                PushNotification(new NotificationOption
+                {
+                    Type = "success",
+                    Message = "Bài viết của bạn đã được tạo và chờ duyệt."
+                });
+                return RedirectToAction(nameof(Index));
+            }
+            return HandleErrors(response);
         }
 
         // GET: PostController/Edit/5
@@ -71,27 +81,20 @@ namespace WebApp.Controllers
             if (post == null)
                 return NotFound();
             //only author of post or admin can edit post            
-            if (post.Author.Id != int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)))
-                return BadRequest();
-            List<Category> selectListCategories = await CreateSelectListCategories();
-            ViewBag.categories = new SelectList(selectListCategories, "Id", "Name");
-            return View(post);
-        }
-
-        private async Task<List<Category>> CreateSelectListCategories()
-        {
-            var sourceCategories = await _repository.Category.GetCategories();
-            var treeLevelCategories = CategoryHelper.CreateTreeLevelCategory(sourceCategories);
-            var selectListCategories = new List<Category>();
-            CategoryHelper.CreateSelectListItem(treeLevelCategories, selectListCategories, 0);
-            return selectListCategories;
-        }
+            if (post.Author.Id == int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) || User.IsInRole("Admin,Moderator"))
+            {
+                List<Category> selectListCategory = await CreateSelectListCategory();
+                ViewBag.categories = new SelectList(selectListCategory, "Id", "Name");
+                return View(post);
+            }
+            return BadRequest();
+        }       
 
         // POST: PostController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<ActionResult> Edit(int id, Post post, IFormFile thumbnailImage)
+        public async Task<IActionResult> Edit(int id, Post post, IFormFile thumbnailImage)
         {
             if (post.Id != id)
                 return BadRequest();
@@ -102,8 +105,17 @@ namespace WebApp.Controllers
             {
                 post.Thumbnail = await this.UploadThumbnail(thumbnailImage);
             }
-            await _repository.Post.Edit(post, AccessToken);
-            return RedirectToAction(nameof(Index));
+            ResponseModel response = await _repository.Post.Edit(post, AccessToken);
+            if (response is SuccessResponseModel)
+            {
+                PushNotification(new NotificationOption
+                {
+                    Type = "success",
+                    Message = "Đã cập nhật bài viết thành công"
+                });
+                return RedirectToAction(nameof(Detail), new { id = id });
+            }
+            return HandleErrors(response);
         }
 
         private async Task<string> UploadThumbnail(IFormFile thumbnailImage)
@@ -111,7 +123,12 @@ namespace WebApp.Controllers
             MultipartFormDataContent content = new MultipartFormDataContent();
             content.Add(new StreamContent(thumbnailImage.OpenReadStream()), nameof(thumbnailImage), thumbnailImage.FileName);
             string url = "/api/fileupload/postthumbnail";
-            return await _repository.FileUpload.Upload(content, url);
+            var response = await _repository.FileUpload.Upload(content, url, AccessToken);
+            if (response is SuccessResponseModel)
+            {
+                return (string)response.Data;
+            }
+            return null;
         }
 
         // GET: PostController/Delete/5
@@ -122,9 +139,12 @@ namespace WebApp.Controllers
             if (post is null)
                 return NotFound();
             //only author of post or admin can delete post            
-            if (post.Author.Id != int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)))
-                return BadRequest();
-            return View(post);
+            if (post.Author.Id == int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) || User.IsInRole("Admin,Moderator"))
+            {
+                return View(post);
+            }
+            return BadRequest();
+
         }
 
         // POST: PostController/Delete/5
@@ -132,10 +152,19 @@ namespace WebApp.Controllers
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirm(int id)
+        public async Task<IActionResult> DeleteConfirm(int id)
         {
-            await _repository.Post.Delete(id, AccessToken);
-            return RedirectToAction(nameof(Index));
+            ResponseModel response = await _repository.Post.Delete(id, AccessToken);
+            if (response is SuccessResponseModel)
+            {
+                PushNotification(new NotificationOption
+                {
+                    Type = "success",
+                    Message = "Đã cập nhật trạng thái bài viết thành công"
+                });
+                RedirectToAction(nameof(Index));
+            }
+            return HandleErrors(response);
         }
         public async Task<IActionResult> Search(string keyword, int page = 1)
         {
@@ -154,9 +183,9 @@ namespace WebApp.Controllers
                 des.Add(category);
                 if (category.ChildCategories?.Count > 0)
                 {
-                  CreateSelectItems(category.ChildCategories, des, level + 1);
+                    CreateSelectItems(category.ChildCategories, des, level + 1);
                 }
-            }            
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using WebApp.Models;
+using WebApp.Models.Response;
 
 namespace WebApp.Interfaces
 {
@@ -6,8 +7,8 @@ namespace WebApp.Interfaces
     {
         Task<List<Category>> GetCategories();
         Task<Category> GetCategoryById(int id);
-        Task<int> Create(Category category, string token);
-        Task<int> Edit(Category category, string token);
-        Task<int> Delete(int id, string token);
+        Task<ResponseModel> Create(Category category, string token);
+        Task<ResponseModel> Edit(Category category, string token);
+        Task<ResponseModel> Delete(int id, string token);
     }
 }

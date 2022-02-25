@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using WebApp.DataTransferObject;
 using WebApp.Interfaces;
 using WebApp.Models;
+using WebApp.Models.Response;
 
 namespace WebApp.Repositories
 {
@@ -20,28 +21,85 @@ namespace WebApp.Repositories
             return null;
         }
         public async Task<int> Register(RegisterModel model)
-        {           
+        {
             return await PostJson<RegisterModel, int>("/api/auth/register", model);
         }
-       
-        public async Task<BadRequestResponse> ChangePassword(ChangePasswordModel obj, string token)
+
+        public async Task<ResponseModel> ChangePassword(ChangePasswordModel obj, string token)
         {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            HttpResponseMessage message =  await client.PostAsJsonAsync<ChangePasswordModel>("/api/auth/changepassword", obj);
+            return await Send("/api/auth/changepassword", obj, (client, url, obj) => client.PostAsJsonAsync(url, obj), token);   
+            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            //HttpResponseMessage message = await client.PostAsJsonAsync<ChangePasswordModel>("/api/auth/changepassword", obj);
+            //if (message.IsSuccessStatusCode)
+            //{
+            //    return new SuccessResponseModel
+            //    {
+            //        Status = (int)message.StatusCode
+            //    };
+            //}
+            //try
+            //{
+            //    var errors =JsonConvert.DeserializeObject<ErrorValidationResponseModel>(await message.Content.ReadAsStringAsync());
+            //    return errors;
+            //}
+            //catch (Exception)
+            //{
+            //    return new ErrorMessageResponseModel
+            //    {
+            //        Status = (int)message.StatusCode,
+            //        Data = await message.Content.ReadAsStringAsync()
+            //    };
+            //}
+        }
+        public async Task<ResponseModel> ForgotPassword(ForgotPasswordModel obj)
+        {
+            return await Send<ForgotPasswordModel, ResetPasswordModel>("/api/auth/forgotpassword", obj, (client, url, obj) => client.PostAsJsonAsync(url, obj),message => message.Content.ReadAsAsync<ResetPasswordModel>()); 
+            //HttpResponseMessage message = await client.PostAsJsonAsync<ForgotPasswordModel>("/api/auth/forgotpassword", obj);
+            //if (message.IsSuccessStatusCode)
+            //{
+            //    return new SuccessResponseModel
+            //    {
+            //        Status = (int)message.StatusCode,
+            //        Data = await message.Content.ReadAsAsync<ResetPasswordModel>()
+            //    };
+            //}
+
+            //try
+            //{
+            //    return JsonConvert.DeserializeObject<ErrorValidationResponseModel>(await message.Content.ReadAsStringAsync());
+            //}
+            //catch (Exception)
+            //{
+            //    return new ErrorMessageResponseModel
+            //    {
+            //        Status = (int)message.StatusCode,
+            //        Data = await message.Content.ReadAsStringAsync()
+            //    };
+            //}
+        }
+
+        public async Task<ResponseModel> ResetPassword(ResetPasswordModel obj)
+        {
+            HttpResponseMessage message = await client.PostAsJsonAsync<ResetPasswordModel>("/api/auth/resetpassword", obj);
             if (message.IsSuccessStatusCode)
-                return null;            
-            BadRequestResponse badRequest = JsonConvert.DeserializeObject<BadRequestResponse>(await message.Content.ReadAsStringAsync());
-            return badRequest;                
-        }
-
-        public async Task<ResetPasswordModel> ForgotPassword(ForgotPasswordModel obj)
-        {
-            return await PostJson<ForgotPasswordModel,ResetPasswordModel>("/api/auth/forgotpassword", obj);
-        }
-
-        public async Task<int> ResetPassword(ResetPasswordModel obj)
-        {
-            return await PostJson<ResetPasswordModel, int>("/api/auth/resetpassword", obj);
+            {
+                return new SuccessResponseModel
+                {
+                    Status = (int)message.StatusCode
+                };
+            }
+            try
+            {
+                return JsonConvert.DeserializeObject<ErrorValidationResponseModel>(await message.Content.ReadAsStringAsync());
+            }
+            catch (Exception)
+            {
+                return new ErrorMessageResponseModel
+                {
+                    Status = (int)message.StatusCode,
+                    Data = await message.Content.ReadAsStringAsync()
+                };
+            }
         }
 
         public async Task<int> Logout(string token)
@@ -53,7 +111,7 @@ namespace WebApp.Repositories
         {
             if (!string.IsNullOrEmpty(refreshToken?.RefreshToken))
             {
-                return await PostJson<TokensDto,TokensDto>("/api/auth/refreshtoken", refreshToken);
+                return await PostJson<TokensDto, TokensDto>("/api/auth/refreshtoken", refreshToken);
             }
             return null;
         }

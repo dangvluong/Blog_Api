@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WebApp.Interfaces;
 using WebApp.Models;
+using WebApp.Models.Response;
 using WebApp.ViewModels;
 
 namespace WebApp.Controllers
@@ -32,17 +33,31 @@ namespace WebApp.Controllers
             if (!ModelState.IsValid)
                 return View();
 
-            BadRequestResponse response = await _repository.Auth.ChangePassword(obj, AccessToken);
-            if (response == null)
-                return RedirectToAction("Logout", "Account");
-            foreach (var errorMessage in response.Errors)
+            ResponseModel response = await _repository.Auth.ChangePassword(obj, AccessToken);            
+            if (response is SuccessResponseModel)
             {
-                foreach (var error in errorMessage.Value)
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                PushNotification(new NotificationOption
                 {
-                    ModelState.AddModelError(errorMessage.Key, error);
-                }
+                    Type = "success",
+                    Message = "Đã cập nhật mật khẩu mới. Bạn cần đăng nhập lại."
+                });
+                return RedirectToAction("Login", "Account");
             }
-            return View();
+            else if (response is ErrorMessageResponseModel)
+            {
+                PushNotification(new NotificationOption
+                {
+                    Type = "error",
+                    Message = (string)response.Data
+                });
+                return View();
+            }
+            else
+            {
+                PushError((Dictionary<string, string[]>)response.Data);
+                return View();
+            }
         }
 
         public async Task<IActionResult> ListPost(int? id = null)
@@ -52,7 +67,7 @@ namespace WebApp.Controllers
             ListPostByMemberViewModel viewModel = new ListPostByMemberViewModel
             {
                 Member = await _repository.Member.GetMemberById(id.Value),
-                Posts = await _repository.Post.GetPostsByMember(id.Value,AccessToken)
+                Posts = await _repository.Post.GetPostsByMember(id.Value, AccessToken)
             };
             return View(viewModel);
         }
@@ -82,9 +97,30 @@ namespace WebApp.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-            int result = await _repository.Member.ChangeAboutMe(obj, AccessToken);
-            return RedirectToAction(nameof(Index));
-
+            ResponseModel response = await _repository.Member.ChangeAboutMe(obj, AccessToken);            
+            if (response is SuccessResponseModel)
+            {
+                PushNotification(new NotificationOption
+                {
+                    Type = "success",
+                    Message = "Đã cập nhật giới thiệu bản thân."
+                });
+                return RedirectToAction(nameof(Index));
+            }
+            else if (response is ErrorMessageResponseModel)
+            {
+                PushNotification(new NotificationOption
+                {
+                    Type = "error",
+                    Message = (string)response.Data
+                });
+                return View();
+            }
+            else
+            {
+                PushError((Dictionary<string, string[]>)response.Data);
+                return View();
+            }
         }
         public IActionResult ChangeAvatar()
         {
@@ -98,17 +134,39 @@ namespace WebApp.Controllers
         public async Task<IActionResult> ChangeAvatar(ChangeAvatarModel obj)
         {
             //Implement validation for IFormFile: size, extension (?)
-            //if (!ModelState.IsValid)
-            //    return View();
+            if (!ModelState.IsValid)
+                return View();
             MultipartFormDataContent content = new MultipartFormDataContent();
             if (obj.AvatarUpload != null)
             {
                 content.Add(new StringContent(obj.MemberId.ToString()), nameof(obj.MemberId));
                 content.Add(new StreamContent(obj.AvatarUpload.OpenReadStream()), nameof(obj.AvatarUpload), obj.AvatarUpload.FileName);
             }
-            int result = await _repository.Member.ChangeAvatar(content, AccessToken);
+            ResponseModel response = await _repository.Member.ChangeAvatar(content, AccessToken);
+            if (response is SuccessResponseModel)
+            {
+                PushNotification(new NotificationOption
+                {
+                    Type = "success",
+                    Message = "Đã cập nhật hình đại diện."
+                });
+                return RedirectToAction(nameof(Index));
+            }
 
-            return RedirectToAction(nameof(Index));
+            else if (response is ErrorMessageResponseModel)
+            {
+                PushNotification(new NotificationOption
+                {
+                    Type = "error",
+                    Message = (string)response.Data
+                });
+                return View();
+            }
+            else
+            {
+                PushError((Dictionary<string, string[]>)response.Data);
+                return View();
+            }
         }
     }
 }

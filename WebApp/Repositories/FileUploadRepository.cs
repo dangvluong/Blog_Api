@@ -1,4 +1,5 @@
 ﻿using WebApp.Interfaces;
+using WebApp.Models.Response;
 
 namespace WebApp.Repositories
 {
@@ -8,9 +9,11 @@ namespace WebApp.Repositories
         {
         }
 
-        public async Task<string> Upload(HttpContent content, string url)
+        public async Task<ResponseModel> Upload(HttpContent obj, string url, string token)
         {
-            return await PostImage(url, content);
+            //return await PostImage(url, content);
+            return await Send<HttpContent, string>(url, obj, (client, url, obj) => client.PostAsync(url, obj), message => message.Content.ReadAsStringAsync(), token);
+            //var response = await Send<string>(url)
         }
     }
 }

@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using WebApp.Controllers;
 using WebApp.DataTransferObject;
 using WebApp.Interfaces;
+using WebApp.Models;
+using WebApp.Models.Response;
 
 namespace WebApp.Areas.Manage.Controllers
 {
@@ -22,13 +23,31 @@ namespace WebApp.Areas.Manage.Controllers
         }
         public async Task<IActionResult> Approve(int id)
         {
-            int result = await _repository.Post.Approve(id, AccessToken);
-            return RedirectToAction(nameof(Index));
+            ResponseModel response = await _repository.Post.Approve(id, AccessToken);
+            if (response is SuccessResponseModel)
+            {
+                PushNotification(new NotificationOption
+                {
+                    Type = "success",
+                    Message = "Cập nhật trạng thái bài viết thành công"
+                });
+                return RedirectToAction(nameof(Index));
+            }
+            return HandleErrors(response);
         }
         public async Task<IActionResult> Delete(int id)
         {
-            int result = await _repository.Post.Delete(id, AccessToken);
-            return RedirectToAction(nameof(Index));
+            ResponseModel response = await _repository.Post.Delete(id, AccessToken);
+            if(response is SuccessResponseModel)
+            {
+                PushNotification(new NotificationOption
+                {
+                    Type = "success",
+                    Message = "Cập nhật trạng thái bài viết thành công"
+                });
+                return RedirectToAction(nameof(Index));
+            }
+            return HandleErrors(response);            
         }
     }
 }

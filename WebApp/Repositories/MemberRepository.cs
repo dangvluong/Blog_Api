@@ -1,7 +1,9 @@
-﻿using System.Net.Http.Headers;
+﻿using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using WebApp.DataTransferObject;
 using WebApp.Interfaces;
 using WebApp.Models;
+using WebApp.Models.Response;
 
 namespace WebApp.Repositories
 {
@@ -11,9 +13,29 @@ namespace WebApp.Repositories
         {
         }
 
-        public async Task<int> ChangeAvatar(MultipartFormDataContent content, string token)
-        {
-            return await Post<int>("/api/member/changeavatar", content, token);
+        public async Task<ResponseModel> ChangeAvatar(MultipartFormDataContent obj, string token)
+        {            
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            HttpResponseMessage message = await client.PostAsync("/api/member/changeavatar", obj);
+            if (message.IsSuccessStatusCode)
+            {
+                return new SuccessResponseModel
+                {
+                    Status = (int)message.StatusCode
+                };
+            }
+            try
+            {
+                return JsonConvert.DeserializeObject<ErrorValidationResponseModel>(await message.Content.ReadAsStringAsync());
+            }
+            catch (Exception)
+            {
+                return new ErrorMessageResponseModel
+                {
+                    Status = (int)message.StatusCode,
+                    Data = await message.Content.ReadAsStringAsync()
+                };
+            }
         }
 
         public async Task<Member> GetMemberById(int id, string token = "")
@@ -21,9 +43,29 @@ namespace WebApp.Repositories
             return await Get<Member>($"/api/member/{id}", token);
         }
 
-        public async Task<int> ChangeAboutMe(ChangeAboutMeModel obj, string token)
+        public async Task<ResponseModel> ChangeAboutMe(ChangeAboutMeModel obj, string token)
         {
-            return await PostJson<ChangeAboutMeModel,int>($"/api/member/changeaboutme", obj, token);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            HttpResponseMessage message = await client.PostAsJsonAsync<ChangeAboutMeModel>("/api/member/changeaboutme", obj);
+            if (message.IsSuccessStatusCode)
+            {
+                return new SuccessResponseModel
+                {
+                    Status = (int)message.StatusCode
+                };
+            }
+            try
+            {
+                return JsonConvert.DeserializeObject<ErrorValidationResponseModel>(await message.Content.ReadAsStringAsync());
+            }
+            catch (Exception)
+            {
+                return new ErrorMessageResponseModel
+                {
+                    Status = (int)message.StatusCode,
+                    Data = await message.Content.ReadAsStringAsync()
+                };
+            }
         }
 
         public async Task<List<Member>> GetMembers(string token)

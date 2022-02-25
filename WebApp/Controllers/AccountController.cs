@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
@@ -9,6 +10,7 @@ using WebApp.Data;
 using WebApp.DataTransferObject;
 using WebApp.Interfaces;
 using WebApp.Models;
+using WebApp.Models.Response;
 using WebApp.Services;
 
 namespace WebApp.Controllers
@@ -16,7 +18,7 @@ namespace WebApp.Controllers
     public class AccountController : BaseController
     {
         private IMailServices _mailServices;
-        public AccountController(IRepositoryManager repository, IConfiguration configuration, IMailServices mailServices,ILogger<AccountController> logger) : base(repository, configuration, logger)
+        public AccountController(IRepositoryManager repository, IConfiguration configuration, IMailServices mailServices, ILogger<AccountController> logger) : base(repository, configuration, logger)
         {
             _mailServices = mailServices;
         }
@@ -61,6 +63,11 @@ namespace WebApp.Controllers
                     IsPersistent = model.Remember
                 };
                 await HttpContext.SignInAsync(principal, properties);
+                PushNotification(new NotificationOption()
+                {
+                    Type = "success",
+                    Message = "Đăng nhập thành công"
+                });
                 if (!string.IsNullOrEmpty(returnUrl))
                     return Redirect(returnUrl);
                 return Redirect("/");
@@ -79,6 +86,11 @@ namespace WebApp.Controllers
             if (!ModelState.IsValid)
                 return View();
             await _repository.Auth.Register(model);
+            PushNotification(new NotificationOption()
+            {
+                Type = "success",
+                Message = "Đăng kí tài khoản thành công"
+            });
             return RedirectToAction(nameof(Login));
         }
         [Authorize]
@@ -87,7 +99,12 @@ namespace WebApp.Controllers
             //Remove refresh tokens at api server
             await _repository.Auth.Logout(AccessToken);
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return Redirect(nameof(Login));
+            PushNotification(new NotificationOption()
+            {
+                Type = "success",
+                Message = "Đăng xuất thành công"
+            });
+            return RedirectToAction(nameof(Login));
         }
         public IActionResult Denied()
         {
@@ -101,15 +118,33 @@ namespace WebApp.Controllers
         public async Task<IActionResult> ForgotPassword(ForgotPasswordModel obj)
         {
             if (!ModelState.IsValid)
-                return BadRequest();            
-            ResetPasswordModel result = await _repository.Auth.ForgotPassword(obj);
-            if (result != null)
+                return BadRequest();
+            ResponseModel response = await _repository.Auth.ForgotPassword(obj);
+            if (response is SuccessResponseModel)
             {
-                //Skip waiting for email sending
-                _mailServices.SendEmailResetPassword(result.Email,result.Token,_logger);
+                ResetPasswordModel resetPasswordInfo = (ResetPasswordModel)response.Data;
+                _mailServices.SendEmailResetPassword(resetPasswordInfo.Email, resetPasswordInfo.Token, _logger);
+                PushNotification(new NotificationOption
+                {
+                    Type = "success",
+                    Message = "Đường dẫn chứa liên kết đặt lại mật khẩu đã được gửi đến email của bạn"
+                });
+                return RedirectToAction(nameof(Login));
             }
-            //Add notification 
-            return RedirectToAction(nameof(Login));
+            else if (response is ErrorMessageResponseModel)
+            {
+                PushNotification(new NotificationOption
+                {
+                    Type = "error",
+                    Message = (string)response.Data
+                });
+                return View();
+            }
+            else
+            {
+                PushError((Dictionary<string, string[]>)response.Data);
+                return View();
+            }
         }
         [HttpGet]
         public IActionResult ResetPassword(ResetPasswordModel obj)
@@ -125,8 +160,30 @@ namespace WebApp.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-            int result = await _repository.Auth.ResetPassword(obj);
-            return RedirectToAction(nameof(Login));
+            ResponseModel response = await _repository.Auth.ResetPassword(obj);
+            if (response is SuccessResponseModel)
+            {
+                PushNotification(new NotificationOption
+                {
+                    Type = "success",
+                    Message = "Đã cập nhật mật khẩu mới"
+                });
+                return RedirectToAction(nameof(Login));
+            }
+            else if (response is ErrorMessageResponseModel)
+            {
+                PushNotification(new NotificationOption
+                {
+                    Type = "error",
+                    Message = (string)response.Data
+                });
+                return View();
+            }
+            else
+            {
+                PushError((Dictionary<string, string[]>)response.Data);
+                return View();
+            }
         }
     }
 }
