@@ -24,6 +24,7 @@ namespace WebApp.Models
         [Display(Name = "Địa chỉ email")]
         public string Email { get; set; }
         [DataType(DataType.Date)]
+        [Required(ErrorMessage = "Bạn phải chọn {0}")]
         [Display(Name = "Ngày sinh")]
         public DateTime DateOfBirth { get; set; }        
     }
