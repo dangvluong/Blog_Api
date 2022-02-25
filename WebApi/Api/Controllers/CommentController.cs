@@ -78,7 +78,7 @@ namespace WebApi.Controllers
             var comment = await _repository.Comment.GetCommentById(id, trackChanges: true);
             if (comment == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy bình luận");
             }
             _repository.Comment.DeleteComment(comment);
             await _repository.SaveChanges();

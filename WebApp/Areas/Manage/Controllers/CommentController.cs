@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WebApp.Controllers;
 using WebApp.Interfaces;
+using WebApp.Models;
+using WebApp.Models.Response;
 
 namespace WebApp.Areas.Dashboard.Controllers
 {
     [Area("Manage")]
-    [Authorize(Roles ="Admin, Moderator")]
+    [Authorize(Roles = "Admin, Moderator")]
     public class CommentController : BaseController
     {
         public CommentController(IRepositoryManager repository) : base(repository)
@@ -16,13 +18,22 @@ namespace WebApp.Areas.Dashboard.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var comments = await _repository.Comment.GetComments(AccessToken);    
+            var comments = await _repository.Comment.GetComments(AccessToken);
             return View(comments);
         }
         public async Task<IActionResult> Delete(int id)
-        {            
-            await _repository.Comment.DeleteComment(id, AccessToken);
-            return RedirectToAction(nameof(Index));
+        {
+            ResponseModel response = await _repository.Comment.DeleteComment(id, AccessToken);
+            if (response is SuccessResponseModel)
+            {
+                PushNotification(new NotificationOption
+                {
+                    Type = "success",
+                    Message = "Đã xóa bình luận"
+                });
+                return RedirectToAction(nameof(Index));
+            }
+            return HandleErrors(response);
         }
     }
 }

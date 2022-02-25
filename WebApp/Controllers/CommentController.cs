@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WebApp.Interfaces;
 using WebApp.Models;
+using WebApp.Models.Response;
 
 namespace WebApp.Controllers
 {
@@ -20,9 +21,11 @@ namespace WebApp.Controllers
             int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             comment.AuthorId = userId;
             comment.DateCreate = DateTime.UtcNow;            
-            int result = await _repository.Comment.PostComment(comment, AccessToken);
-            if (result >= 0)
-                return RedirectToAction("Detail", "Post",new {Id = comment.PostId}, "comments");
+            ResponseModel response= await _repository.Comment.PostComment(comment, AccessToken);
+            if(response is SuccessResponseModel)
+            {                
+                return RedirectToAction("Detail", "Post", new { Id = comment.PostId }, "comments");
+            }                
             return BadRequest();
         }
     }

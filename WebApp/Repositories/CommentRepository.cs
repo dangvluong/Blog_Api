@@ -1,5 +1,6 @@
 ﻿using WebApp.Interfaces;
 using WebApp.Models;
+using WebApp.Models.Response;
 
 namespace WebApp.Repositories
 {
@@ -10,34 +11,69 @@ namespace WebApp.Repositories
         }
         public async Task<List<Comment>> GetComments(string token)
         {
-            return await Get<List<Comment>>("/api/comment",token);            
+            ResponseModel response = await Send<List<Comment>>("/api/comment",
+                (client, url) => client.GetAsync(url),
+                message => message.Content.ReadAsAsync<List<Comment>>(),
+                token);
+            if (response is SuccessResponseModel)
+                return (List<Comment>)response.Data;
+            return null;
+            //return await Get<List<Comment>>("/api/comment",token);            
         }
         public async Task<List<Comment>> GetCommentsByPostId(int id)
         {
-            return await Get<List<Comment>>($"/api/comment/GetCommentsByPost/{id}");            
-        }        
+            ResponseModel response = await Send<List<Comment>>($"/api/comment/GetCommentsByPost/{id}",
+                (client, url) => client.GetAsync(url),
+                message => message.Content.ReadAsAsync<List<Comment>>()
+                );
+            if (response is SuccessResponseModel)
+                return (List<Comment>)response.Data;
+            return null;
+            //return await Get<List<Comment>>($"/api/comment/GetCommentsByPost/{id}");            
+        }
 
         public async Task<Comment> GetComment(int id)
         {
-            return await Get<Comment>($"/api/comment/{id}");            
+            //return await Get<Comment>($"/api/comment/{id}");
+            ResponseModel response = await Send<Comment>($"/api/comment/{id}",
+                (client, url) => client.GetAsync(url),
+                message => message.Content.ReadAsAsync<Comment>()
+                );
+            if (response is SuccessResponseModel)
+                return (Comment)response.Data;
+            return null;
         }
         //Override more method to return comment after post (?)
-        public async Task<int> PostComment(Comment comment, string token)
+        public async Task<ResponseModel> PostComment(Comment obj, string token)
         {
-            return await PostJson<Comment,int>("/api/comment", comment, token);            
+            //return await PostJson<Comment, int>("/api/comment", comment, token);
+            return await Send<Comment>("/api/comment", obj,
+                (client, url, obj) => client.PostAsJsonAsync<Comment>(url, obj),
+                token);
         }
-        public async Task<int> EditComment(Comment comment, string token)
+        public async Task<ResponseModel> EditComment(Comment obj, string token)
         {
-            return await Put<Comment>("/api/comment", comment, token);            
+            //return await Put<Comment>("/api/comment", comment, token);
+            return await Send<Comment>("/api/comment", obj,
+                (client, url, obj) => client.PutAsJsonAsync<Comment>(url, obj),
+                token);
         }
-        public async Task<int> DeleteComment(int id, string token)
+        public async Task<ResponseModel> DeleteComment(int id, string token)
         {
-            return await Delete($"/api/comment/{id}", token);            
+            //return await Delete($"/api/comment/{id}", token);
+            return await Send($"/api/comment/{id}",(client, url) => client.DeleteAsync(url),token);
         }
 
         public async Task<List<Comment>> GetCommentsByMember(int id)
         {
-            return await Get<List<Comment>>($"/api/comment/getcommentsbymember/{id}");
+            //return await Get<List<Comment>>($"/api/comment/getcommentsbymember/{id}");
+            ResponseModel response = await Send<List<Comment>>($"/api/comment/getcommentsbymember/{id}",
+                (client, url) => client.GetAsync(url),
+                message => message.Content.ReadAsAsync<List<Comment>>()
+                );
+            if (response is SuccessResponseModel)
+                return (List<Comment>)response.Data;
+            return null;
         }
     }
 }
