@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApp.Interfaces;
+using WebApp.Models.Response;
 
 namespace WebApp.Controllers
 {
@@ -16,8 +17,9 @@ namespace WebApp.Controllers
                 MultipartFormDataContent content = new MultipartFormDataContent();
                 content.Add(new StreamContent(image.OpenReadStream()), nameof(image), image.FileName);
                 string url = "/api/fileupload/postimage";
-                string imageUrl = await _repository.FileUpload.Upload(content,url);
-                return imageUrl;                
+                ResponseModel response = await _repository.FileUpload.Upload(content,url, AccessToken);
+                if (response is SuccessResponseModel)
+                    return (string)response.Data;                
             }
             return null;
         }

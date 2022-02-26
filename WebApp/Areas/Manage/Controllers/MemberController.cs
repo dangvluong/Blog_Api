@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using WebApp.Controllers;
 using WebApp.DataTransferObject;
 using WebApp.Interfaces;
 using WebApp.Models;
+using WebApp.Models.Response;
 using WebApp.ViewModels;
 
 namespace WebApp.Areas.Manage.Controllers
@@ -24,10 +24,19 @@ namespace WebApp.Areas.Manage.Controllers
         }
         public async Task<IActionResult> BanAccount(int id, string returnUrl = "")
         {
-            int result = await _repository.Member.BanAccount(id, AccessToken);
-            if (!string.IsNullOrEmpty(returnUrl))
-                return Redirect(returnUrl);
-            return RedirectToAction(nameof(Index));
+            ResponseModel response = await _repository.Member.BanAccount(id, AccessToken);
+            if(response is SuccessResponseModel)
+            {
+                PushNotification(new NotificationOption
+                {
+                    Type="success",
+                    Message = "Đã cập nhật trạng thái của tài khoản."
+                });
+                if (!string.IsNullOrEmpty(returnUrl))
+                    return Redirect(returnUrl);
+                return RedirectToAction(nameof(Index));
+            } 
+            return HandleErrors(response);
         }
         public async Task<IActionResult> Detail(int id)
         {
@@ -53,8 +62,17 @@ namespace WebApp.Areas.Manage.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateRole(UpdateRolesOfMemberDto obj)
         {            
-            int result = await _repository.Member.UpdateRolesOfMember(obj, AccessToken);
-            return RedirectToAction(nameof(Index));
+            ResponseModel response = await _repository.Member.UpdateRolesOfMember(obj, AccessToken);
+            if (response is SuccessResponseModel)
+            {
+                PushNotification(new NotificationOption
+                {
+                    Type = "success",
+                    Message = "Đã cập nhật vai trò của tài khoản."
+                });                
+                return RedirectToAction(nameof(Detail), new {id = obj.MemberId});
+            }
+            return HandleErrors(response);
         }
     }
 }

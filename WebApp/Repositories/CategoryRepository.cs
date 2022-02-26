@@ -36,7 +36,7 @@ namespace WebApp.Repositories
         public async Task<ResponseModel> Delete(int id, string token)
         {
             //return await Delete($"/api/category/{id}", token);
-            return await Send("/api/category", (client, url) => client.DeleteAsync(url), token);
+            return await Send($"/api/category/{id}", (client, url) => client.DeleteAsync(url), token);
         }
     }
 }

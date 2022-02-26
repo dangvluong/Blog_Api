@@ -4,6 +4,7 @@ using System.Security.Claims;
 using WebApp.Controllers;
 using WebApp.Interfaces;
 using WebApp.Models;
+using WebApp.Models.Response;
 
 namespace WebApp.Areas.Manage.Controllers
 {
@@ -29,8 +30,18 @@ namespace WebApp.Areas.Manage.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-            int result = await _repository.Role.CreateRole(obj, AccessToken);
-            return RedirectToAction(nameof(Index));
+            ResponseModel response = await _repository.Role.CreateRole(obj, AccessToken);
+            if(response is SuccessResponseModel)
+            {
+                PushNotification(new NotificationOption
+                {
+                    Type="success",
+                    Message = "Đã tạo vai trò mới."
+                });
+                return RedirectToAction(nameof(Index));
+            }
+            return HandleErrors(response);
+            
         }
         public async Task<IActionResult> Edit(int id)
         {
@@ -44,14 +55,31 @@ namespace WebApp.Areas.Manage.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-            int result = await _repository.Role.UpdateRole(role, AccessToken);
-            return RedirectToAction(nameof(Index));
+            ResponseModel response = await _repository.Role.UpdateRole(role, AccessToken);
+            if (response is SuccessResponseModel)
+            {
+                PushNotification(new NotificationOption
+                {
+                    Type = "success",
+                    Message = "Đã cập nhật vai trò."
+                });
+                return RedirectToAction(nameof(Index));
+            }
+            return HandleErrors(response);
         }
         public async Task<IActionResult> Delete(int id)
-        {
-            int result = await _repository.Role.DeleteRole(id, AccessToken);
-            return RedirectToAction(nameof(Index));
-
+        {            
+            ResponseModel response = await _repository.Role.DeleteRole(id, AccessToken);
+            if (response is SuccessResponseModel)
+            {
+                PushNotification(new NotificationOption
+                {
+                    Type = "success",
+                    Message = "Đã cập nhật trạng thái của vai trò."
+                });
+                return RedirectToAction(nameof(Index));
+            }
+            return HandleErrors(response);
         }
     }
 }

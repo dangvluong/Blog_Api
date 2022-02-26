@@ -69,7 +69,7 @@ namespace WebApi.Controllers
             var category = await _repository.Category.GetCategory(id, trackChanges: true);
             if (category == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy danh mục.");
             }            
             _repository.Category.DeleteCategory(category);
             await _repository.SaveChanges();

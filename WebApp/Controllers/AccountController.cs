@@ -131,20 +131,7 @@ namespace WebApp.Controllers
                 });
                 return RedirectToAction(nameof(Login));
             }
-            else if (response is ErrorMessageResponseModel)
-            {
-                PushNotification(new NotificationOption
-                {
-                    Type = "error",
-                    Message = (string)response.Data
-                });
-                return View();
-            }
-            else
-            {
-                PushError((Dictionary<string, string[]>)response.Data);
-                return View();
-            }
+            return HandleErrors(response);
         }
         [HttpGet]
         public IActionResult ResetPassword(ResetPasswordModel obj)
@@ -170,20 +157,7 @@ namespace WebApp.Controllers
                 });
                 return RedirectToAction(nameof(Login));
             }
-            else if (response is ErrorMessageResponseModel)
-            {
-                PushNotification(new NotificationOption
-                {
-                    Type = "error",
-                    Message = (string)response.Data
-                });
-                return View();
-            }
-            else
-            {
-                PushError((Dictionary<string, string[]>)response.Data);
-                return View();
-            }
+            return HandleErrors(response);    
         }
     }
 }

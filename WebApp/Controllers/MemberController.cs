@@ -44,20 +44,7 @@ namespace WebApp.Controllers
                 });
                 return RedirectToAction("Login", "Account");
             }
-            else if (response is ErrorMessageResponseModel)
-            {
-                PushNotification(new NotificationOption
-                {
-                    Type = "error",
-                    Message = (string)response.Data
-                });
-                return View();
-            }
-            else
-            {
-                PushError((Dictionary<string, string[]>)response.Data);
-                return View();
-            }
+            return HandleErrors(response);
         }
 
         public async Task<IActionResult> ListPost(int? id = null)
@@ -107,20 +94,7 @@ namespace WebApp.Controllers
                 });
                 return RedirectToAction(nameof(Index));
             }
-            else if (response is ErrorMessageResponseModel)
-            {
-                PushNotification(new NotificationOption
-                {
-                    Type = "error",
-                    Message = (string)response.Data
-                });
-                return View();
-            }
-            else
-            {
-                PushError((Dictionary<string, string[]>)response.Data);
-                return View();
-            }
+            return HandleErrors(response);
         }
         public IActionResult ChangeAvatar()
         {
@@ -153,20 +127,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            else if (response is ErrorMessageResponseModel)
-            {
-                PushNotification(new NotificationOption
-                {
-                    Type = "error",
-                    Message = (string)response.Data
-                });
-                return View();
-            }
-            else
-            {
-                PushError((Dictionary<string, string[]>)response.Data);
-                return View();
-            }
+            return HandleErrors(response);
         }
     }
 }

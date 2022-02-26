@@ -37,7 +37,7 @@ namespace WebApp.Controllers
         [Authorize]
         public async Task<ActionResult> Create()
         {
-            List<Category> selectListCategories = await CreateSelectListCategories();
+            List<Category> selectListCategories = await CreateSelectListCategory();
             ViewBag.categories = new SelectList(selectListCategories, "Id", "Name");
             return View();
         }
