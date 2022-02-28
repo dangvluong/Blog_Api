@@ -21,7 +21,7 @@
                 @foreach (var role in Model.Member.Roles)
                 {
                     <span class="badge @role.ColorDisplay">@role.Name</span>
-                }                
+                }
             </td>
         </tr>
         <tr>
@@ -41,15 +41,29 @@
             <td>@Model.Member.DateOfBirth.ToShortDateString()</td>
         </tr>
         <tr>
-            <th>Bài viết đã đăng:</th>
+            <th>Các bài viết đã đăng:</th>
             <td>
-                <a asp-action="ListPost" asp-controller="Member" asp-area="" asp-route-id="@Model.Member.Id" target="_blank">@Model.NumberOfPost bài viết</a>
+                @if (Model.NumberOfPost > 0)
+                {
+                    <a asp-action="ListPost" asp-controller="Member" asp-area="" asp-route-id="@Model.Member.Id" target="_blank">@Model.NumberOfPost bài viết</a>
+                }
+                else
+                {
+                    <span>0 bài viết</span>
+                }
             </td>
         </tr>
         <tr>
-            <th>Bình luận đã đăng:</th>
+            <th>Các bình luận đã đăng:</th>
             <td>
-                <a asp-action="ListComment" asp-controller="Member" asp-area="" asp-route-id="@Model.Member.Id" target="_blank">@Model.NumberOfComment bình luận</a>
+                @if (Model.NumberOfComment > 0)
+                {
+                    <a asp-action="ListComment" asp-controller="Member" asp-area="" asp-route-id="@Model.Member.Id" target="_blank">@Model.NumberOfComment bình luận</a>
+                }
+                else
+                {
+                    <span>0 bình luận</span>
+                }
             </td>
         </tr>
     </table>

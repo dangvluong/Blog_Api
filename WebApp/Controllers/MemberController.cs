@@ -23,6 +23,21 @@ namespace WebApp.Controllers
             Member member = await _repository.Member.GetMemberById(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), AccessToken);
             return View(member);
         }
+
+        public async Task<IActionResult> Detail(int id)
+        {
+            Member member = await _repository.Member.GetMemberById(id);
+            if (member == null)
+                return NotFound();
+            MemberDetailViewModel viewModel = new MemberDetailViewModel
+            {
+                Member = member,
+                NumberOfComment = (await _repository.Comment.GetCommentsByMember(id)).Count,
+                NumberOfPost = (await _repository.Post.GetPostsByMember(id)).Count
+            };
+            return View(viewModel);
+        }
+
         public IActionResult ChangePassword()
         {
             return View();
