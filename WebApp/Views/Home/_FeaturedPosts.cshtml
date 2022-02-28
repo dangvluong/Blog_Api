@@ -3,9 +3,6 @@
 @{
     var hostAddress = configuration.GetSection("ApiServer").Value;
 }
-<h3 class="section-title-left">
-    Featured posts
-</h3>
 @if (Model != null && Model.Count > 0)
 {
     <div class="row">

@@ -4,7 +4,17 @@
         <!-- block -->
 
         <div class="BlogHomeLayout">
-            <partial name="_FeaturedPosts" model="@Model.FeaturedPosts" />            
+            <div class="row my-3">
+                <div class="col-md-9">
+                    <h3 class="section-title-left">
+                        Featured posts
+                    </h3>
+                </div>
+                <div class="col-md-3">
+                    <a asp-action="Create" asp-controller="Post" asp-area="" class="btn btn-style btn-outline ml-auto">Create new post</a>
+                </div>
+            </div>
+            <partial name="_FeaturedPosts" model="@Model.FeaturedPosts" />
 
         </div>
     </div>
