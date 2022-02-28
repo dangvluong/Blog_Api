@@ -9,8 +9,7 @@
         <div class="col-lg-5 col-md-6 item">
             <div class="card">
                 <div class="card-header p-0 position-relative blog-post-thumb">
-                    <a href="https://wp.w3layouts.com/designblog/2021/04/30/hello-world/">
-
+                    <a asp-action="Detail" asp-controller="Post" asp-area="" asp-route-id="@Model[0].Id" rel="bookmark" class="blog-desc">
                         <div class="post-thumbnail">
                             <img width="560" height="370"
                                  src="@(hostAddress + "/" + Model[0].Thumbnail)"
@@ -20,18 +19,15 @@
                     </a>
                 </div>
                 <div class="card-body p-0 blog-details">
-                    <a href="https://wp.w3layouts.com/designblog/2021/04/30/hello-world/" class="blog-desc">
+                    <a asp-action="Detail" asp-controller="Post" asp-area="" asp-route-id="@Model[0].Id" rel="bookmark" class="blog-desc">
                         @Model[0].Title
                     </a>
                     <!-- <p>Lorem ipsum dolor sit amet consectetur ipsum adipisicing elit. Qui eligendi
-                              vitae sit.</p> -->
+                    vitae sit.</p> -->
 
                     <div class="author align-items-center mt-3 mb-1">
-
-                        <a href="https://wp.w3layouts.com/designblog/author/w3layouts/">
-                        </a><a class="url fn n" href="https://wp.w3layouts.com/designblog/author/w3layouts/">@Model[0].Author.Username</a>
-
-                        in <a href="https://wp.w3layouts.com/designblog/#url"></a><a href="https://wp.w3layouts.com/designblog/category/culture/" rel="category tag">@Model[0].Category.Name</a>
+                        <a class="url fn n" href="https://wp.w3layouts.com/designblog/author/w3layouts/">@Model[0].Author.Username</a>
+                        in  <a asp-action="Detail" asp-controller="Category" asp-area="" asp-route-id="@Model[0].CategoryId" rel="category tag">@Model[0].Category.Name</a>
                     </div>
 
                     <ul class="blog-meta">
@@ -60,27 +56,21 @@
                 {
                     <div class="list-view list-view1 mb-5">
                         <div class="grids5-info">
-                            <a href="https://wp.w3layouts.com/designblog/2021/05/31/how-to-write-a-blog-post-a-step-by-step-guide/"
-                               class="d-block zoom">
-
+                            <a asp-action="Detail" asp-controller="Post" asp-area="" asp-route-id="@Model[i].Id" class="d-block zoom">
                                 <div class="post-thumbnail">
                                     <img width="340" height="284"
                                          src="@(hostAddress + "/" + Model[i].Thumbnail)"
                                          class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" loading="lazy">
                                 </div><!-- .post-thumbnail -->
-
                             </a>
                             <div class="blog-info align-self">
-                                <a href="https://wp.w3layouts.com/designblog/2021/05/31/how-to-write-a-blog-post-a-step-by-step-guide/"
-                                   class="blog-desc1">
+                                <a asp-action="Detail" asp-controller="Post" asp-area="" asp-route-id="@Model[i].Id" class="blog-desc1">
                                     @Model[i].Title
                                 </a>
-
                                 <div class="author align-items-center mt-3 mb-1">
-                                    <a href="https://wp.w3layouts.com/designblog/author/w3layouts/">
-                                    </a><a class="url fn n" href="https://wp.w3layouts.com/designblog/author/w3layouts/"> @Model[i].Author.Username</a>
+                                    <a class="url fn n" href="https://wp.w3layouts.com/designblog/author/w3layouts/"> @Model[i].Author.Username</a>
 
-                                    in <a href="https://wp.w3layouts.com/designblog/#url"></a><a href="https://wp.w3layouts.com/designblog/category/startup/" rel="category tag"> @Model[i].Category.Name</a>
+                                    in <a asp-action="Detail" asp-controller="Category" asp-area="" asp-route-id="@Model[i].CategoryId" rel="category tag"> @Model[i].Category.Name</a>
                                 </div>
 
                                 <ul class="blog-meta">

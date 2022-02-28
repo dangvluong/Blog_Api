@@ -12,26 +12,26 @@
         <div class="col-lg-6 col-md-6">
             <div class="list-view list-view1">
                 <div class="grids5-info mb-5">
-                    <a href="https://wp.w3layouts.com/designblog/2021/05/31/curated-collection-post-8-examples-of-evolution-in-action/"
-                       class="d-block zoom">
-
+                    <a asp-action="Detail" asp-controller="Post" asp-area="" asp-route-id="@post.Id" class="d-block zoom">
                         <div class="post-thumbnail">
                             <img width="340" height="284"
-                                  src="@(hostAddress + "/" + post.Thumbnail)"
+                                 src="@(hostAddress + "/" + post.Thumbnail)"
                                  class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" loading="lazy">
                         </div><!-- .post-thumbnail -->
 
                     </a>
                     <div class="blog-info align-self">
-                        <a href="https://wp.w3layouts.com/designblog/2021/05/31/curated-collection-post-8-examples-of-evolution-in-action/"
-                           class="blog-desc1">
+                        <a asp-action="Detail" asp-controller="Post" asp-area="" asp-route-id="@post.Id" class="blog-desc1">
                             @post.Title
                         </a>
 
                         <div class="author align-items-center mt-3 mb-1">
                             <a class="url fn n" href="#">@post.Author.Username</a>
 
-                            in <a href="#" rel="category tag">@post.Category.Name</a>
+                            in
+                            <a asp-action="Detail" asp-controller="Category" asp-area="" asp-route-id="@post.CategoryId" rel="category tag">                               
+                                    @post.Category.Name
+                                </a>
                         </div>
 
                         <ul class="blog-meta">

@@ -8,12 +8,15 @@
                 <a asp-action="Detail" asp-controller="Post" asp-route-id="@post.Id">
                     <span class="rpwwt-post-title">@post.Title</span>
                 </a>
-                <div class="rpwwt-post-author">By @post.Author.Username</div>
+                <div class="rpwwt-post-author">By <a href="#">@post.Author.Username</a></div>
                 <div class="rpwwt-post-categories">
-                    In <a href="#">@post.Category.Name</a>
+                    in
+                    <a asp-action="Detail" asp-controller="Category" asp-area="" asp-route-id="@post.CategoryId" rel="category tag">
+                        @post.Category.Name
+                    </a>
                 </div>
                 <div class="rpwwt-post-date">@post.DateCreated.ToShortDateString()</div>
             </li>
-        }       
+        }
     </ul>
 </div>
