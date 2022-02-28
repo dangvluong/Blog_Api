@@ -85,13 +85,19 @@ namespace WebApp.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-            await _repository.Auth.Register(model);
-            PushNotification(new NotificationOptions()
+            ResponseModel response =  await _repository.Auth.Register(model);
+            if(response is SuccessResponseModel)
             {
-                Type = "success",
-                Message = "Đăng kí tài khoản thành công"
-            });
-            return RedirectToAction(nameof(Login));
+                PushNotification(new NotificationOptions()
+                {
+                    Type = "success",
+                    Message = "Đăng kí tài khoản thành công"
+                });
+                return RedirectToAction(nameof(Login));
+            }
+            HandleErrors(response);
+            return View();
+            
         }
         [Authorize]
         public async Task<IActionResult> Logout()

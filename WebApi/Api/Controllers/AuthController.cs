@@ -30,7 +30,21 @@ namespace WebApi.Controllers
         public async Task<IActionResult> Register(RegisterModel model)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest();            
+            var existUsename = await _repository.Member.GetMemberByCondition(m => m.Username == model.Username,trackChanges: false);
+            if (existUsename != null)
+            {
+                ModelState.AddModelError(nameof(model.Username),"Tên tài khoản này đã có người sử dụng.");
+                return ValidationProblem(ModelState);
+            }
+
+            var existEmail = await _repository.Member.GetMemberByCondition(m => m.Email == model.Email, trackChanges: false);
+            if (existEmail != null)
+            {
+                ModelState.AddModelError(nameof(model.Email), "Email này đã có người sử dụng.");
+                return ValidationProblem(ModelState);
+            }
+
             Member member = new Member
             {
                 Username = model.Username,
