@@ -1,0 +1,49 @@
+﻿@model List<Category>
+@inject IConfiguration configuration
+@{
+    var hostAddress = configuration.GetSection("ApiServer").Value;
+}
+<nav id="breadcrumbs" class="breadcrumbs">
+    <div class="container page-wrapper AllBreadcrumbs">
+        <a asp-action="Index" asp-controller="Home" rel="homepage">Home</a>&nbsp;&nbsp;»&nbsp;&nbsp;
+        <a asp-action="Index" asp-controller="Category" rel="post">Category</a>
+    </div>
+</nav>
+<section class="w3l-blog-block2 mt-md-5">
+    <div class="container mb-lg-4 BlogHomeLayout my-5">
+        <div class="my-3">          
+                <h3 class="section-title-left">All category </h3>                   
+        </div>
+        @if (Model?.Count > 0)
+        {
+            <div class="row">
+                @foreach (Category category in Model)
+                {
+                    <div class="col-lg-4 col-md-6 item mb-4">
+                        <div class="card">
+                            <div class="card-header p-0 position-relative blog-post-thumb">
+                                <a href="https://wp.w3layouts.com/designblog/2021/05/31/how-to-write-a-blog-post-a-step-by-step-guide/"></a>
+                                <a class="post-thumbnail" asp-action="Detail" asp-route-id="@category.Id" aria-hidden="true" tabindex="-1">
+                                    <img width="340" height="284"
+                                         src="/"
+                                         class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
+                                         alt="@category.Name" loading="lazy">
+                                </a>
+                            </div>
+                            <div class="card-body p-0 blog-details">
+                                <a asp-action="Detail" asp-route-id="@category.Id" rel="bookmark" class="blog-desc">
+                                    @category.Name
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>}
+        else
+        {
+            <div class="text-center">
+                <h5>Hiện không có chuyên mục nào</h5>
+            </div>
+        }
+    </div>
+</section>

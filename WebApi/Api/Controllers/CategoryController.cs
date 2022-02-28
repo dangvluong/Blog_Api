@@ -14,11 +14,21 @@ namespace WebApi.Controllers
         }
 
         // GET: api/Category
-        [HttpGet]     
+        [HttpGet]      
         public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
-        {             
+        {
             //throw new NotImplementedException();
             IEnumerable<Category> categories = await _repository.Category.GetCategories(trackChanges: false);
+            if (categories == null)
+                return NotFound();
+            return Ok(categories);
+        }
+        [HttpGet("managergetcategories")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<IEnumerable<Category>>> ManagerGetCategories()
+        {             
+            //throw new NotImplementedException();
+            IEnumerable<Category> categories = await _repository.Category.ManagerGetCategories(trackChanges: false);
             if (categories == null)
                 return NotFound();
             return Ok(categories);

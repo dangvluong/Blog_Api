@@ -21,7 +21,7 @@ namespace WebApp.Areas.Dashboard.Controllers
         // GET: CategoryController
         public async Task<IActionResult> Index()
         {
-            List<Category> categories = await _repository.Category.GetCategories();
+            List<Category> categories = await _repository.Category.ManagerGetCategories(AccessToken);
             List<Category> listCategory = CategoryHelper.CreateTreeLevelCategory(categories);
             return View(listCategory);
         }

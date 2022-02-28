@@ -32,6 +32,20 @@ namespace WebApi.Controllers
             };
             return Ok(listPost);
         }
+        [HttpGet("fromcategory/{categoryid}")]
+        public async Task<ActionResult<ListPostDto>> GetPostsFromCategory(int categoryId, [FromQuery] int page = 1)
+        {
+            var posts = await _repository.Post.GetPostsFromCategory(categoryId,page, pageSize, trackChanges: false);
+            if (posts == null)
+                return NotFound();
+            ListPostDto listPost = new ListPostDto
+            {
+                Posts = MapPosts(posts),
+                TotalPage = await _repository.Post.CountTotalPage(pageSize, p => p.CategoryId == categoryId && p.IsActive == true && p.IsDeleted == false)
+            };
+            return Ok(listPost);
+        }
+
         [HttpGet("managergetposts")]
         [Authorize(Roles = "Admin, Moderator")]
         public async Task<ActionResult<ListPostDto>> ManagerGetPosts([FromQuery] int page = 1)

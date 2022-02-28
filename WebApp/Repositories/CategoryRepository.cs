@@ -38,5 +38,11 @@ namespace WebApp.Repositories
             //return await Delete($"/api/category/{id}", token);
             return await Send($"/api/category/{id}", (client, url) => client.DeleteAsync(url), token);
         }
+
+        public async Task<List<Category>> ManagerGetCategories(string token)
+        {
+            var response = await Send<List<Category>>("/api/category/managergetcategories", (client, url) => client.GetAsync(url), message => message.Content.ReadAsAsync<List<Category>>(),token);
+            return (List<Category>)response.Data;
+        }
     }
 }

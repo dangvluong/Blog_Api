@@ -11,6 +11,7 @@ namespace WebApp.Interfaces
         Task<Post> GetPostById(int id, bool countView= false);
         Task<ResponseModel> Create(Post post, string token);
         Task<ResponseModel> Edit(Post post, string token);
+        Task<ListPostDto> GetPostsFromCategory(int id,int page);
         Task<ResponseModel> Delete(int id, string token);
         Task<ResponseModel> Restore(int id, string token);
         Task<List<Post>> GetPostsByMember(int id,string token=null);

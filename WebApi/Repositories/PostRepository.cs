@@ -105,5 +105,17 @@ namespace WebApi.Repositories
         {
             return await FindAll(trackChanges).Where(p => p.IsActive == true && p.IsDeleted == false).Include(p => p.Author).Include(p => p.Category).OrderBy(p => p.Id).Skip(pageSize * (page - 1)).Take(pageSize).ToListAsync();
         }
+
+        public async Task<IEnumerable<Post>> GetPostsFromCategory(int categoryId, int page, int pageSize, bool trackChanges)
+        {
+            return await FindByCondition(p => p.CategoryId == categoryId,trackChanges)
+                .Where(p => p.IsActive == true && p.IsDeleted == false)
+                .Include(p => p.Author)
+                .Include(p => p.Category)
+                .OrderBy(p => p.Id)
+                .Skip(pageSize * (page - 1))
+                .Take(pageSize)
+                .ToListAsync();            
+        }
     }
 }

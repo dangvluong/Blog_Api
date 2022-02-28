@@ -1,4 +1,4 @@
-﻿@model ListPostDto
+﻿@model ListPostFromCategoryViewModel
 @inject IConfiguration configuration
 @{
     var hostAddress = configuration.GetSection("ApiServer").Value;
@@ -6,14 +6,16 @@
 <nav id="breadcrumbs" class="breadcrumbs">
     <div class="container page-wrapper AllBreadcrumbs">
         <a asp-action="Index" asp-controller="Home" rel="homepage">Home</a>&nbsp;&nbsp;»&nbsp;&nbsp;
-        <a asp-action="Index" asp-controller="Post" rel="post">Post</a>
+        <a asp-action="Index" asp-controller="Category" rel="post">Category</a>
+        &nbsp;&nbsp;»&nbsp;&nbsp;
+        @Model.Category.Name
     </div>
 </nav>
 <section class="w3l-blog-block2 mt-md-5">
     <div class="container mb-lg-4 BlogHomeLayout my-5">
         <div class="row my-3">
             <div class="col-md-9">
-                <h3 class="section-title-left">All posts </h3>
+                <h3 class="section-title-left">@Model.Category.Name </h3>
             </div>
             <div class="col-md-3">
                 <a asp-action="Create" asp-controller="Post" asp-area="" class="btn btn-style btn-outline ml-auto">Create new post</a>
@@ -28,7 +30,7 @@
                         <div class="card">
                             <div class="card-header p-0 position-relative blog-post-thumb">
                                 <a href="https://wp.w3layouts.com/designblog/2021/05/31/how-to-write-a-blog-post-a-step-by-step-guide/"></a>
-                                <a class="post-thumbnail" asp-action="Detail" asp-route-id="@post.Id" aria-hidden="true" tabindex="-1">
+                                <a class="post-thumbnail" asp-controller="Post" asp-area="" asp-action="Detail" asp-route-id="@post.Id" aria-hidden="true" tabindex="-1">
                                     <img width="340" height="284"
                                          src="@(hostAddress + "/" + post.Thumbnail)"
                                          class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
@@ -38,16 +40,13 @@
 
                             </div>
                             <div class="card-body p-0 blog-details">
-                                <a asp-action="Detail" asp-route-id="@post.Id" rel="bookmark" class="blog-desc">
+                                <a asp-action="Detail" asp-controller="Post" asp-area="" asp-route-id="@post.Id" rel="bookmark" class="blog-desc">
                                     @post.Title
                                 </a>
                                 <div class="author align-items-center mt-3 mb-1">
                                     <a href="https://wp.w3layouts.com/designblog/author/w3layouts/">
                                     </a><a class="url fn n"
                                            href="#">@post.Author.Username</a>
-
-                                        in <a asp-action="Detail" asp-controller="Category" asp-area="" asp-route-id="@post.CategoryId" rel="category tag">Category @post.Category.Name</a>
-
                                     </div>
 
                                     <ul class="blog-meta">
@@ -73,7 +72,7 @@
 
         @if (Model?.TotalPage > 1)
         {<div class="text-center">
-                <pagination total-page="@Model.TotalPage" current-page="@Context.Request.Query["page"].FirstOrDefault()" url="/post/index?{0}"></pagination>
+                <pagination total-page="@Model.TotalPage" current-page="@Context.Request.Query["page"].FirstOrDefault()" url="/category/index/@Model.Category.Id?{0}"></pagination>
             </div>
         }
     </div>

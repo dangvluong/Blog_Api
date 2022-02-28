@@ -9,9 +9,13 @@ namespace WebApi.Repositories
         public CategoryRepository(AppDbContext context) : base(context)
         {
         }
-        public async Task<IEnumerable<Category>> GetCategories(bool trackChanges)
+        public async Task<IEnumerable<Category>> ManagerGetCategories(bool trackChanges)
         {
             return await FindAll(trackChanges).ToListAsync();
+        }
+        public async Task<IEnumerable<Category>> GetCategories(bool trackChanges)
+        {
+            return await FindByCondition(c => c.IsDeleted == false,trackChanges).ToListAsync();
         }
 
         public async Task<Category> GetCategory(int id, bool trackChanges)

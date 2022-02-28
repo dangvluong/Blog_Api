@@ -171,5 +171,11 @@ namespace WebApp.Repositories
         {
             return await Send($"/api/post/restore/{id}", (client, url) => client.PostAsync(url,null), token);
         }
+
+        public async Task<ListPostDto> GetPostsFromCategory(int categoryId, int page)
+        {
+            var response = await Send<ListPostDto>($"/api/post/fromcategory/{categoryId}?page={page}", (client, url) => client.GetAsync(url), message => message.Content.ReadAsAsync<ListPostDto>());
+            return (ListPostDto)response.Data;
+        }
     }
 }
