@@ -75,14 +75,15 @@ namespace WebApp.Areas.Dashboard.Controllers
             ResponseModel response = await _repository.Category.Edit(category, AccessToken);
             if (response is SuccessResponseModel)
             {
-                PushNotification(new NotificationOption
+                PushNotification(new NotificationOptions
                 {
                     Type = "success",
                     Message = "Đã cập nhật danh mục thành công."
                 });
                 return RedirectToAction(nameof(Index));
             }
-            return HandleErrors(response);
+            HandleErrors(response);
+            return View();
 
         }
 
@@ -90,17 +91,34 @@ namespace WebApp.Areas.Dashboard.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             ResponseModel response = await _repository.Category.Delete(id, AccessToken);
-            if(response is SuccessResponseModel)
+            if (response is SuccessResponseModel)
             {
-                PushNotification(new NotificationOption
+                PushNotification(new NotificationOptions
                 {
-                    Type = "success",
-                    Message = "Đã xóa danh mục thành công."
+                    Type = "warning",
+                    Message = "Đã xóa danh mục."
                 });
-                return RedirectToAction(nameof(Index));
             }
-            return HandleErrors(response);
-            
+            else            
+                HandleErrors(response);            
+            return RedirectToAction(nameof(Index));
+
+        }
+        public async Task<IActionResult> Restore(int id)
+        {
+            ResponseModel response = await _repository.Category.Delete(id, AccessToken);
+            if (response is SuccessResponseModel)
+            {
+                PushNotification(new NotificationOptions
+                {
+                    Type = "info",
+                    Message = "Đã khôi phục danh mục."
+                });
+            }
+            else
+                HandleErrors(response);
+            return RedirectToAction(nameof(Index));
+
         }
     }
 }

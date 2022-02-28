@@ -8,7 +8,15 @@
             <td>@(category.IsDeleted ? "Đã xóa" : "")</td>
             <td>
                 <a asp-action="Edit" asp-controller="Category" asp-area="Manage" asp-route-id="@category.Id">Chỉnh sửa</a> |
-                <a asp-action="Delete" asp-controller="Category" asp-area="Manage" asp-route-id="@category.Id">@(!category.IsDeleted ? "Xóa" : "Khôi phục")</a>
+                @if (!category.IsDeleted)
+                {
+                    <a asp-action="Delete" asp-controller="Category" asp-area="Manage" asp-route-id="@category.Id">Xóa</a>
+                }
+                else
+                {
+                    <a asp-action="Restore" asp-controller="Category" asp-area="Manage" asp-route-id="@category.Id">Khôi phục</a>
+                }
+
             </td>
         </tr>
         if (category.ChildCategories?.Count > 0)

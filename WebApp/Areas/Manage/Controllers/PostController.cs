@@ -26,28 +26,63 @@ namespace WebApp.Areas.Manage.Controllers
             ResponseModel response = await _repository.Post.Approve(id, AccessToken);
             if (response is SuccessResponseModel)
             {
-                PushNotification(new NotificationOption
+                PushNotification(new NotificationOptions
                 {
                     Type = "success",
-                    Message = "Cập nhật trạng thái bài viết thành công"
+                    Message = "Đã phê duyệt bài viết"
                 });
-                return RedirectToAction(nameof(Index));
             }
-            return HandleErrors(response);
+            else
+                HandleErrors(response);
+            return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> removeapproved(int id)
+        {
+            ResponseModel response = await _repository.Post.RemoveApproved(id, AccessToken);
+            if (response is SuccessResponseModel)
+            {
+                PushNotification(new NotificationOptions
+                {
+                    Type = "warning",
+                    Message = "Đã hủy bỏ phê duyệt bài viết"
+                });
+            }
+            else
+                HandleErrors(response);
+            return RedirectToAction(nameof(Index));
+        }
+
         public async Task<IActionResult> Delete(int id)
         {
             ResponseModel response = await _repository.Post.Delete(id, AccessToken);
-            if(response is SuccessResponseModel)
+            if (response is SuccessResponseModel)
             {
-                PushNotification(new NotificationOption
+                PushNotification(new NotificationOptions
                 {
-                    Type = "success",
-                    Message = "Cập nhật trạng thái bài viết thành công"
+                    Type = "warning",
+                    Message = "Đã xóa bài viết"
                 });
-                return RedirectToAction(nameof(Index));
             }
-            return HandleErrors(response);            
+            else
+                HandleErrors(response);
+            return RedirectToAction(nameof(Index));
+
+        }
+        public async Task<IActionResult> Restore(int id)
+        {
+            ResponseModel response = await _repository.Post.Restore(id, AccessToken);
+            if (response is SuccessResponseModel)
+            {
+                PushNotification(new NotificationOptions
+                {
+                    Type = "warning",
+                    Message = "Đã khôi phục bài viết"
+                });
+            }
+            else
+                HandleErrors(response);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

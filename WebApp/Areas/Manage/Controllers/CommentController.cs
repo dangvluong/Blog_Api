@@ -26,14 +26,15 @@ namespace WebApp.Areas.Dashboard.Controllers
             ResponseModel response = await _repository.Comment.DeleteComment(id, AccessToken);
             if (response is SuccessResponseModel)
             {
-                PushNotification(new NotificationOption
+                PushNotification(new NotificationOptions
                 {
                     Type = "success",
                     Message = "Đã xóa bình luận"
                 });
-                return RedirectToAction(nameof(Index));
             }
-            return HandleErrors(response);
+            else
+                HandleErrors(response);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

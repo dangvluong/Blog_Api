@@ -75,24 +75,40 @@ namespace WebApi.Controllers
             Member member = await _repository.Member.GetMemberByCondition(c => c.Id == id, trackChanges: true);
             if (member == null)
                 return NotFound();
-            member.IsBanned = !member.IsBanned;
+            if(member.IsBanned)
+                return BadRequest("Tài khoản này đã bị khóa trước đó.");
+            member.IsBanned = true;
             await _repository.SaveChanges();
             return NoContent();
         }
+        [HttpPost("unbanaccount/{id}")]
+        [Authorize(Roles = "Admin, Moderator")]
+        public async Task<IActionResult> UnbanAccount(int id)
+        {
+            Member member = await _repository.Member.GetMemberByCondition(c => c.Id == id, trackChanges: true);
+            if (member == null)
+                return NotFound();
+            if (!member.IsBanned)
+                return BadRequest("Tài khoản này chưa bị khóa trước đó.");
+            member.IsBanned = false;
+            await _repository.SaveChanges();
+            return NoContent();
+        }
+
         [HttpPost("updaterolesofmember")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateRolesOfMember(UpdateRolesOfMemberDto obj)
         {
             if (obj == null || obj.RoleIds.Length <= 0)
                 return BadRequest();
-            Member member = await _repository.Member.GetMemberByCondition(m => m.Id ==obj.MemberId, trackChanges: true);
+            Member member = await _repository.Member.GetMemberByCondition(m => m.Id == obj.MemberId, trackChanges: true);
             if (member == null)
-                return NotFound();
+                return NotFound("Không tìm thấy thành viên");
             member.Roles.Clear();
             IEnumerable<Role> roles = await _repository.Role.GetRoles(trackChanges: true);
             foreach (Role role in roles)
             {
-                if(obj.RoleIds.Contains(role.Id))
+                if (obj.RoleIds.Contains(role.Id))
                     member.Roles.Add(role);
             }
             await _repository.SaveChanges();

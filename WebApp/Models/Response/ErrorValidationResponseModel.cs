@@ -2,6 +2,6 @@
 {
     public class ErrorValidationResponseModel : ResponseModel
     {
-        public new Dictionary<string, string[]> Errors { get; set; }
+        public new Dictionary<string, string[]> Errors { get; set; }        
     }
 }

@@ -162,7 +162,7 @@ namespace WebApp.Repositories
                 return new ErrorMessageResponseModel
                 {
                     Status = (int)message.StatusCode,
-                    Data = await message.Content.ReadAsStringAsync()
+                    Errors = await message.Content.ReadAsStringAsync()
                 };
             }
         }

@@ -31,17 +31,18 @@ namespace WebApp.Areas.Manage.Controllers
             if (!ModelState.IsValid)
                 return View();
             ResponseModel response = await _repository.Role.CreateRole(obj, AccessToken);
-            if(response is SuccessResponseModel)
+            if (response is SuccessResponseModel)
             {
-                PushNotification(new NotificationOption
+                PushNotification(new NotificationOptions
                 {
-                    Type="success",
+                    Type = "success",
                     Message = "Đã tạo vai trò mới."
                 });
                 return RedirectToAction(nameof(Index));
             }
-            return HandleErrors(response);
-            
+            HandleErrors(response);
+            return View();
+
         }
         public async Task<IActionResult> Edit(int id)
         {
@@ -58,28 +59,30 @@ namespace WebApp.Areas.Manage.Controllers
             ResponseModel response = await _repository.Role.UpdateRole(role, AccessToken);
             if (response is SuccessResponseModel)
             {
-                PushNotification(new NotificationOption
+                PushNotification(new NotificationOptions
                 {
                     Type = "success",
                     Message = "Đã cập nhật vai trò."
                 });
                 return RedirectToAction(nameof(Index));
             }
-            return HandleErrors(response);
+            HandleErrors(response);
+            return View();
         }
         public async Task<IActionResult> Delete(int id)
-        {            
+        {
             ResponseModel response = await _repository.Role.DeleteRole(id, AccessToken);
             if (response is SuccessResponseModel)
             {
-                PushNotification(new NotificationOption
+                PushNotification(new NotificationOptions
                 {
                     Type = "success",
                     Message = "Đã cập nhật trạng thái của vai trò."
                 });
-                return RedirectToAction(nameof(Index));
             }
-            return HandleErrors(response);
+            else
+                HandleErrors(response);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

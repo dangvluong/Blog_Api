@@ -69,7 +69,7 @@
                 <div class="single-post-content">
                     <!--post content-->
                     @Html.Raw(Model.Content)
-                   
+
                     <!--about author-->
                     <div class="author-card author-listhny my-lg-5 my-sm-4 w3ArticleAuth">
                         <div class="row">
@@ -77,8 +77,8 @@
                                 <a href="https://wp.w3layouts.com/designblog/author/w3layouts/">
                                     <!--author's avatar-->
                                     <img class="img-fluid"
-                                        src="@(hostAddress+ "/" + Model.Author.AvatarUrl)"
-                         alt="@Model.Author.FullName">
+                                         src="@(hostAddress+ "/" + Model.Author.AvatarUrl)"
+                                         alt="@Model.Author.FullName">
                                 </a>
                             </div>
                             <div class="author-right col-sm-9 position-relative align-self">
@@ -86,8 +86,10 @@
                                 <h4>
                                     <a href="https://wp.w3layouts.com/designblog/author/w3layouts/"
                                        class="title-team-28">@Model.Author.Username</a>
-                                    <span class="badge badge-primary">Admin</span>
-                                    <span class="badge badge-info">Member</span>
+                                    @foreach (var role in Model.Author.Roles)
+                                    {
+                                        <span class="badge @role.ColorDisplay">@role.Name</span>
+                                    }
                                 </h4>
                                 <p class="para-team mb-0">
                                     @Model.Author.AboutMe
@@ -110,47 +112,48 @@
                         </div>
                     </div>
                     <!--post's comments'-->
-                    <div class="w3PostComments">
-                        <div id="comments" class="comments-area">
-                            @if (Model.Comments != null && Model.Comments.Count > 0)
-                            {
-                                <div class="comments mt-5">
-                                    <h4 class="side-title ">Comments (@Model.Comments.Count)</h4>
-                                   <partial name="_Comments" model="@Model.Comments" />
-                                </div>
-                            }
-                            @if (User.Identity.IsAuthenticated)
-                            {
-                                <div class="leave-comment-form mt-5" id="reply">
-                                    <div class="d-flex">
-                                        <h4 class="side-title mb-2" id="reply-to-comment-title">Leave a Reply</h4>
-                                        <a href="" id="cancel-reply-to-comment" class="ml-3 pt-2" hidden>Cancel</a>
+                    @if (Model.IsActive)
+                    {
+                        <div class="w3PostComments">
+                            <div id="comments" class="comments-area">
+                                @if (Model.Comments != null && Model.Comments.Count > 0)
+                                {
+                                    <div class="comments mt-5">
+                                        <h4 class="side-title ">Comments (@Model.Comments.Count)</h4>
+                                        <partial name="_Comments" model="@Model.Comments" />
                                     </div>
-                                    @*<h4 class="side-title mb-2"></h4>*@
-                                    <form asp-action="PostComment" asp-controller="Comment" method="post">
-                                        <div class="form-group">
-                                            <input type="hidden" name="PostId" value="@Model.Id" />
-                                            <input type="hidden" name="CommentParentId"  id="CommentParentId" value="" />
-                                            <textarea name="Content" class="form-control" placeholder="Your Comment*" required
-                                                      spellcheck="false"></textarea>
+                                }
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <div class="leave-comment-form mt-5" id="reply">
+                                        <div class="d-flex">
+                                            <h4 class="side-title mb-2" id="reply-to-comment-title">Leave a Reply</h4>
+                                            <a href="" id="cancel-reply-to-comment" class="ml-3 pt-2" hidden>Cancel</a>
                                         </div>
-                                        <div class="submit text-right">
-                                            <button class="btn btn-style btn-primary">Post Comment </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            }
-                            else
-                            {
-                                //consider add returnUrl
-                                <div class="text-center mt-3">
-                                    Bạn phải <a asp-action="Login" asp-controller="Account">đăng nhập </a>
-                                    mới có thể bình luận
-                                </div>
-                            }
-                        </div><!-- #comments -->
-                    </div>
-
+                                        @*<h4 class="side-title mb-2"></h4>*@
+                                        <form asp-action="PostComment" asp-controller="Comment" method="post">
+                                            <div class="form-group">
+                                                <input type="hidden" name="PostId" value="@Model.Id" />
+                                                <input type="hidden" name="CommentParentId" id="CommentParentId" value="" />
+                                                <textarea name="Content" class="form-control" placeholder="Your Comment*" required
+                                                          spellcheck="false"></textarea>
+                                            </div>
+                                            <div class="submit text-right">
+                                                <button class="btn btn-style btn-primary">Post Comment </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="text-center mt-3">
+                                        Bạn phải <a asp-action="Login" asp-controller="Account">đăng nhập </a>
+                                        mới có thể bình luận
+                                    </div>
+                                }
+                            </div><!-- #comments -->
+                        </div>
+                    }
                 </div>
             </div>
         </div>

@@ -37,14 +37,15 @@ namespace WebApp.Controllers
             if (response is SuccessResponseModel)
             {
                 await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                PushNotification(new NotificationOption
+                PushNotification(new NotificationOptions
                 {
                     Type = "success",
                     Message = "Đã cập nhật mật khẩu mới. Bạn cần đăng nhập lại."
                 });
                 return RedirectToAction("Login", "Account");
             }
-            return HandleErrors(response);
+            HandleErrors(response);
+            return View();
         }
 
         public async Task<IActionResult> ListPost(int? id = null)
@@ -87,14 +88,15 @@ namespace WebApp.Controllers
             ResponseModel response = await _repository.Member.ChangeAboutMe(obj, AccessToken);            
             if (response is SuccessResponseModel)
             {
-                PushNotification(new NotificationOption
+                PushNotification(new NotificationOptions
                 {
                     Type = "success",
                     Message = "Đã cập nhật giới thiệu bản thân."
                 });
                 return RedirectToAction(nameof(Index));
             }
-            return HandleErrors(response);
+            HandleErrors(response);
+            return View();
         }
         public IActionResult ChangeAvatar()
         {
@@ -119,15 +121,15 @@ namespace WebApp.Controllers
             ResponseModel response = await _repository.Member.ChangeAvatar(content, AccessToken);
             if (response is SuccessResponseModel)
             {
-                PushNotification(new NotificationOption
+                PushNotification(new NotificationOptions
                 {
                     Type = "success",
                     Message = "Đã cập nhật hình đại diện."
                 });
                 return RedirectToAction(nameof(Index));
             }
-
-            return HandleErrors(response);
+            HandleErrors(response);
+            return View();
         }
     }
 }

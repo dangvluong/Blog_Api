@@ -54,9 +54,18 @@
         </tr>
     </table>
 </div>
-<div class="my-3 d-flex">    
-    <a asp-action="UpdateRole" asp-route-id="@Model.Member.Id" class="btn btn-sm btn-info mr-3">Cập nhật vai trò</a>
-    <a asp-action="BanAccount" asp-route-id="@Model.Member.Id" class="btn btn-sm  @(!Model.Member.IsBanned ? "btn-danger" : "btn-warning")" asp-route-returnUrl="@Context.Request.Path">
-        @(!Model.Member.IsBanned ? "Khóa tài khoản" : "Gỡ khóa tài khoản")
-    </a>
+<div class="my-3 d-flex">
+    <a asp-action="UpdateRole" asp-route-id="@Model.Member.Id" class="btn btn-sm btn-info mr-3">Cập nhật vai trò</a>   
+    @if (!Model.Member.IsBanned)
+    {
+        <a asp-action="BanAccount" asp-route-id="@Model.Member.Id" class="btn btn-sm btn-danger" asp-route-returnUrl="@Context.Request.Path">
+            Khóa tài khoản
+        </a>
+    }
+    else
+    {
+        <a asp-action="UnbanAccount" asp-route-id="@Model.Member.Id" class="btn btn-sm btn-warning" asp-route-returnUrl="@Context.Request.Path">
+            Mở khóa tài khoản
+        </a>
+    }
 </div>

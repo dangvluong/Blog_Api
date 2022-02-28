@@ -12,6 +12,7 @@ namespace WebApp.Interfaces
         Task<ResponseModel> Create(Post post, string token);
         Task<ResponseModel> Edit(Post post, string token);
         Task<ResponseModel> Delete(int id, string token);
+        Task<ResponseModel> Restore(int id, string token);
         Task<List<Post>> GetPostsByMember(int id,string token=null);
         Task<IEnumerable<Post>> GetTrendingPost();
         Task<IEnumerable<Post>> GetMostRecentPosts();
@@ -19,5 +20,6 @@ namespace WebApp.Interfaces
         Task<List<Post>> GetFeaturedPosts();
         Task<ResponseModel> Approve(int postId, string token);
         Task<ListPostDto> SearchPost(string keyword,int id);
+        Task<ResponseModel> RemoveApproved(int id, string accessToken);
     }
 }

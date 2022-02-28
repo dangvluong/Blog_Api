@@ -1,6 +1,6 @@
 ﻿namespace WebApp.Models
 {
-    public class NotificationOption
+    public class NotificationOptions
     {
         public string Type { get; set; }
         public string Message { get; set; }

@@ -30,26 +30,31 @@
                             @(post.IsDeleted ? "Đã xóa" : "")
                         </td>
                         <td>
-                            <a asp-action="Approve" asp-controller="Post" asp-route-id="@post.Id" class="btn btn-sm btn-primary">
-                                @if (!post.IsActive)
-                                {
-                                    <span>Duyệt đăng</span>
-                                }
-                                else
-                                {
-                                    <span>Hủy duyệt</span>
-                                }
-                            </a>
-                            <a asp-action="Delete" asp-controller="Post" asp-route-id="@post.Id" class="btn btn-sm btn-danger">
-                                @if (!post.IsDeleted)
-                                {
-                                    <span>Xóa</span>
-                                }
-                                else
-                                {
-                                    <span>Khôi phục</span>
-                                }
-                            </a>
+                            @if (!post.IsActive)
+                            {
+                                <a asp-action="Approve" asp-controller="Post" asp-route-id="@post.Id" class="btn btn-sm btn-primary">
+                                    Duyệt đăng
+                                </a>
+                            }
+                            else
+                            { <a asp-action="RemoveApproved" asp-controller="Post" asp-route-id="@post.Id" class="btn btn-sm btn-warning">
+                                    Hủy duyệt đăng
+                                </a>                                
+                            }
+
+                            @if (!post.IsDeleted)
+                            {
+                                <a asp-action="Delete" asp-controller="Post" asp-route-id="@post.Id" class="btn btn-sm btn-danger">
+                                    Xóa
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-action="Restore" asp-controller="Post" asp-route-id="@post.Id" class="btn btn-sm btn-danger">
+                                    Khôi phục
+                                </a>
+                            }
+
                         </td>
                     </tr>
                 }

@@ -45,16 +45,18 @@ namespace WebApi.Controllers
                 TotalPage = await _repository.Post.CountTotalPage(pageSize)
             };
             return Ok(listPost);
-        }       
+        }
 
         // GET: api/Post/5
         [HttpGet("{id}")]
         public async Task<ActionResult<PostDto>> GetPost(int id, [FromQuery] bool countView = false)
-        {            
+        {
             bool trackChanges = countView ? true : false;
             Post post = await _repository.Post.GetPostById(id, trackChanges, countView);
             if (post == null)
                 return NotFound();
+            if (post.IsDeleted)
+                return BadRequest("Bài viết đã bị xóa");
             PostDto postDto = _mapper.Map<PostDto>(post);
             return Ok(postDto);
         }
@@ -96,12 +98,35 @@ namespace WebApi.Controllers
             var post = await _repository.Post.GetPostById(id, trackChanges: true);
             if (post == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy bài viết");
+            }
+            if (post.IsDeleted)
+            {
+                return BadRequest("Bài viết đã bị xóa trước đó");
             }
             _repository.Post.DeletePost(post);
             await _repository.SaveChanges();
             return NoContent();
         }
+
+        [HttpPost("restore/{id}")]
+        [Authorize]
+        public async Task<IActionResult> RestorePost(int id)
+        {
+            var post = await _repository.Post.GetPostById(id, trackChanges: true);
+            if (post == null)
+            {
+                return NotFound("Không tìm thấy bài viết");
+            }
+            if (!post.IsDeleted)
+            {
+                return BadRequest("Bài viết chưa bị xóa trước đó");
+            }
+            _repository.Post.RestorePost(post);
+            await _repository.SaveChanges();
+            return NoContent();
+        }
+
         [HttpGet("getpostsbymember/{id}")]
         public async Task<ActionResult<IEnumerable<PostDto>>> GetPostsByMember(int id)
         {
@@ -109,7 +134,7 @@ namespace WebApi.Controllers
             var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (User.Identity.IsAuthenticated && int.Parse(currentUserId) == id)
                 includeInActivePosts = true;
-            IEnumerable<Post> posts = await _repository.Post.GetPostsByMember(id, trackChanges: false,includeInActivePosts);
+            IEnumerable<Post> posts = await _repository.Post.GetPostsByMember(id, trackChanges: false, includeInActivePosts);
             if (posts == null)
                 return NotFound();
             return Ok(MapPosts(posts));
@@ -151,17 +176,34 @@ namespace WebApi.Controllers
         }
         [HttpPost("approve/{postId}")]
         [Authorize(Roles = "Admin, Moderator")]
-        public async Task<IActionResult> ApprovePost(int postId)
+        public async Task<IActionResult> Approve(int postId)
         {
             Post post = await _repository.Post.GetPostById(postId, trackChanges: true);
             if (post == null)
                 return NotFound();
-            post.IsActive = !post.IsActive;
+            if (post.IsActive)
+                return BadRequest("Bài viết đã được phê duyệt trước đó");
+            post.IsActive = true;
             await _repository.SaveChanges();
             return NoContent();
         }
+
+        [HttpPost("removeapproved/{postId}")]
+        [Authorize(Roles = "Admin, Moderator")]
+        public async Task<IActionResult> RemoveApproved(int postId)
+        {
+            Post post = await _repository.Post.GetPostById(postId, trackChanges: true);
+            if (post == null)
+                return NotFound();
+            if (!post.IsActive)
+                return BadRequest("Bài viết chưa được phê duyệt trước đó");
+            post.IsActive = false;
+            await _repository.SaveChanges();
+            return NoContent();
+        }
+
         [HttpGet("search")]
-        public async Task<ActionResult<ListPostDto>> Search(string keyword,int page = 1)
+        public async Task<ActionResult<ListPostDto>> Search(string keyword, int page = 1)
         {
             if (string.IsNullOrEmpty(keyword))
                 return BadRequest();
@@ -171,7 +213,7 @@ namespace WebApi.Controllers
             ListPostDto listPost = new ListPostDto
             {
                 Posts = MapPosts(posts),
-                TotalPage = await _repository.Post.CountTotalPage(pageSize,p => p.Title.Contains(keyword))
+                TotalPage = await _repository.Post.CountTotalPage(pageSize, p => p.Title.Contains(keyword))
             };
             return Ok(listPost);
         }

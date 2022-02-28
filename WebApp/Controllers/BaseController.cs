@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Newtonsoft.Json;
 using WebApp.Helper;
 using WebApp.Interfaces;
@@ -13,15 +14,16 @@ namespace WebApp.Controllers
         protected readonly IConfiguration _configuration;
         protected readonly ILogger _logger;
         private string accessToken;
-        public string AccessToken
+        protected string AccessToken
         {
-            get { 
-                if(string.IsNullOrEmpty(accessToken))
+            get
+            {
+                if (string.IsNullOrEmpty(accessToken))
                     accessToken = User.FindFirst(Data.ClaimTypes.AccessToken).Value;
                 return accessToken;
             }
-        }
-        public BaseController(IRepositoryManager repository)
+        }        
+        public BaseController(IRepositoryManager repository) 
         {
             _repository = repository;
         }
@@ -30,15 +32,17 @@ namespace WebApp.Controllers
         {
             _configuration = configuration;
         }
-        protected BaseController(IRepositoryManager repository, IConfiguration configuration, ILogger logger) : this(repository,configuration)
+        protected BaseController(IRepositoryManager repository, IConfiguration configuration, ILogger logger) : this(repository, configuration)
         {
             _logger = logger;
         }
-        protected void PushNotification(NotificationOption options)
-        {            
+
+
+        protected void PushNotification(NotificationOptions options)
+        {
             TempData["notification"] = JsonConvert.SerializeObject(options);
         }
-        private void PushError(Dictionary<string, string[]> errors)
+        private void FetchValidationError(Dictionary<string, string[]> errors)
         {
             foreach (var errorMessage in errors)
             {
@@ -48,21 +52,20 @@ namespace WebApp.Controllers
                 }
             }
         }
-        protected IActionResult HandleErrors(ResponseModel response)
+        protected void HandleErrors(ResponseModel response)
         {
             if (response is ErrorMessageResponseModel)
             {
-                PushNotification(new NotificationOption
+                PushNotification(new NotificationOptions
                 {
                     Type = "error",
                     Message = (string)response.Data
                 });
-                return View();
             }
             else
             {
-                PushError((Dictionary<string, string[]>)response.Data);
-                return View();
+                var errorValidationResponse = (ErrorValidationResponseModel)response;
+                FetchValidationError(errorValidationResponse.Errors);                
             }
         }
         protected async Task<List<Category>> CreateSelectListCategory()
@@ -70,7 +73,7 @@ namespace WebApp.Controllers
             List<Category> sourceCategories = await _repository.Category.GetCategories();
             sourceCategories = CategoryHelper.CreateTreeLevelCategory(sourceCategories);
             List<Category> selectListCategory = new List<Category>();
-            CategoryHelper.CreateSelectListCategory(sourceCategories, selectListCategory, 0);  
+            CategoryHelper.CreateSelectListCategory(sourceCategories, selectListCategory, 0);
             return selectListCategory;
         }
     }

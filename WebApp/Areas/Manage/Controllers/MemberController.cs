@@ -25,19 +25,38 @@ namespace WebApp.Areas.Manage.Controllers
         public async Task<IActionResult> BanAccount(int id, string returnUrl = "")
         {
             ResponseModel response = await _repository.Member.BanAccount(id, AccessToken);
-            if(response is SuccessResponseModel)
+            if (response is SuccessResponseModel)
             {
-                PushNotification(new NotificationOption
+                PushNotification(new NotificationOptions
                 {
-                    Type="success",
-                    Message = "Đã cập nhật trạng thái của tài khoản."
+                    Type = "warning",
+                    Message = "Đã khóa tài khoản."
                 });
-                if (!string.IsNullOrEmpty(returnUrl))
-                    return Redirect(returnUrl);
-                return RedirectToAction(nameof(Index));
-            } 
-            return HandleErrors(response);
+            }
+            else
+                HandleErrors(response);
+            if (!string.IsNullOrEmpty(returnUrl))
+                return Redirect(returnUrl);
+            return RedirectToAction(nameof(Index));
         }
+        public async Task<IActionResult> UnbanAccount(int id, string returnUrl = "")
+        {
+            ResponseModel response = await _repository.Member.UnbanAccount(id, AccessToken);
+            if (response is SuccessResponseModel)
+            {
+                PushNotification(new NotificationOptions
+                {
+                    Type = "warning",
+                    Message = "Đã mở khóa tài khoản."
+                });
+            }
+            else
+                HandleErrors(response);
+            if (!string.IsNullOrEmpty(returnUrl))
+                return Redirect(returnUrl);
+            return RedirectToAction(nameof(Index));
+        }
+
         public async Task<IActionResult> Detail(int id)
         {
             Member member = await _repository.Member.GetMemberById(id);
@@ -61,18 +80,19 @@ namespace WebApp.Areas.Manage.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> UpdateRole(UpdateRolesOfMemberDto obj)
-        {            
+        {
             ResponseModel response = await _repository.Member.UpdateRolesOfMember(obj, AccessToken);
             if (response is SuccessResponseModel)
             {
-                PushNotification(new NotificationOption
+                PushNotification(new NotificationOptions
                 {
                     Type = "success",
                     Message = "Đã cập nhật vai trò của tài khoản."
-                });                
-                return RedirectToAction(nameof(Detail), new {id = obj.MemberId});
+                });
             }
-            return HandleErrors(response);
+            else
+                HandleErrors(response);
+            return RedirectToAction(nameof(Detail), new { id = obj.MemberId });
         }
     }
 }

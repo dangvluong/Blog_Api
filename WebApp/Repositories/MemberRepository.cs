@@ -88,6 +88,12 @@ namespace WebApp.Repositories
             return await Send($"/api/member/banaccount/{id}",(client,url) => client.PostAsync(url,null),token);
         }
 
+        public async Task<ResponseModel> UnbanAccount(int id, string token)
+        {
+            //return await Post<int>($"/api/member/banaccount/{id}", token: token);
+            return await Send($"/api/member/unbanaccount/{id}", (client, url) => client.PostAsync(url, null), token);
+        }
+
         public async Task<ResponseModel> UpdateRolesOfMember(UpdateRolesOfMemberDto obj, string token)
         {
             //return PostJson<UpdateRolesOfMemberDto,int>("/api/member/updaterolesofmember", obj, token);

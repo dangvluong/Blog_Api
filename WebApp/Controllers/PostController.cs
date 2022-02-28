@@ -29,6 +29,14 @@ namespace WebApp.Controllers
             Post post = await _repository.Post.GetPostById(id, countView: true);
             if (post == null)
                 return NotFound();
+            //Only author or admin/moderator can view inactive post detail
+            if (post.IsActive == false && !User.IsInRole("Admin"))
+            {
+                int userId;
+                bool isUserIdExist = int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
+                if(userId != post.AuthorId)
+                    return BadRequest();
+            }
             post.Comments = await _repository.Comment.GetCommentsByPostId(post.Id);
             return View(post);
         }
@@ -63,14 +71,15 @@ namespace WebApp.Controllers
             ResponseModel response = await _repository.Post.Create(post, AccessToken);
             if (response is SuccessResponseModel)
             {
-                PushNotification(new NotificationOption
+                PushNotification(new NotificationOptions
                 {
                     Type = "success",
                     Message = "Bài viết của bạn đã được tạo và chờ duyệt."
                 });
                 return RedirectToAction(nameof(Index));
             }
-            return HandleErrors(response);
+            HandleErrors(response);
+            return View(post);
         }
 
         // GET: PostController/Edit/5
@@ -88,7 +97,7 @@ namespace WebApp.Controllers
                 return View(post);
             }
             return BadRequest();
-        }       
+        }
 
         // POST: PostController/Edit/5
         [HttpPost]
@@ -108,22 +117,22 @@ namespace WebApp.Controllers
             ResponseModel response = await _repository.Post.Edit(post, AccessToken);
             if (response is SuccessResponseModel)
             {
-                PushNotification(new NotificationOption
+                PushNotification(new NotificationOptions
                 {
                     Type = "success",
                     Message = "Đã cập nhật bài viết thành công"
                 });
                 return RedirectToAction(nameof(Detail), new { id = id });
             }
-            return HandleErrors(response);
+            HandleErrors(response);
+            return View(post);
         }
 
         private async Task<string> UploadThumbnail(IFormFile thumbnailImage)
         {
             MultipartFormDataContent content = new MultipartFormDataContent();
             content.Add(new StreamContent(thumbnailImage.OpenReadStream()), nameof(thumbnailImage), thumbnailImage.FileName);
-            string url = "/api/fileupload/postthumbnail";
-            var response = await _repository.FileUpload.Upload(content, url, AccessToken);
+            var response = await _repository.FileUpload.UploadThumbnail(content, AccessToken);
             if (response is SuccessResponseModel)
             {
                 return (string)response.Data;
@@ -157,14 +166,15 @@ namespace WebApp.Controllers
             ResponseModel response = await _repository.Post.Delete(id, AccessToken);
             if (response is SuccessResponseModel)
             {
-                PushNotification(new NotificationOption
+                PushNotification(new NotificationOptions
                 {
                     Type = "success",
                     Message = "Đã cập nhật trạng thái bài viết thành công"
                 });
-                RedirectToAction(nameof(Index));
             }
-            return HandleErrors(response);
+            else
+                HandleErrors(response);
+            return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Search(string keyword, int page = 1)
         {

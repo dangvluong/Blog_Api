@@ -1,6 +1,6 @@
 ﻿@if (TempData["notification"] != null)
 {
-    var options = JsonConvert.DeserializeObject<NotificationOption>((string)TempData["notification"]);
+    var options = JsonConvert.DeserializeObject<NotificationOptions>((string)TempData["notification"]);
 
     <script>
         toastr.options = {

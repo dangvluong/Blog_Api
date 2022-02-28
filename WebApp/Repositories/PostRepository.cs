@@ -154,12 +154,22 @@ namespace WebApp.Repositories
             //return await Post<int>($"/api/post/approve/{postId}", token: token);
             return await Send($"/api/post/approve/{postId}", (client, url) => client.PostAsync(url,null), token);
         }
+        public async Task<ResponseModel> RemoveApproved(int postId, string token)
+        {
+            //return await Post<int>($"/api/post/approve/{postId}", token: token);
+            return await Send($"/api/post/removeapproved/{postId}", (client, url) => client.PostAsync(url, null), token);
+        }
 
         public async Task<ListPostDto> SearchPost(string keyword, int id)
         {
             var response = await Send<ListPostDto>($"/api/post/search?keyword={keyword}&page={id}", (client, url) => client.GetAsync(url), message => message.Content.ReadAsAsync<ListPostDto>());
             return (ListPostDto)response.Data;
             //return await Get<ListPostDto>($"/api/post/search?keyword={keyword}&page={id}");
+        }
+
+        public async Task<ResponseModel> Restore(int id, string token)
+        {
+            return await Send($"/api/post/restore/{id}", (client, url) => client.PostAsync(url,null), token);
         }
     }
 }

@@ -20,7 +20,7 @@
                         <td>
                             <a asp-action="Detail" asp-controller="Member" asp-area="Manage" asp-route-id="@member.Id">
                                 @member.Username
-                            </a>                            
+                            </a>
                         </td>
                         <td>@member.DateCreate.ToShortDateString()</td>
                         <td>
@@ -33,9 +33,18 @@
                             @(member.IsBanned ? "Tài khoản bị khóa":"Đang hoạt động")
                         </td>
                         <td>
-                            <a asp-action="BanAccount" asp-route-id="@member.Id" class="btn btn-sm @(!member.IsBanned ? "btn-danger" : "btn-warning")">
-                                @(!member.IsBanned ? "Khóa tài khoản" : "Gỡ khóa tài khoản")
-                            </a>
+                            @if (!member.IsBanned)
+                            {
+                                <a asp-action="BanAccount" asp-route-id="@member.Id" class="btn btn-sm btn-danger">
+                                    Khóa tài khoản
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-action="UnbanAccount" asp-route-id="@member.Id" class="btn btn-sm btn-warning">
+                                    Mở khóa tài khoản
+                                </a>
+                            }
                         </td>
                     </tr>
                 }

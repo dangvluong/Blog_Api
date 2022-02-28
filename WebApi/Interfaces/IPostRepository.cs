@@ -13,6 +13,7 @@ namespace WebApi.Interfaces
         void AddPost(Post post);
         void UpdatePost(Post post);
         void DeletePost(Post post);
+        void RestorePost(Post post);
         Task<IEnumerable<Post>> GetTrendingPost(bool trackChanges= false);
         Task<IEnumerable<Post>> GetPosts(int page, int pageSize, bool trackChanges, bool isManager = false);
         Task<IEnumerable<Post>> GetMostRecentPosts(bool trackChanges = false);
