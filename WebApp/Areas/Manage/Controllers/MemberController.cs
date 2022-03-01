@@ -10,7 +10,7 @@ using WebApp.ViewModels;
 namespace WebApp.Areas.Manage.Controllers
 {
     [Area("Manage")]
-    [Authorize(Roles = "Admin, Moderator")]
+    [Authorize(Roles = "Admin,Moderator")]
     public class MemberController : BaseController
     {
         public MemberController(IRepositoryManager repository) : base(repository)

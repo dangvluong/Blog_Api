@@ -23,7 +23,7 @@ namespace WebApp.Controllers
             Member member = await _repository.Member.GetMemberById(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), AccessToken);
             return View(member);
         }
-
+        [AllowAnonymous]
         public async Task<IActionResult> Detail(int id)
         {
             Member member = await _repository.Member.GetMemberById(id);

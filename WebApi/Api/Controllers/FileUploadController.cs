@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebApi.Controllers;
 using WebApi.Enums;
 using WebApi.Helper;
@@ -13,6 +14,7 @@ namespace WebApi.Api.Controllers
         public FileUploadController(IRepositoryManager repository) : base(repository)
         {
         }
+        [Authorize]
         [HttpPost("postimage")]
         public ActionResult<string> PostImage([FromForm] IFormFile image)
         {
@@ -21,6 +23,7 @@ namespace WebApi.Api.Controllers
             string imageUrl = SiteHelper.UploadFile(image, UploadTypes.PostImages);            
             return Ok(imageUrl);
         }
+        [Authorize]
         [HttpPost("postthumbnail")]
         public ActionResult<string> PostThumbnail([FromForm] IFormFile thumbnailImage)
         {

@@ -47,7 +47,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("managergetposts")]
-        [Authorize(Roles = "Admin, Moderator")]
+        [Authorize(Roles = "Admin,Moderator")]
         public async Task<ActionResult<ListPostDto>> ManagerGetPosts([FromQuery] int page = 1)
         {
             var posts = await _repository.Post.GetPosts(page, pageSize, trackChanges: false, isManager: true);
@@ -189,7 +189,7 @@ namespace WebApi.Controllers
             return Ok(MapPosts(posts));
         }
         [HttpPost("approve/{postId}")]
-        [Authorize(Roles = "Admin, Moderator")]
+        [Authorize(Roles = "Admin,Moderator")]
         public async Task<IActionResult> Approve(int postId)
         {
             Post post = await _repository.Post.GetPostById(postId, trackChanges: true);
@@ -203,7 +203,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("removeapproved/{postId}")]
-        [Authorize(Roles = "Admin, Moderator")]
+        [Authorize(Roles = "Admin,Moderator")]
         public async Task<IActionResult> RemoveApproved(int postId)
         {
             Post post = await _repository.Post.GetPostById(postId, trackChanges: true);

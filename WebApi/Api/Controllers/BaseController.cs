@@ -8,15 +8,14 @@ namespace WebApi.Controllers
         protected readonly IRepositoryManager _repository;
         protected readonly IMapper _mapper;
 
-        public BaseController(IRepositoryManager repository,IMapper mapper)
+        public BaseController(IRepositoryManager repository, IMapper mapper) : this(repository)
         {
-            _repository = repository;
             _mapper = mapper;
         }
 
         public BaseController(IRepositoryManager repository)
         {
-            _repository = repository;          
+            _repository = repository;
         }
 
     }

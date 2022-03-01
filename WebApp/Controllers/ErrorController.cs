@@ -19,9 +19,12 @@ namespace WebApp.Controllers
             {
                 case 404:
                     ViewBag.ErrorMessage = "Xin lỗi, trang bạn tìm không có";
-                    break;  
+                    break;
+                default:
+                    ViewBag.ErrorMessage = "Đã có lỗi xảy ra.";
+                    break;
             }
-            return View("NotFound");
+            return View("NotFound",statusCode);
                 
         }   
         [Route("Error")]

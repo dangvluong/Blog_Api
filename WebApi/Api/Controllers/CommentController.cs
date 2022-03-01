@@ -16,7 +16,7 @@ namespace WebApi.Controllers
         }
         // GET: api/Comment
         [HttpGet]
-        [Authorize(Roles ="Admin, Moderator")]
+        [Authorize(Roles ="Admin,Moderator")]
         public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
         {
             IEnumerable<Comment> comments = await _repository.Comment.GetComments();

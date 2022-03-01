@@ -9,7 +9,7 @@ using WebApp.Models.Response;
 namespace WebApp.Areas.Dashboard.Controllers
 {
     [Area("Manage")]
-    [Authorize(Roles = "Admin, Moderator")]
+    [Authorize(Roles = "Admin,Moderator")]
     public class CommentController : BaseController
     {
         public CommentController(IRepositoryManager repository) : base(repository)

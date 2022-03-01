@@ -9,7 +9,7 @@ using WebApp.Models.Response;
 namespace WebApp.Areas.Manage.Controllers
 {
     [Area("Manage")]
-    [Authorize(Roles = "Admin, Moderator")]
+    [Authorize(Roles = "Admin,Moderator")]
     public class PostController : BaseController
     {
         public PostController(IRepositoryManager repository) : base(repository)
