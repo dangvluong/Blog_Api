@@ -25,7 +25,7 @@
                                 <a href="https://wp.w3layouts.com/designblog/2021/05/31/how-to-write-a-blog-post-a-step-by-step-guide/"></a>
                                 <a class="post-thumbnail" asp-action="Detail" asp-route-id="@category.Id" aria-hidden="true" tabindex="-1">
                                     <img width="340" height="284"
-                                         src="/"
+                                         src="@(hostAddress + "/" + category.Thumbnail)"
                                          class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
                                          alt="@category.Name" loading="lazy">
                                 </a>

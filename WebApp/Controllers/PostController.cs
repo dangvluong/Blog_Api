@@ -66,7 +66,7 @@ namespace WebApp.Controllers
             post.DateCreated = DateTime.Now;
             if (thumbnailImage != null && !string.IsNullOrEmpty(thumbnailImage.FileName))
             {
-                post.Thumbnail = await this.UploadThumbnail(thumbnailImage);
+                post.Thumbnail = await UploadThumbnail(thumbnailImage);
             }
             ResponseModel response = await _repository.Post.Create(post, AccessToken);
             if (response is SuccessResponseModel)
@@ -90,7 +90,7 @@ namespace WebApp.Controllers
             if (post == null)
                 return NotFound();
             //only author of post or admin can edit post            
-            if (post.Author.Id == int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) || User.IsInRole("Admin,Moderator"))
+            if (post.Author.Id == int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) || User.IsInRole("Admin") || User.IsInRole("Moderator"))
             {
                 List<Category> selectListCategory = await CreateSelectListCategory();
                 ViewBag.categories = new SelectList(selectListCategory, "Id", "Name");
@@ -112,7 +112,7 @@ namespace WebApp.Controllers
             post.DateModifier = DateTime.Now;
             if (thumbnailImage != null && !string.IsNullOrEmpty(thumbnailImage.FileName))
             {
-                post.Thumbnail = await this.UploadThumbnail(thumbnailImage);
+                post.Thumbnail = await UploadThumbnail(thumbnailImage);
             }
             ResponseModel response = await _repository.Post.Edit(post, AccessToken);
             if (response is SuccessResponseModel)
@@ -128,17 +128,7 @@ namespace WebApp.Controllers
             return View(post);
         }
 
-        private async Task<string> UploadThumbnail(IFormFile thumbnailImage)
-        {
-            MultipartFormDataContent content = new MultipartFormDataContent();
-            content.Add(new StreamContent(thumbnailImage.OpenReadStream()), nameof(thumbnailImage), thumbnailImage.FileName);
-            var response = await _repository.FileUpload.UploadThumbnail(content, AccessToken);
-            if (response is SuccessResponseModel)
-            {
-                return (string)response.Data;
-            }
-            return null;
-        }
+        
 
         // GET: PostController/Delete/5
         [Authorize]

@@ -14,5 +14,6 @@ namespace WebApp.Models
         public int? ParentCategoryId { get; set; }
         public Category  ParentCategory { get; set; }
         public List<Category> ChildCategories { get; set; }
+        public string Thumbnail { get; set; }
     }
 }

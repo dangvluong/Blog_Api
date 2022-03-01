@@ -65,6 +65,8 @@ namespace WebApi.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest();
+            if(string.IsNullOrEmpty(category.Thumbnail))
+                category.Thumbnail = "/images/thumbnails/default.jpg";
             _repository.Category.AddCategory(category);
             await _repository.SaveChanges();
             return Ok();

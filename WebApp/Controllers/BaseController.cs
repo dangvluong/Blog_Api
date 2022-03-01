@@ -76,5 +76,17 @@ namespace WebApp.Controllers
             CategoryHelper.CreateSelectListCategory(sourceCategories, selectListCategory, 0);
             return selectListCategory;
         }
+
+        protected async Task<string> UploadThumbnail(IFormFile thumbnailImage)
+        {
+            MultipartFormDataContent content = new MultipartFormDataContent();
+            content.Add(new StreamContent(thumbnailImage.OpenReadStream()), nameof(thumbnailImage), thumbnailImage.FileName);
+            var response = await _repository.FileUpload.UploadThumbnail(content, AccessToken);
+            if (response is SuccessResponseModel)
+            {
+                return (string)response.Data;
+            }
+            return null;
+        }
     }
 }

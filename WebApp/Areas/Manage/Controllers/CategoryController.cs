@@ -37,10 +37,18 @@ namespace WebApp.Areas.Dashboard.Controllers
         // POST: CategoryController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Category category)
+        public async Task<IActionResult> Create(Category category, IFormFile thumbnailImage)
         {
             if (!ModelState.IsValid)
+            {
+                var selectListCategory = await CreateSelectListCategory();
+                ViewBag.categories = new SelectList(selectListCategory, "Id", "Name");
                 return View();
+            }
+            if (thumbnailImage != null && !string.IsNullOrEmpty(thumbnailImage.FileName))
+            {
+                category.Thumbnail = await UploadThumbnail(thumbnailImage);
+            }
             var result = await _repository.Category.Create(category, AccessToken);
             return RedirectToAction(nameof(Index));
 
@@ -66,12 +74,16 @@ namespace WebApp.Areas.Dashboard.Controllers
         // POST: CategoryController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Category category)
+        public async Task<IActionResult> Edit(int id, Category category, IFormFile thumbnailImage)
         {
             if (category.Id != id)
                 return BadRequest();
             if (!ModelState.IsValid)
                 return View();
+            if (thumbnailImage != null && !string.IsNullOrEmpty(thumbnailImage.FileName))
+            {
+                category.Thumbnail = await UploadThumbnail(thumbnailImage);
+            }
             ResponseModel response = await _repository.Category.Edit(category, AccessToken);
             if (response is SuccessResponseModel)
             {

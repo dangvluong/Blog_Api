@@ -13,5 +13,6 @@ namespace WebApi.Models
         public int? ParentCategoryId { get; set; }
         [ForeignKey("ParentCategoryId")]
         public Category ParentCategory{ get; set; }
+        public string Thumbnail { get; set; }
     }
 }
