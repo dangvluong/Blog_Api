@@ -22,7 +22,7 @@ namespace WebApi.Repositories
         }
         public async Task<Comment> GetCommentById(int id, bool trackChanges)
         {            
-            return await FindByCondition(comment => comment.Id == id, trackChanges).SingleOrDefaultAsync();
+            return await FindByCondition(comment => comment.Id == id, trackChanges).Include(c => c.Post).Include(c => c.Author).SingleOrDefaultAsync();
         }                
         public async Task<IEnumerable<Comment>> GetCommentsByPost(int postId, bool trackChanges)
         {

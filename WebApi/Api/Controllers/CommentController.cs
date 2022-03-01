@@ -47,7 +47,7 @@ namespace WebApi.Controllers
         }
 
         // PUT: api/Comment/5
-        [HttpPut("{id}")]
+        [HttpPut]
         [Authorize]        
         public async Task<IActionResult> UpdateComment(Comment comment)
         {

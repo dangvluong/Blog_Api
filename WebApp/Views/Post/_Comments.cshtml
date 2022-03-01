@@ -6,21 +6,25 @@
 
 @foreach (var comment in Model)
 {    
-    <div class="media" id="comment_@comment.Id">
-        <div class="img-circle">
-            <img src="@(hostAddress + "/" + comment.Author.AvatarUrl)" class="@comment.Author.FullName" alt="...">
-        </div>
-        <div class="media-body">
-            <ul class="time-rply mb-2">
-                <li>
-                    <a href="#" class="name mt-0 mb-2 d-block">@comment.Author.Username</a>
-                    At @comment.DateCreate.ToShortTimeString() - @comment.DateCreate.ToShortDateString()
-
-                </li>
-            </ul>
-            <p>
-                @comment.Content
-            </p>
-        </div>
+<div class="media" id="comment_@comment.Id">
+    <div class="img-circle">
+        <img src="@(hostAddress + "/" + comment.Author.AvatarUrl)" class="@comment.Author.FullName" alt="...">
     </div>
+    <div class="media-body">
+        <ul class="time-rply mb-2">
+            <li>
+                <a href="#" class="name mt-0 mb-2 d-block">@comment.Author.Username</a>
+                At @comment.DateCreate.ToShortTimeString() - @comment.DateCreate.ToShortDateString()
+            </li>
+        </ul>
+        <p>
+            @comment.Content
+        </p>
+        <div>
+            <a class="mr-3" asp-action="Edit" asp-controller="Comment" asp-area="" asp-route-id="@comment.Id">Edit</a>
+            <a asp-action="Delete" asp-controller="Comment" asp-area="" asp-route-id="@comment.Id">Delete</a>
+        </div>
+    </div>   
+</div>
 }
+

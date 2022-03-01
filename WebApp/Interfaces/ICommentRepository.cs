@@ -12,5 +12,6 @@ namespace WebApp.Interfaces
         Task<ResponseModel> EditComment(Comment comment, string token);
         Task<ResponseModel> DeleteComment(int id, string token);
         Task<List<Comment>> GetCommentsByMember(int id);
+        Task<ResponseModel> UpdateComment(Comment comment, string accessToken);
     }
 }

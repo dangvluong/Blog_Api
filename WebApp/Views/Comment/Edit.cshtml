@@ -1,0 +1,41 @@
+﻿@model Comment
+<nav id="breadcrumbs" class="breadcrumbs">
+    <div class="container page-wrapper AllBreadcrumbs">
+        <a asp-action="Index" asp-controller="Home" rel="homepage">Home</a>&nbsp;&nbsp;»&nbsp;&nbsp;
+        <a asp-action="Index" asp-controller="Post" rel="post">Post</a>
+        &nbsp;&nbsp;»&nbsp;&nbsp;
+        <a asp-action="Detail" asp-controller="Post" rel="post" asp-route-id="@Model.Post.Id">@Model.Post.Title</a>
+        &nbsp;&nbsp;»&nbsp;&nbsp;
+        Edit comment
+    </div>
+</nav>
+<div class="container my-3">
+    <div class="single-post-content">
+        <div class="contact-grids">
+            <div class="leave-comment-form mt-5" id="reply">
+                <div class="d-flex">
+                    <h4 class="side-title mb-2" id="reply-to-comment-title">Edit comment</h4>
+                    <a href="" id="cancel-reply-to-comment" class="ml-3 pt-2" hidden>Cancel</a>
+                </div>
+                @*<h4 class="side-title mb-2"></h4>*@
+                <form asp-action="Edit" asp-controller="Comment" method="post">
+                    <div class="form-group">
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="PostId" />
+                        <input type="hidden" asp-for="AuthorId" />
+                        <input type="hidden" asp-for="DateCreate" />
+                        <input type="hidden" name="CommentParentId" id="CommentParentId" value="" />
+                        <textarea asp-for="Content"></textarea>
+                    </div>
+                    <div class="submit text-center">
+                        <button class="btn btn-style btn-primary">Save changes </button>
+                        
+                    </div>
+                    <div class="text-center my-3">
+                        <a asp-action="Detail" asp-controller="Post" rel="post" asp-route-id="@Model.Post.Id" asp-fragment="comment_@Model.Id">Back</a>
+                    </div>                    
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
