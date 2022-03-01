@@ -1,75 +1,7 @@
 ﻿@model MemberDetailViewModel
-
-<h4 class="text-center">CHI TIẾT THÀNH VIÊN</h4>
-<div id="memberdetails">
-    <table class="table table-borderless">
-        <tr>
-            <th>Tên tài khoản:</th>
-            <td>@Model.Member.Username</td>
-        </tr>
-        <tr>
-            <th>Trạng thái tài khoản:</th>
-            <td>@(Model.Member.IsBanned ? "Tài khoản bị khóa":"Đang hoạt động")</td>
-        </tr>
-        <tr>
-            <th>Ngày gia nhập:</th>
-            <td>@Model.Member.DateCreate.ToShortDateString()</td>
-        </tr>
-        <tr>
-            <th>Vai trò:</th>
-            <td>
-                @foreach (var role in Model.Member.Roles)
-                {
-                    <span class="badge @role.ColorDisplay">@role.Name</span>
-                }
-            </td>
-        </tr>
-        <tr>
-            <th>Tên đầy đủ:</th>
-            <td>@Model.Member.FullName</td>
-        </tr>
-        <tr>
-            <th>Địa chỉ email:</th>
-            <td>@Model.Member.Email</td>
-        </tr>
-        <tr>
-            <th>Giới tính:</th>
-            <td>@(Model.Member.Gender ? "Nam" :"Nữ")</td>
-        </tr>
-        <tr>
-            <th>Ngày sinh:</th>
-            <td>@Model.Member.DateOfBirth.ToShortDateString()</td>
-        </tr>
-        <tr>
-            <th>Các bài viết đã đăng:</th>
-            <td>
-                @if (Model.NumberOfPost > 0)
-                {
-                    <a asp-action="ListPost" asp-controller="Member" asp-area="" asp-route-id="@Model.Member.Id" target="_blank">@Model.NumberOfPost bài viết</a>
-                }
-                else
-                {
-                    <span>0 bài viết</span>
-                }
-            </td>
-        </tr>
-        <tr>
-            <th>Các bình luận đã đăng:</th>
-            <td>
-                @if (Model.NumberOfComment > 0)
-                {
-                    <a asp-action="ListComment" asp-controller="Member" asp-area="" asp-route-id="@Model.Member.Id" target="_blank">@Model.NumberOfComment bình luận</a>
-                }
-                else
-                {
-                    <span>0 bình luận</span>
-                }
-            </td>
-        </tr>
-    </table>
-</div>
+<partial name="_MemberDetail" model="@Model" />
 <div class="my-3 d-flex">
-    <a asp-action="UpdateRole" asp-route-id="@Model.Member.Id" class="btn btn-sm btn-info mr-3">Cập nhật vai trò</a>   
+    <a asp-action="UpdateRole" asp-route-id="@Model.Member.Id" class="btn btn-sm btn-info mr-3">Cập nhật vai trò</a>
     @if (!Model.Member.IsBanned)
     {
         <a asp-action="BanAccount" asp-route-id="@Model.Member.Id" class="btn btn-sm btn-danger" asp-route-returnUrl="@Context.Request.Path">
