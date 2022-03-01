@@ -22,7 +22,7 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<ListPostDto>> GetPosts([FromQuery] int page = 1)
         {
-            var posts = await _repository.Post.GetPosts(page, pageSize, trackChanges: false, isManager: false);
+            var posts = await _repository.Post.GetActivePosts(page, pageSize, trackChanges: false);
             if (posts == null)
                 return NotFound();
             ListPostDto listPost = new ListPostDto
@@ -50,7 +50,7 @@ namespace WebApi.Controllers
         [Authorize(Roles = "Admin,Moderator")]
         public async Task<ActionResult<ListPostDto>> ManagerGetPosts([FromQuery] int page = 1)
         {
-            var posts = await _repository.Post.GetPosts(page, pageSize, trackChanges: false, isManager: true);
+            var posts = await _repository.Post.GetPosts(page, pageSize, trackChanges: false);
             if (posts == null)
                 return NotFound();
             ListPostDto listPost = new ListPostDto

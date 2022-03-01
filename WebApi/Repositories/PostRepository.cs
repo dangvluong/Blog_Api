@@ -11,12 +11,10 @@ namespace WebApi.Repositories
         public PostRepository(AppDbContext context) : base(context)
         {
         }
-        public async Task<IEnumerable<Post>> GetPosts(int page, int pageSize, bool trackChanges, bool isManager = false)
+        public async Task<IEnumerable<Post>> GetPosts(int page, int pageSize, bool trackChanges)
         {
-            var posts = FindAll(trackChanges);
-            if (!isManager)
-                posts = posts.Where(p => p.IsActive == true && p.IsDeleted == false);
-            return await posts.Include(p => p.Author).Include(p => p.Category).OrderBy(p => p.Id).Skip(pageSize * (page - 1)).Take(pageSize).ToListAsync();
+            //var posts = FindAll(trackChanges);           
+            return await FindAll(trackChanges).Include(p => p.Author).Include(p => p.Category).OrderByDescending(p => p.DateCreated).Skip(pageSize * (page - 1)).Take(pageSize).ToListAsync();
         }
 
         public async Task<Post> GetPostById(int id, bool trackChanges, bool countView = false)
@@ -61,28 +59,28 @@ namespace WebApi.Repositories
         {
             _context.Posts.AddRange(posts);
         }
-
+        //Get posts have most views within 30 days
         public async Task<IEnumerable<Post>> GetTrendingPost(bool trackChanges = false)
         {
-            return await FindAll(trackChanges).Include(post => post.Author).Include(post => post.Category).OrderByDescending(post => post.CountView).Take(10).ToListAsync();
+            return await FindByCondition(p => p.IsActive == true && p.IsDeleted == false,trackChanges).Where(p => p.DateCreated >= DateTime.Today.AddDays(-30)).Include(post => post.Author).Include(post => post.Category).OrderByDescending(post => post.CountView).Take(10).ToListAsync();
         }
-
+        //Get most recent posts (order by descending of date created)
         public async Task<IEnumerable<Post>> GetMostRecentPosts(bool trackChanges = false)
         {
-            return await FindAll(trackChanges).Include(post => post.Author).Include(post => post.Category).OrderByDescending(post => post.DateCreated).Take(20).ToListAsync();
+            return await FindByCondition(p => p.IsActive == true && p.IsDeleted == false, trackChanges).Include(post => post.Author).Include(post => post.Category).OrderByDescending(post => post.DateCreated).Take(20).ToListAsync();
         }
-
+        //Get most recent 4 posts
         public async Task<IEnumerable<Post>> GetTodayHighlightPosts(bool trackChanges = false)
         {
             //Should replay by posts have datecreated nearst from now
-            return await FindAll(trackChanges).Include(p => p.Author).Include(p => p.Category).Where(p => p.DateCreated.Month == DateTime.UtcNow.Month)
-                .OrderByDescending(post => post.CountView).Take(4).ToListAsync();
+            return await FindByCondition(p => p.IsActive == true && p.IsDeleted == false,trackChanges).Include(p => p.Author).Include(p => p.Category)
+                .OrderByDescending(p => p.DateCreated).Take(4).ToListAsync();
         }
-
+        //Get random 4 posts
         public async Task<IEnumerable<Post>> GetFeaturedPosts(bool trackChanges = false)
         {
-            return await FindAll(trackChanges).Include(p => p.Author).Include(p => p.Category).Where(p => p.DateCreated.Month == DateTime.UtcNow.Month)
-                .OrderByDescending(post => post.CountView).Take(4).ToListAsync();
+            return await FindByCondition(p => p.IsActive == true && p.IsDeleted == false,trackChanges).Include(p => p.Author).Include(p => p.Category)
+                .OrderBy(p => Guid.NewGuid()).Take(4).ToListAsync();
         }
 
         public async Task<IEnumerable<Post>> Search(string keyword, int page, int pageSize, bool trackChanges = false)
@@ -103,7 +101,7 @@ namespace WebApi.Repositories
 
         public async Task<IEnumerable<Post>> GetActivePosts(int page, int pageSize, bool trackChanges)
         {
-            return await FindAll(trackChanges).Where(p => p.IsActive == true && p.IsDeleted == false).Include(p => p.Author).Include(p => p.Category).OrderBy(p => p.Id).Skip(pageSize * (page - 1)).Take(pageSize).ToListAsync();
+            return await FindByCondition(p => p.IsActive == true && p.IsDeleted == false, trackChanges).Include(p => p.Author).Include(p => p.Category).OrderBy(p => p.Id).Skip(pageSize * (page - 1)).Take(pageSize).ToListAsync();
         }
 
         public async Task<IEnumerable<Post>> GetPostsFromCategory(int categoryId, int page, int pageSize, bool trackChanges)
