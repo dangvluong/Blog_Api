@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Interfaces;
-namespace WebApi.Controllers
+namespace WebApi.Api.Controllers
 {
     public class BaseController : ControllerBase
     {

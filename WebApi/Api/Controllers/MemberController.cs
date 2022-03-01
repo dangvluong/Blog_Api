@@ -8,7 +8,7 @@ using WebApi.Helper;
 using WebApi.Interfaces;
 using WebApi.Models;
 
-namespace WebApi.Controllers
+namespace WebApi.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
