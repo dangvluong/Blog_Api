@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Controllers;
 using WebApi.Enums;
 using WebApi.Helper;
 using WebApi.Interfaces;

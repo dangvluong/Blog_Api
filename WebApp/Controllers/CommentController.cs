@@ -32,9 +32,11 @@ namespace WebApp.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            Comment comment = await _repository.Comment.GetComment(id);
+            Comment comment = await _repository.Comment.GetComment(id);            
             if (comment == null)
                 return NotFound();
+            if (int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) != comment.AuthorId)
+                return Unauthorized();
             return View(comment);
         }
         [HttpPost]
@@ -59,6 +61,8 @@ namespace WebApp.Controllers
             Comment comment = await _repository.Comment.GetComment(id);
             if (comment == null)
                 return NotFound();
+            if (int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) != comment.AuthorId)
+                return Unauthorized();
             ResponseModel response = await _repository.Comment.DeleteComment(comment.Id, AccessToken);
             if (response is SuccessResponseModel)
             {
