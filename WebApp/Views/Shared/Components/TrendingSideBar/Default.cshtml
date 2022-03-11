@@ -8,7 +8,7 @@
                 <a asp-action="Detail" asp-controller="Post" asp-route-id="@post.Id">
                     <span class="rpwwt-post-title">@post.Title</span>
                 </a>
-                <div class="rpwwt-post-author">By <a href="#">@post.Author.Username</a></div>
+                <div class="rpwwt-post-author">By <a asp-action="Detail" asp-controller="Member" asp-route-id="@post.Author.Id">@post.Author.Username</a></div>
                 <div class="rpwwt-post-categories">
                     in
                     <a asp-action="Detail" asp-controller="Category" asp-area="" asp-route-id="@post.CategoryId" rel="category tag">

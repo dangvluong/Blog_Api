@@ -23,7 +23,7 @@
                 </a>
 
                 <div class="author align-items-center mt-3 mb-1">
-                    <a class="url fn n" href="#">@post.Author.Username</a>
+                    <a class="url fn n" asp-action="Detail" asp-controller="Member" asp-route-id="@post.Author.Id">@post.Author.Username</a>
 
                     in
                     <a asp-action="Detail" asp-controller="Category" asp-area="" asp-route-id="@post.CategoryId" rel="category tag">

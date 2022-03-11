@@ -24,7 +24,7 @@
                                 <div class="card">
                                     <div class="card-header p-0 position-relative blog-post-thumb">
                                         <a class="post-thumbnail"
-                                           href="https://wp.w3layouts.com/designblog/2021/05/31/before-you-start-writing-your-first-blog-post-you-should-make-a-content-plan/"
+                                            asp-action="Detail" asp-controller="Post" asp-route-id="@post.Id"
                                            aria-hidden="true" tabindex="-1">
                                             <img width="560" height="370"
                                                  src="@(hostAddress + "/" + post.Thumbnail)"
@@ -44,8 +44,8 @@
 
                                         <div class="author align-items-center mt-3 mb-1">
                                             <a class="url fn n"
-                                               href="#">@post.Author.Username</a>
-                                            in<a href="#" rel="category tag">@post.Category.Name</a>
+                                              asp-action="Detail" asp-controller="Member" asp-route-id="@post.Author.Id">@post.Author.Username</a>
+                                            in<a  asp-action="Detail" asp-controller="Category" asp-route-id="@post.CategoryId" rel="category tag">@post.Category.Name</a>
                                         </div>
 
 
