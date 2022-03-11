@@ -13,7 +13,7 @@
         <div class="media-body">
             <ul class="time-rply mb-2">
                 <li>
-                    <a href="#" class="name mt-0 mb-2 d-block">@comment.Author.Username</a>
+                    <a asp-action="Detail" asp-controller="Member" asp-area="" asp-route-id="@comment.Author.Id" class="name mt-0 mb-2 d-block">@comment.Author.Username</a>
                     At @comment.DateCreate.ToShortTimeString() - @comment.DateCreate.ToShortDateString()
                 </li>
             </ul>
