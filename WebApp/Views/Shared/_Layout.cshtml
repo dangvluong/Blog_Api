@@ -30,11 +30,11 @@ Author URL: http://w3layouts.com
 
     @*script for client-side validation*@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link href="~/css/style.css" rel="stylesheet" />
-    <link href="~/css/style-liberty.css" rel="stylesheet" />    
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />    
+    <link href="~/css/style-liberty.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
     <link href="~/css/customstyle.css" rel="stylesheet" />
 </head>
 
@@ -62,27 +62,23 @@ Author URL: http://w3layouts.com
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" asp-area="" asp-controller="Post" asp-action="Index">Post</a>
-                        </li>                       
-                        <li class="nav-item active">
-                            <a class="nav-link" asp-area="Manage" asp-controller="Home" asp-action="Index">Manage</a>
+                            <a class="nav-link" asp-area="" asp-controller="Post" asp-action="Index">Posts</a>
                         </li>
                         <li class="nav-item active">
-                            <a class="nav-link" asp-area="" asp-controller="SeedData" asp-action="Index">Manage Data</a>
+                            <a class="nav-link" asp-area="" asp-controller="Category" asp-action="Index">Categories</a>
                         </li>
-                        <li class="nav-item dropdown @@category__active">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Categories <span class="fa fa-angle-down"></span>
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item @@ls__active" href="lifestyle.html">Lifestyle posts</a>
-                                <a class="dropdown-item @@cp__active" href="culture.html">Culture posts</a>
-                            </div>
-                        </li>
-                        <li class="nav-item @@contact__active">
-                            <a class="nav-link" href="contact.html">Contact</a>
-                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                            {
+                                <li class="nav-item active">
+                                    <a class="nav-link" asp-area="Manage" asp-controller="Home" asp-action="Index">Manage</a>
+                                </li>
+                                <li class="nav-item active">
+                                    <a class="nav-link" asp-area="" asp-controller="SeedData" asp-action="Index">Manage Data</a>
+                                </li>
+                            }
+                        }
                     </ul>
 
                     <!--/search-right-->
@@ -179,15 +175,15 @@ Author URL: http://w3layouts.com
     <!-- Template JavaScript -->
     @*<script src="~/js/theme-change.js"></script>*@
 
-   
+
     <!-- disable body scroll which navbar is in active -->
     @*<script>
-        $(function () {
-            $('.navbar-toggler').click(function () {
-                $('body').toggleClass('noscroll');
-            })
-        });
-    </script>*@
+            $(function () {
+                $('.navbar-toggler').click(function () {
+                    $('body').toggleClass('noscroll');
+                })
+            });
+        </script>*@
     <!-- disable body scroll which navbar is in active -->
 
 
