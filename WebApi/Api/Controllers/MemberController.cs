@@ -75,9 +75,18 @@ namespace WebApi.Api.Controllers
             Member member = await _repository.Member.GetMemberByCondition(c => c.Id == id, trackChanges: true);
             if (member == null)
                 return NotFound();
-            if(member.IsBanned)
+            if (member.IsBanned)
                 return BadRequest("Tài khoản này đã bị khóa trước đó.");
             member.IsBanned = true;
+            //Remove all refresh tokens from db, restrict member from renew access token.
+            IEnumerable<RefreshToken> refreshTokens = await _repository.RefreshToken.GetByMember(member.Id, trackChanges: true);
+            if(refreshTokens != null)
+            {
+                foreach (var token in refreshTokens)
+                {
+                    _repository.RefreshToken.DeleteToken(token);
+                }
+            }
             await _repository.SaveChanges();
             return NoContent();
         }
