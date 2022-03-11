@@ -40,7 +40,7 @@ namespace WebApi.Api.Controllers
         {
             Category category  = await _repository.Category.GetCategory(id, trackChanges: false);
             if(category == null)
-                return NotFound();
+                return NotFound("Không tìm thấy danh mục!");
             return Ok(category);
         }
 
