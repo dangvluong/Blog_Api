@@ -21,12 +21,10 @@ namespace WebApi.Api.Controllers
         [HttpGet]
         //Should only admin view all members
         [Authorize(Roles = "Admin,Moderator")]
-        public async Task<ActionResult<IEnumerable<Member>>> GetMembers()
+        public async Task<ActionResult<IEnumerable<MemberDto>>> GetMembers()
         {
-            IEnumerable<Member> members = await _repository.Member.GetMembers(trackChanges: false);
-            if (members == null)
-                return NotFound();
-            return Ok(members);
+            IEnumerable<Member> members = await _repository.Member.GetMembers(trackChanges: false);            
+            return Ok(MapMembers(members));
         }
 
         [HttpGet("{id}")]
@@ -129,12 +127,17 @@ namespace WebApi.Api.Controllers
         public async Task<IActionResult> GetNewMembers()
         {
             IEnumerable<Member> newMembers = await _repository.Member.GetNewMembers(trackChanges: false);
+            
+            return Ok(MapMembers(newMembers));
+        }
+        private List<MemberDto> MapMembers(IEnumerable<Member> members)
+        {
             List<MemberDto> memberDtos = new List<MemberDto>();
-            foreach (Member member in newMembers)
+            foreach (Member member in members)
             {
                 memberDtos.Add(_mapper.Map<MemberDto>(member));
             }
-            return Ok(memberDtos);
+            return memberDtos;
         }
 
     }
