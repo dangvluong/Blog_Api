@@ -1,5 +1,5 @@
 ﻿@model List<Member>
-<h4 class="text-center">QUẢN LÝ THÀNH VIÊN</h4>
+<h4 class="text-center">@ViewBag.Title</h4>
 <div class="my-5">
     @if (Model != null && Model.Count > 0)
     {
@@ -35,13 +35,13 @@
                         <td>
                             @if (!member.IsBanned)
                             {
-                                <a asp-action="BanAccount" asp-route-id="@member.Id" class="btn btn-sm btn-danger">
+                                <a asp-action="BanAccount" asp-route-id="@member.Id" asp-route-returnUrl="@Context.Request.Path" class="btn btn-sm btn-danger">
                                     Khóa tài khoản
                                 </a>
                             }
                             else
                             {
-                                <a asp-action="UnbanAccount" asp-route-id="@member.Id" class="btn btn-sm btn-warning">
+                                <a asp-action="UnbanAccount" asp-route-id="@member.Id" asp-route-returnUrl="@Context.Request.Path" class="btn btn-sm btn-warning">
                                     Mở khóa tài khoản
                                 </a>
                             }

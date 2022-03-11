@@ -82,6 +82,14 @@ namespace WebApp.Repositories
                 return (List<Member>)response.Data;
             return null;
         }
+        public async Task<List<Member>> GetNewMembers(string token)
+        {           
+            var response = await Send<List<Member>>("/api/member/getnewmembers", (client, url) => client.GetAsync(url), message => message.Content.ReadAsAsync<List<Member>>(), token);
+            if (response is SuccessResponseModel)
+                return (List<Member>)response.Data;
+            return null;
+        }
+
         public async Task<ResponseModel> BanAccount(int id, string token)
         {
             //return await Post<int>($"/api/member/banaccount/{id}", token: token);

@@ -20,8 +20,17 @@ namespace WebApp.Areas.Manage.Controllers
         public async Task<IActionResult> Index()
         {
             List<Member> members = await _repository.Member.GetMembers(AccessToken);
+            ViewBag.Title = "QUẢN LÝ THÀNH VIÊN";
             return View(members);
         }
+        public async Task<IActionResult> NewMember()
+        {
+            List<Member> newMembers = await _repository.Member.GetNewMembers(AccessToken);
+            ViewBag.Title = "THÀNH VIÊN MỚI TRONG 30 NGÀY QUA";
+            return View(nameof(Index), newMembers);
+        }
+
+
         public async Task<IActionResult> BanAccount(int id, string returnUrl = "")
         {
             ResponseModel response = await _repository.Member.BanAccount(id, AccessToken);

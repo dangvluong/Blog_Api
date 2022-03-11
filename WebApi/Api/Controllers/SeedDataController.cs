@@ -175,7 +175,7 @@ namespace WebApi.Api.Controllers
             var rand = new Random();
             fakerPost.RuleFor(p => p.Title, fk => $"Post {index++} " + fk.Lorem.Sentence(3, 4).Trim('.'));            
             fakerPost.RuleFor(p => p.Content, fk => fk.Lorem.Paragraphs(10));
-            fakerPost.RuleFor(p => p.DateCreated, fk => fk.Date.Between(new DateTime(2019, 1, 1), new DateTime(2021, 12, 31)));
+            fakerPost.RuleFor(p => p.DateCreated, fk => DateTime.Now);
 
             var posts = new List<Post>();
             var categoriesInDb = await _context.Categories.ToListAsync();

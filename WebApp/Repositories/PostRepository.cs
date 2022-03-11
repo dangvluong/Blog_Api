@@ -177,5 +177,16 @@ namespace WebApp.Repositories
             var response = await Send<ListPostDto>($"/api/post/fromcategory/{categoryId}?page={page}", (client, url) => client.GetAsync(url), message => message.Content.ReadAsAsync<ListPostDto>());
             return (ListPostDto)response.Data;
         }
+
+        public async Task<ListPostDto> GetNewPosts(int page,string accessToken)
+        {
+            var response = await Send<ListPostDto>($"/api/post/getpostswithin30days?page={page}", (client, url) => client.GetAsync(url), message => message.Content.ReadAsAsync<ListPostDto>(),accessToken);
+            return (ListPostDto)response.Data;
+        }
+        public async Task<ListPostDto> GetUnapprovedPosts(int page,string accessToken)
+        {
+            var response = await Send<ListPostDto>($"/api/post/getunapprovedposts?page={page}", (client, url) => client.GetAsync(url), message => message.Content.ReadAsAsync<ListPostDto>(),accessToken);
+            return (ListPostDto)response.Data;
+        }
     }
 }

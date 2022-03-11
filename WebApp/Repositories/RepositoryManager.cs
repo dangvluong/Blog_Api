@@ -4,20 +4,30 @@ using WebApp.Models;
 namespace WebApp.Repositories
 {
     public class RepositoryManager : RepositoryManagerBase, IRepositoryManager
-    {        
-        private ICategoryRepository category;       
+    {
+        private ICategoryRepository category;
         private IPostRepository post;
         private IMemberRepository member;
         private ICommentRepository comment;
         private IAuthRepository auth;
         private ISeedDataRepository seedData;
-        private IRoleRepository role;        
-       private IFileUploadRepository fileUpload;
+        private IRoleRepository role;
+        private IFileUploadRepository fileUpload;
+        private IStatisticRepository statistic;
+        public IStatisticRepository Statistic
+        {
+            get
+            {
+                if (statistic == null)
+                    statistic = new StatisticRepository(Client);
+                return statistic;
+            }
+        }
         public IFileUploadRepository FileUpload
         {
             get
             {
-                if(fileUpload is null)
+                if (fileUpload is null)
                 {
                     fileUpload = new FileUploadRepository(Client);
                 }
@@ -35,7 +45,7 @@ namespace WebApp.Repositories
                 return category;
             }
 
-        }        
+        }
 
         public IPostRepository Post
         {
@@ -45,7 +55,7 @@ namespace WebApp.Repositories
                     post = new PostRepository(Client);
                 return post;
             }
-        }       
+        }
 
         public IMemberRepository Member
         {
@@ -55,7 +65,7 @@ namespace WebApp.Repositories
                     member = new MemberRepository(Client);
                 return member;
             }
-        }       
+        }
 
         public ISeedDataRepository SeedData
         {
@@ -65,7 +75,7 @@ namespace WebApp.Repositories
                     seedData = new SeedDataRepository(Client);
                 return seedData;
             }
-        }        
+        }
 
         public ICommentRepository Comment
         {
@@ -76,7 +86,7 @@ namespace WebApp.Repositories
                 return comment;
             }
         }
-        
+
         public IAuthRepository Auth
         {
             get
@@ -90,7 +100,7 @@ namespace WebApp.Repositories
         {
             get
             {
-                if(role == null)
+                if (role == null)
                     role = new RoleRepository(Client);
                 return role;
             }

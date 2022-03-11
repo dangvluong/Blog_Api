@@ -14,7 +14,7 @@ namespace WebApi.Repositories
         {
             _context.Members.Add(member);
         }      
-        public async Task<IEnumerable<Member>> GetMembers(bool trackChanges)
+        public async Task<List<Member>> GetMembers(bool trackChanges)
         {
             //return await _context.Members.Include(p => p.Roles).ToListAsync();
             return await FindAll(trackChanges).Include(member => member.Roles).ToListAsync();
@@ -31,7 +31,7 @@ namespace WebApi.Repositories
             _context.Members.AddRange(member);
         }
 
-        public async Task<IEnumerable<Member>> GetNewMembers(bool trackChanges)
+        public async Task<List<Member>> GetNewMembers(bool trackChanges)
         {
             return await FindByCondition(m => m.DateCreate >= DateTime.Now.AddDays(-30),trackChanges).Include(m => m.Roles).ToListAsync();
         }

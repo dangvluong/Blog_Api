@@ -115,21 +115,48 @@ namespace WebApi.Repositories
                 .ToListAsync();            
         }
 
-        public async Task<IEnumerable<Post>> GetUnapprovedPosts(bool trackChanges)
+        public async Task<List<Post>> GetUnapprovedPosts(int page, int pageSize,bool trackChanges)
         {
             return await FindByCondition(p => p.IsActive == false, trackChanges: false)
                 .Include(p => p.Author)
                 .Include(p => p.Category)
                 .OrderByDescending(p => p.DateCreated)
+                .Skip(pageSize * (page - 1))
+                .Take(pageSize)
                 .ToListAsync();
         }
-        public async Task<IEnumerable<Post>> GetPostsWithin30Days(bool trackChanges)
+        public async Task<List<Post>> GetNewPost(int page, int pageSize,bool trackChanges)
         {
-            return await FindByCondition(p => p.DateCreated >= DateTime.Now.AddDays(-30), trackChanges: false)
+            return await FindByCondition(p => p.IsDeleted == false && p.DateCreated >= DateTime.Now.AddDays(-30), trackChanges)
                 .Include(p => p.Author)
                 .Include(p => p.Category)
                 .OrderByDescending(p => p.DateCreated)
+                .Skip(pageSize * (page - 1))
+                .Take(pageSize)
                 .ToListAsync();
+        }
+
+        public async Task<int> CountTotalPost()
+        {
+            return (await FindByCondition(p => p.IsDeleted == false,trackChanges: false).ToListAsync()).Count;
+        }
+
+        public async Task<int> CountUnapprovedPost()
+        {
+            return (await FindByCondition(p => p.IsActive == false, trackChanges: false)
+                .Include(p => p.Author)
+                .Include(p => p.Category)
+                .OrderByDescending(p => p.DateCreated)               
+                .ToListAsync()).Count;
+        }
+
+        public async Task<int> CountNewPost()
+        {
+            return (await FindByCondition(p => p.IsDeleted == false && p.DateCreated >= DateTime.Now.AddDays(-30), trackChanges:false)
+                 .Include(p => p.Author)
+                 .Include(p => p.Category)
+                 .OrderByDescending(p => p.DateCreated)               
+                 .ToListAsync()).Count;
         }
     }
 }

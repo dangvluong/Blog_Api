@@ -1,5 +1,63 @@
-﻿@model List<Member>
-<h4 class="text-center">THÔNG TIN CHUNG</h4>
-<div class="my-5">   
-    Implement charts which are display how many new posts, new comments, new members...
+﻿@model Statistic
+<h4 class="text-center">THÔNG TIN TỔNG QUAN</h4>
+<div class="my-4">
+    @if (Model != null)
+    {
+        <div class="row">
+            <div class="col-4">
+                <div class="card p-3 m-2">
+                    <div class="card-title text-center">
+                        <h5>Tổng số thành viên:</h5>
+                        <h1 class="text-info display-1">@Model.TotalMember</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card p-3 m-2 ">
+                    <div class="card-title text-center">
+                        <h5>Tổng số bài viết:</h5>
+                        <h1 class="text-info display-1">@Model.TotalPost</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card p-3 m-2 ">
+                    <div class="card-title text-center">
+                        <h5>Tổng số bình luận:</h5>
+                        <h1 class="text-info display-1">@Model.TotalComment</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <a asp-action="NewMember" asp-controller="Member" asp-area="Manage">
+                    <div class="card p-3 m-2 bg-light">
+                        <div class="card-title text-center"><h1 class="text-primary display-1">@Model.NewMember</h1></div>
+                        <div class="card-body text-center">
+                            thành viên mới trong 30 ngày qua
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-4">
+                <a asp-action="NewPost" asp-controller="Post" asp-area="Manage">
+                    <div class="card p-3 m-2 bg-light">
+                        <div class="card-title text-center"><h1 class="text-secondary display-1">@Model.NewPosts</h1></div>
+                        <div class="card-body text-center">
+                            bài viết mới trong 30 ngày qua
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-4">
+                <a asp-action="ListUnapproved" asp-controller="Post" asp-area="Manage">
+                    <div class="card p-3 m-2 bg-light">
+                        <div class="card-title text-center"><h1 class="text-warning display-1">@Model.TotalUnapprovedPost</h1></div>
+                        <div class="card-body text-center">
+                            bài viết chờ phê duyệt
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    }
 </div>

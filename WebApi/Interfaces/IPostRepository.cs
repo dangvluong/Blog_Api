@@ -11,9 +11,12 @@ namespace WebApi.Interfaces
         Task<int> CountTotalPage(int pageSize,Expression<Func<Post, bool>> conditionFilter = null);
         Task<IEnumerable<Post>> GetPostsByMember(int memberId, bool trackChanges, bool includeInactivePost = false);
         void AddPost(Post post);
+        Task<int> CountTotalPost();
         void UpdatePost(Post post);
         void DeletePost(Post post);
+        Task<int> CountUnapprovedPost();
         void RestorePost(Post post);
+        Task<int> CountNewPost();
         Task<IEnumerable<Post>> GetTrendingPost(bool trackChanges= false);
         Task<IEnumerable<Post>> GetPosts(int page, int pageSize, bool trackChanges);
         Task<IEnumerable<Post>> GetMostRecentPosts(bool trackChanges = false);
@@ -22,7 +25,7 @@ namespace WebApi.Interfaces
         Task<IEnumerable<Post>> Search(string keyword,int page, int pageSize, bool trackChanges = false);
         Task<IEnumerable<Post>> GetActivePosts(int page, int pageSize, bool trackChanges);
         Task<IEnumerable<Post>> GetPostsFromCategory(int categoryId, int page, int pageSize, bool trackChanges);
-        Task<IEnumerable<Post>> GetUnapprovedPosts(bool trackChanges);
-        Task<IEnumerable<Post>> GetPostsWithin30Days(bool trackChanges);
+        Task<List<Post>> GetUnapprovedPosts(int page, int pageSize,bool trackChanges);
+        Task<List<Post>> GetNewPost(int page, int pageSize, bool trackChanges);
     }
 }

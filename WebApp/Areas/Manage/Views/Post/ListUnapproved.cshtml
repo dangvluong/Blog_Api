@@ -1,0 +1,9 @@
+﻿@model ListPostDto
+<h4 class="text-center">BÀI VIẾT CHỜ PHÊ DUYỆT</h4>
+<partial name="_ListPost" model="@Model.Posts" />
+@if (Model?.TotalPage > 1)
+{
+    <div class="text-center">
+        <pagination total-page="@Model.TotalPage" current-page="@Context.Request.Query["page"].FirstOrDefault()" url="/manage/post/listunapproved?{0}"></pagination>
+    </div>
+}

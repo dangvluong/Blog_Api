@@ -1,75 +1,9 @@
 ﻿@model ListPostDto
 <h4 class="text-center">QUẢN LÝ BÀI VIẾT</h4>
-@if (Model?.Posts.Count > 0)
-{
-    <div id="">
-        <table>
-            <thead>
-                <tr>
-                    <th>Tiêu đề</th>
-                    <th>Ngày đăng</th>
-                    <th>Tác giả</th>
-                    <th>Phê duyệt?</th>
-                    <th>Đã xóa?</th>
-                    <th style="width: 20%;"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (Post post in Model.Posts)
-                {
-                    <tr>
-                        <td>
-                            <a asp-action="Detail" asp-controller="Post" asp-area="" asp-route-id="@post.Id" target="_blank">@post.Title</a>
-                        </td>
-                        <td>@post.DateCreated.ToShortDateString()</td>
-                        <td>@post.Author.Username</td>
-                        <td>
-                            @(post.IsActive ? "Đã phê duyệt" : "")
-                        </td>
-                        <td>
-                            @(post.IsDeleted ? "Đã xóa" : "")
-                        </td>
-                        <td>
-                            @if (!post.IsActive)
-                            {
-                                <a asp-action="Approve" asp-controller="Post" asp-route-id="@post.Id" class="btn btn-sm btn-primary">
-                                    Duyệt đăng
-                                </a>
-                            }
-                            else
-                            { <a asp-action="RemoveApproved" asp-controller="Post" asp-route-id="@post.Id" class="btn btn-sm btn-warning">
-                                    Hủy duyệt đăng
-                                </a>                                
-                            }
-
-                            @if (!post.IsDeleted)
-                            {
-                                <a asp-action="Delete" asp-controller="Post" asp-route-id="@post.Id" class="btn btn-sm btn-danger">
-                                    Xóa
-                                </a>
-                            }
-                            else
-                            {
-                                <a asp-action="Restore" asp-controller="Post" asp-route-id="@post.Id" class="btn btn-sm btn-danger">
-                                    Khôi phục
-                                </a>
-                            }
-
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-}
-else
-{
-    <h5>Hiện không có bài viết nào</h5>
-}
+<partial name="_ListPost" model="@Model.Posts" />
 @if (Model?.TotalPage > 1)
 {
     <div class="text-center">
         <pagination total-page="@Model.TotalPage" current-page="@Context.Request.Query["page"].FirstOrDefault()" url="/manage/post/index?{0}"></pagination>
     </div>
-
 }

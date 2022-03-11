@@ -21,7 +21,19 @@ namespace WebApp.Areas.Manage.Controllers
             ListPostDto listPostDto = await _repository.Post.ManagerGetPosts(page, AccessToken);
             return View(listPostDto);
         }
-        public async Task<IActionResult> Approve(int id)
+
+        public async Task<IActionResult> NewPost(int page = 1)
+        {
+            ListPostDto listPostDto = await _repository.Post.GetNewPosts(page, AccessToken);
+            return View(listPostDto);
+        }
+
+        public async Task<IActionResult> ListUnapproved(int page = 1)
+        {
+            ListPostDto listPostDto = await _repository.Post.GetUnapprovedPosts(page, AccessToken);
+            return View(listPostDto);
+        }
+        public async Task<IActionResult> Approve(int id, string returnUrl = "")
         {
             ResponseModel response = await _repository.Post.Approve(id, AccessToken);
             if (response is SuccessResponseModel)
@@ -34,10 +46,12 @@ namespace WebApp.Areas.Manage.Controllers
             }
             else
                 HandleErrors(response);
+            if (!string.IsNullOrEmpty(returnUrl))
+                return Redirect(returnUrl);
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> removeapproved(int id)
+        public async Task<IActionResult> RemoveApproved(int id, string returnUrl = "")
         {
             ResponseModel response = await _repository.Post.RemoveApproved(id, AccessToken);
             if (response is SuccessResponseModel)
@@ -50,6 +64,8 @@ namespace WebApp.Areas.Manage.Controllers
             }
             else
                 HandleErrors(response);
+            if (!string.IsNullOrEmpty(returnUrl))
+                return Redirect(returnUrl);
             return RedirectToAction(nameof(Index));
         }
 

@@ -13,5 +13,6 @@ namespace WebApp.Interfaces
         Task<ResponseModel> BanAccount(int id, string token);
         Task<ResponseModel> UpdateRolesOfMember(UpdateRolesOfMemberDto obj, string token);
         Task<ResponseModel> UnbanAccount(int id, string accessToken);
+        Task<List<Member>> GetNewMembers(string accessToken);
     }
 }

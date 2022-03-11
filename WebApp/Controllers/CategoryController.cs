@@ -24,7 +24,7 @@ namespace WebApp.Controllers
                 return BadRequest();
             ListPostDto listPostFromCategory =   await _repository.Post.GetPostsFromCategory(id, page);
 
-            ListPostFromCategoryViewModel viewModel = new ListPostFromCategoryViewModel
+            ListPostFromCategoryDto viewModel = new ListPostFromCategoryDto
             {
                 Category = category,
                 Posts = listPostFromCategory.Posts,

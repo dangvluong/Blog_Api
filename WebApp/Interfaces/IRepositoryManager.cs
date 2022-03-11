@@ -10,5 +10,6 @@
         public IRoleRepository Role { get; }
         public ISeedDataRepository SeedData { get; }
         public IFileUploadRepository FileUpload { get; }
+        public IStatisticRepository Statistic { get; }
     }
 }

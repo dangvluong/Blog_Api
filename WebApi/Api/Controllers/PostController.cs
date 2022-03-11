@@ -234,20 +234,28 @@ namespace WebApi.Api.Controllers
 
         [HttpGet("getunapprovedposts")]
         [Authorize(Roles = "Admin,Moderator")]
-        public async Task<IActionResult> GetUnapprovedPosts()
+        public async Task<IActionResult> GetUnapprovedPosts([FromQuery] int page =1)
         {            
-            var unapprovedposts = await _repository.Post.GetUnapprovedPosts(trackChanges: false);            
-            
-            return Ok(MapPosts(unapprovedposts));
+            var unapprovedposts = await _repository.Post.GetUnapprovedPosts(page, pageSize,trackChanges: false);
+            ListPostDto listPost = new ListPostDto
+            {
+                Posts = MapPosts(unapprovedposts),
+                TotalPage = await _repository.Post.CountTotalPage(pageSize, p => p.IsActive == false)
+            };
+            return Ok(listPost);
         }
 
         [HttpGet("getpostswithin30days")]
         [Authorize(Roles = "Admin,Moderator")]
-        public async Task<IActionResult> GetPostsWithin30Days()
+        public async Task<ActionResult<ListPostDto>> GetPostsWithin30Days([FromQuery]int page = 1)
         {
-            var posts = await _repository.Post.GetPostsWithin30Days(trackChanges: false);
-
-            return Ok(MapPosts(posts));
+            var posts = await _repository.Post.GetNewPost(page, pageSize, trackChanges: false);           
+            ListPostDto listPost = new ListPostDto
+            {
+                Posts = MapPosts(posts),
+                TotalPage = await _repository.Post.CountTotalPage(pageSize, p => p.IsDeleted == false && p.DateCreated >= DateTime.Now.AddDays(-30))
+            };
+            return Ok(listPost);
         }
 
 
