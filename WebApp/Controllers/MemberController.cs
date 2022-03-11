@@ -123,13 +123,17 @@ namespace WebApp.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> ChangeAvatar(ChangeAvatarModel obj)
-        {
-            //Implement validation for IFormFile: size, extension (?)
+        {            
             if (!ModelState.IsValid)
                 return View();
             MultipartFormDataContent content = new MultipartFormDataContent();
             if (obj.AvatarUpload != null)
             {
+                if(obj.AvatarUpload.Length > (1024 * 1024))
+                {
+                    ModelState.AddModelError(string.Empty, "Hãy chọn hình ảnh có kích thước nhỏ hơn 1MB");
+                    return View();
+                }
                 content.Add(new StringContent(obj.MemberId.ToString()), nameof(obj.MemberId));
                 content.Add(new StreamContent(obj.AvatarUpload.OpenReadStream()), nameof(obj.AvatarUpload), obj.AvatarUpload.FileName);
             }
