@@ -30,6 +30,10 @@ namespace WebApi.Repositories
         {
             _context.Members.AddRange(member);
         }
-        
+
+        public async Task<IEnumerable<Member>> GetNewMembers(bool trackChanges)
+        {
+            return await FindByCondition(m => m.DateCreate >= DateTime.Now.AddDays(-30),trackChanges).Include(m => m.Roles).ToListAsync();
+        }
     }
 }

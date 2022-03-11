@@ -104,6 +104,7 @@ namespace WebApi.Api.Controllers
             return NoContent();
         }
 
+
         [HttpPost("updaterolesofmember")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateRolesOfMember(UpdateRolesOfMemberDto obj)
@@ -123,5 +124,18 @@ namespace WebApi.Api.Controllers
             await _repository.SaveChanges();
             return NoContent();
         }
+        [HttpGet("getnewmembers")]
+        [Authorize(Roles = "Admin,Moderator")]
+        public async Task<IActionResult> GetNewMembers()
+        {
+            IEnumerable<Member> newMembers = await _repository.Member.GetNewMembers(trackChanges: false);
+            List<MemberDto> memberDtos = new List<MemberDto>();
+            foreach (Member member in newMembers)
+            {
+                memberDtos.Add(_mapper.Map<MemberDto>(member));
+            }
+            return Ok(memberDtos);
+        }
+
     }
 }

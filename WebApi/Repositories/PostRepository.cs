@@ -106,14 +106,30 @@ namespace WebApi.Repositories
 
         public async Task<IEnumerable<Post>> GetPostsFromCategory(int categoryId, int page, int pageSize, bool trackChanges)
         {
-            return await FindByCondition(p => p.CategoryId == categoryId,trackChanges)
-                .Where(p => p.IsActive == true && p.IsDeleted == false)
+            return await FindByCondition(p => p.CategoryId == categoryId && p.IsActive == true && p.IsDeleted == false, trackChanges)               
                 .Include(p => p.Author)
                 .Include(p => p.Category)
                 .OrderBy(p => p.Id)
                 .Skip(pageSize * (page - 1))
                 .Take(pageSize)
                 .ToListAsync();            
+        }
+
+        public async Task<IEnumerable<Post>> GetUnapprovedPosts(bool trackChanges)
+        {
+            return await FindByCondition(p => p.IsActive == false, trackChanges: false)
+                .Include(p => p.Author)
+                .Include(p => p.Category)
+                .OrderByDescending(p => p.DateCreated)
+                .ToListAsync();
+        }
+        public async Task<IEnumerable<Post>> GetPostsWithin30Days(bool trackChanges)
+        {
+            return await FindByCondition(p => p.DateCreated >= DateTime.Now.AddDays(-30), trackChanges: false)
+                .Include(p => p.Author)
+                .Include(p => p.Category)
+                .OrderByDescending(p => p.DateCreated)
+                .ToListAsync();
         }
     }
 }

@@ -231,6 +231,27 @@ namespace WebApi.Api.Controllers
             };
             return Ok(listPost);
         }
+
+        [HttpGet("getunapprovedposts")]
+        [Authorize(Roles = "Admin,Moderator")]
+        public async Task<IActionResult> GetUnapprovedPosts()
+        {            
+            var unapprovedposts = await _repository.Post.GetUnapprovedPosts(trackChanges: false);            
+            
+            return Ok(MapPosts(unapprovedposts));
+        }
+
+        [HttpGet("getpostswithin30days")]
+        [Authorize(Roles = "Admin,Moderator")]
+        public async Task<IActionResult> GetPostsWithin30Days()
+        {
+            var posts = await _repository.Post.GetPostsWithin30Days(trackChanges: false);
+
+            return Ok(MapPosts(posts));
+        }
+
+
+
         private List<PostDto> MapPosts(IEnumerable<Post> posts)
         {
             List<PostDto> postDtos = new List<PostDto>();

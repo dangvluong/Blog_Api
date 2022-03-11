@@ -9,5 +9,6 @@ namespace WebApi.Interfaces
         void AddMember(Member member);
         //Task<Member> GetMember(int id);
         Task<Member> GetMemberByCondition(Expression<Func<Member, bool>> condition, bool trackChanges);
+        Task<IEnumerable<Member>> GetNewMembers(bool trackChanges);
     }
 }

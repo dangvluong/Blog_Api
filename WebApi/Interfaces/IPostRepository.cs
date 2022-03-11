@@ -22,5 +22,7 @@ namespace WebApi.Interfaces
         Task<IEnumerable<Post>> Search(string keyword,int page, int pageSize, bool trackChanges = false);
         Task<IEnumerable<Post>> GetActivePosts(int page, int pageSize, bool trackChanges);
         Task<IEnumerable<Post>> GetPostsFromCategory(int categoryId, int page, int pageSize, bool trackChanges);
+        Task<IEnumerable<Post>> GetUnapprovedPosts(bool trackChanges);
+        Task<IEnumerable<Post>> GetPostsWithin30Days(bool trackChanges);
     }
 }
