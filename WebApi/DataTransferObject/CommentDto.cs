@@ -1,6 +1,4 @@
-﻿using WebApi.Models;
-
-namespace WebApi.DataTransferObject
+﻿namespace WebApi.DataTransferObject
 {
     public class CommentDto
     {        

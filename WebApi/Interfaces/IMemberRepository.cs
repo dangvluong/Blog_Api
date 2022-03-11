@@ -6,8 +6,7 @@ namespace WebApi.Interfaces
     public interface IMemberRepository
     {
         Task<List<Member>> GetMembers(bool trackChanges);
-        void AddMember(Member member);
-        //Task<Member> GetMember(int id);
+        void AddMember(Member member);       
         Task<Member> GetMemberByCondition(Expression<Func<Member, bool>> condition, bool trackChanges);
         Task<List<Member>> GetNewMembers(bool trackChanges);
     }

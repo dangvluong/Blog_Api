@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.DataTransferObject;
 using WebApi.Interfaces;
 
@@ -27,6 +26,5 @@ namespace WebApi.Api.Controllers
             };
             return Ok(dto);
         }
-
     }
 }

@@ -19,7 +19,7 @@ namespace WebApp.Controllers
             get
             {
                 if (string.IsNullOrEmpty(accessToken))
-                    accessToken = User.FindFirst(Data.ClaimTypes.AccessToken).Value;
+                    accessToken = User.FindFirst(Helper.ClaimTypes.AccessToken).Value;
                 return accessToken;
             }
         }

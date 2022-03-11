@@ -37,14 +37,12 @@ namespace WebApi.Api.Controllers
                 ModelState.AddModelError(nameof(model.Username), "Tên tài khoản này đã có người sử dụng.");
                 return ValidationProblem(ModelState);
             }
-
             var existEmail = await _repository.Member.GetMemberByCondition(m => m.Email == model.Email, trackChanges: false);
             if (existEmail != null)
             {
                 ModelState.AddModelError(nameof(model.Email), "Email này đã có người sử dụng.");
                 return ValidationProblem(ModelState);
             }
-
             Member member = new Member
             {
                 Username = model.Username,
@@ -64,13 +62,11 @@ namespace WebApi.Api.Controllers
             await _repository.SaveChanges();
             return Ok();
         }
-
         [HttpPost("login")]
         public async Task<ActionResult<MemberDto>> Login(LoginModel loginModel)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
-            //Member member = await _repository.Member.Login(loginModel);
+                return BadRequest();            
             Member member = await _repository.Member.GetMemberByCondition(member =>
                 member.Username == loginModel.Username && member.Password == SiteHelper.HashPassword(loginModel.Password)
             , trackChanges: false);
@@ -93,10 +89,7 @@ namespace WebApi.Api.Controllers
             _repository.RefreshToken.AddToken(refreshToken);
             await _repository.SaveChanges();
             return Ok(memberDto);
-
-
         }
-
         [HttpPost("changepassword")]
         [Authorize]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel obj)
@@ -153,9 +146,7 @@ namespace WebApi.Api.Controllers
                 return BadRequest();
             Member member = await _repository.Member.GetMemberByCondition(m => m.Email == obj.Email && m.ResetPasswordToken == obj.Token, trackChanges: true);
             if (member == null)
-            {
-                //ModelState.AddModelError(string.Empty, "Liên kết đã hết hạn.");
-                //return ValidationProblem(ModelState);
+            {                
                 return BadRequest("Liên kết đã hết hạn.");
             }
             member.Password = SiteHelper.HashPassword(obj.NewPassword);
@@ -163,7 +154,6 @@ namespace WebApi.Api.Controllers
             await _repository.SaveChanges();
             return NoContent();
         }
-
         [HttpPost("refreshtoken")]
         public async Task<IActionResult> RefreshToken(TokensDto tokensDto)
         {
@@ -201,6 +191,4 @@ namespace WebApi.Api.Controllers
             return NoContent();
         }
     }
-
 }
-

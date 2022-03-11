@@ -15,33 +15,30 @@ namespace WebApp.Controllers
         public PostController(IRepositoryManager repository) : base(repository)
         {
         }
-
-        // GET: PostController
+      
         public async Task<ActionResult> Index(int page = 1)
         {
             ListPostDto listPost = await _repository.Post.GetPosts(page);
             return View(listPost);
         }
-
-        // GET: PostController/Detail/5
+       
         public async Task<ActionResult> Detail(int id)
         {
             Post post = await _repository.Post.GetPostById(id, countView: true);
             if (post == null)
                 return NotFound();
             //Only author or admin/moderator can view inactive post detail
-            if (post.IsActive == false && !User.IsInRole("Admin"))
+            if (post.IsActive == false && !User.IsInRole("Admin") && !User.IsInRole("Moderator"))
             {
                 int userId;
-                bool isUserIdExist = int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
+                bool isUserIdExist = int.TryParse(User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier), out userId);
                 if(userId != post.AuthorId)
                     return BadRequest();
             }
             post.Comments = await _repository.Comment.GetCommentsByPostId(post.Id);
             return View(post);
         }
-
-        // GET: PostController/Create
+        
         [Authorize]
         public async Task<ActionResult> Create()
         {
@@ -49,8 +46,7 @@ namespace WebApp.Controllers
             ViewBag.categories = new SelectList(selectListCategories, "Id", "Name");
             return View();
         }
-
-        // POST: PostController/Create
+      
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -62,7 +58,7 @@ namespace WebApp.Controllers
                 ViewBag.categories = new SelectList(selectListCategory, "Id", "Name");
                 return View(post);
             }
-            post.AuthorId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            post.AuthorId = int.Parse(User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier));
             post.DateCreated = DateTime.Now;
             if (thumbnailImage != null && !string.IsNullOrEmpty(thumbnailImage.FileName))
             {
@@ -81,16 +77,14 @@ namespace WebApp.Controllers
             HandleErrors(response);
             return View(post);
         }
-
-        // GET: PostController/Edit/5
+            
         [Authorize]
         public async Task<ActionResult> Edit(int id)
         {
             Post post = await _repository.Post.GetPostById(id);
             if (post == null)
-                return NotFound();
-            //only author of post or admin can edit post            
-            if (post.Author.Id == int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) || User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                return NotFound();                
+            if (post.Author.Id == int.Parse(User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier)) || User.IsInRole("Admin") || User.IsInRole("Moderator"))
             {
                 List<Category> selectListCategory = await CreateSelectListCategory();
                 ViewBag.categories = new SelectList(selectListCategory, "Id", "Name");
@@ -99,7 +93,6 @@ namespace WebApp.Controllers
             return BadRequest();
         }
 
-        // POST: PostController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
@@ -127,10 +120,7 @@ namespace WebApp.Controllers
             HandleErrors(response);
             return View(post);
         }
-
         
-
-        // GET: PostController/Delete/5
         [Authorize]
         public async Task<ActionResult> Delete(int id)
         {
@@ -138,15 +128,14 @@ namespace WebApp.Controllers
             if (post is null)
                 return NotFound();
             //only author of post or admin can delete post            
-            if (post.Author.Id == int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) || User.IsInRole("Admin,Moderator"))
+            if (post.Author.Id == int.Parse(User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier)) || User.IsInRole("Admin,Moderator"))
             {
                 return View(post);
             }
             return BadRequest();
 
         }
-
-        // POST: PostController/Delete/5
+               
         [Authorize]
         [HttpPost]
         [ActionName("Delete")]
@@ -173,7 +162,6 @@ namespace WebApp.Controllers
             ListPostDto searchResult = await _repository.Post.SearchPost(keyword, page);
             return View(searchResult);
         }
-
         private void CreateSelectItems(List<Category> source, List<Category> des, int level)
         {
             string prefix = string.Concat(Enumerable.Repeat("----;", level));

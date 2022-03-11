@@ -39,8 +39,8 @@ namespace WebApp.Controllers
                     new Claim(ClaimTypes.Email, member.Email),
                     new Claim(ClaimTypes.Gender, member.Gender ? "Nam" : "Nữ"),
                     //Save token to this claimtype
-                    new Claim(Data.ClaimTypes.AccessToken, member.AccessToken),
-                    new Claim(Data.ClaimTypes.RefreshToken, member.RefreshToken),
+                    new Claim(Helper.ClaimTypes.AccessToken, member.AccessToken),
+                    new Claim(Helper.ClaimTypes.RefreshToken, member.RefreshToken),
                 };
 
                 //Get roles of member and save to claims

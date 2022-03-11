@@ -36,11 +36,7 @@ namespace WebApi.Api.Controllers
                 new Role{Name = "Admin", CanChange = false,ColorDisplay="badge-danger"},
                 new Role{Name = "Moderator",CanChange  =false,ColorDisplay="badge-primary"},
                 new Role{Name = "Member",CanChange = false,ColorDisplay="badge-secondary"}
-            };
-            //context.Roles.Add(new Role
-            //{
-            //    Name = "admin1"
-            //});
+            };            
             _context.Roles.AddRange(roles);
 
             await _repository.SaveChanges();
@@ -134,21 +130,7 @@ namespace WebApi.Api.Controllers
                 comments.Add(comment);
             }
             _context.Comments.AddRange(comments);
-            await _repository.SaveChanges();
-            //comments.Clear();
-            //var commentsInDb = _context.Comments.ToList();
-            //add comments child
-            //for (int i = 0; i < 30; i++)
-            //{
-            //    var commentParent = commentsInDb[rand.Next(commentsInDb.Count)];
-            //    var commentChild = fk.Generate();
-            //    commentChild.AuthorId = members[rand.Next(members.Count)].Id;
-            //    commentChild.PostId = commentParent.PostId;
-            //    commentChild.CommentParentId = commentParent.Id;
-            //    comments.Add(commentChild);
-            //}
-            //_context.Comments.AddRange(comments);
-            //await _repository.SaveChanges();
+            await _repository.SaveChanges();           
         }
 
         private async Task SeedPostAndCategoryAsync()
@@ -156,7 +138,7 @@ namespace WebApi.Api.Controllers
             var fakerCategory = new Faker<Category>();
             int j = 1;
             fakerCategory.RuleFor(c => c.Name, name => $"Category {j++}: " + name.Lorem.Sentence(1, 2).Trim('.'));
-            fakerCategory.RuleFor(c => c.Thumbnail, thumbnail => "/images/thumbnails/default.jpg");
+            fakerCategory.RuleFor(c => c.Thumbnail, thumbnail => DefaultValue.Thumbnail);
             var category1 = fakerCategory.Generate();
             var category11 = fakerCategory.Generate();
             var category2 = fakerCategory.Generate();

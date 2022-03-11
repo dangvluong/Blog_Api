@@ -18,8 +18,7 @@ namespace WebApi.Api.Controllers
         {
 
         }
-        [HttpGet]
-        //Should only admin view all members
+        [HttpGet]      
         [Authorize(Roles = "Admin,Moderator")]
         public async Task<ActionResult<IEnumerable<MemberDto>>> GetMembers()
         {
@@ -27,12 +26,9 @@ namespace WebApi.Api.Controllers
             return Ok(MapMembers(members));
         }
 
-        [HttpGet("{id}")]
-        //[Authorize]
+        [HttpGet("{id}")]       
         public async Task<ActionResult<MemberDto>> GetMemberById(int id)
-        {
-            //Will implement only members can get data about them, or admins can view data of all members.
-
+        {           
             var member = await _repository.Member.GetMemberByCondition(member => member.Id == id, trackChanges: false);
             if (member == null)
                 return NotFound();
@@ -79,11 +75,8 @@ namespace WebApi.Api.Controllers
             //Remove all refresh tokens from db, restrict member from renew access token.
             IEnumerable<RefreshToken> refreshTokens = await _repository.RefreshToken.GetByMember(member.Id, trackChanges: true);
             if(refreshTokens != null)
-            {
-                foreach (var token in refreshTokens)
-                {
-                    _repository.RefreshToken.DeleteToken(token);
-                }
+            {                
+                _repository.RefreshToken.DeleteTokens(refreshTokens);
             }
             await _repository.SaveChanges();
             return NoContent();
@@ -101,8 +94,6 @@ namespace WebApi.Api.Controllers
             await _repository.SaveChanges();
             return NoContent();
         }
-
-
         [HttpPost("updaterolesofmember")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateRolesOfMember(UpdateRolesOfMemberDto obj)
@@ -139,6 +130,5 @@ namespace WebApi.Api.Controllers
             }
             return memberDtos;
         }
-
     }
 }

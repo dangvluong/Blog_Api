@@ -18,23 +18,18 @@ namespace WebApp.Areas.Dashboard.Controllers
         {
         }
 
-        // GET: CategoryController
         public async Task<IActionResult> Index()
         {
             List<Category> categories = await _repository.Category.ManagerGetCategories(AccessToken);
             List<Category> listCategory = CategoryHelper.CreateTreeLevelCategory(categories);
             return View(listCategory);
         }
-
-        // GET: CategoryController/Create
         public async Task<IActionResult> Create()
         {
             var selectListCategory = await CreateSelectListCategory();
             ViewBag.categories = new SelectList(selectListCategory, "Id", "Name");
             return View();
         }
-
-        // POST: CategoryController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Category category, IFormFile thumbnailImage)
@@ -53,8 +48,6 @@ namespace WebApp.Areas.Dashboard.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-
-        // GET: CategoryController/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             List<Category> categories = await _repository.Category.GetCategories();
@@ -70,8 +63,6 @@ namespace WebApp.Areas.Dashboard.Controllers
             return View(targetCategory);
         }
 
-
-        // POST: CategoryController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Category category, IFormFile thumbnailImage)
@@ -98,8 +89,6 @@ namespace WebApp.Areas.Dashboard.Controllers
             return View();
 
         }
-
-        // GET: CategoryController/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
             ResponseModel response = await _repository.Category.Delete(id, AccessToken);
@@ -111,8 +100,8 @@ namespace WebApp.Areas.Dashboard.Controllers
                     Message = "Đã xóa danh mục."
                 });
             }
-            else            
-                HandleErrors(response);            
+            else
+                HandleErrors(response);
             return RedirectToAction(nameof(Index));
 
         }

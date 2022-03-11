@@ -15,14 +15,12 @@ namespace WebApi.Repositories
             _context.Members.Add(member);
         }      
         public async Task<List<Member>> GetMembers(bool trackChanges)
-        {
-            //return await _context.Members.Include(p => p.Roles).ToListAsync();
+        {           
             return await FindAll(trackChanges).Include(member => member.Roles).ToListAsync();
         }
         
         public async Task<Member> GetMemberByCondition(Expression<Func<Member, bool>> condition, bool trackChanges)
-        {
-            //return await _context.Members.FirstOrDefaultAsync(p => p.Id == id);
+        {            
             return await FindByCondition(condition, trackChanges).Include(m => m.Roles).FirstOrDefaultAsync();
         }
         

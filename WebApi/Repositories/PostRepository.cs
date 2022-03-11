@@ -12,8 +12,7 @@ namespace WebApi.Repositories
         {
         }
         public async Task<IEnumerable<Post>> GetPosts(int page, int pageSize, bool trackChanges)
-        {
-            //var posts = FindAll(trackChanges);           
+        {                    
             return await FindAll(trackChanges).Include(p => p.Author).Include(p => p.Category).OrderByDescending(p => p.DateCreated).Skip(pageSize * (page - 1)).Take(pageSize).ToListAsync();
         }
 
@@ -25,8 +24,7 @@ namespace WebApi.Repositories
             {
                 post.CountView++;
                 _context.SaveChanges();
-            }
-            //return await _context.Posts.FindAsync(id);
+            }            
             return post;
         }
         public void UpdatePost(Post post)
@@ -149,7 +147,6 @@ namespace WebApi.Repositories
                 .OrderByDescending(p => p.DateCreated)               
                 .ToListAsync()).Count;
         }
-
         public async Task<int> CountNewPost()
         {
             return (await FindByCondition(p => p.IsDeleted == false && p.DateCreated >= DateTime.Now.AddDays(-30), trackChanges:false)

@@ -14,14 +14,12 @@ namespace WebApi.Repositories
             return await FindAll(trackChanges).ToListAsync();
         }
         public async Task<Role> GetRole(int id, bool trackChanges)
-        {
-            //return await _context.Roles.FindAsync(id);
+        {           
             return await FindByCondition(role => role.Id == id, trackChanges).FirstOrDefaultAsync();
         }
 
         public async Task<Role> GetRoleByName(string roleName, bool trackChanges)
-        {
-            //return await _context.Roles.FirstOrDefaultAsync(r => r.Name == roleName);
+        {            
             return await FindByCondition(role => role.Name == roleName, trackChanges).FirstOrDefaultAsync();
         }
         public void UpdateRole(Role role)

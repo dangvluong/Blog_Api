@@ -16,9 +16,7 @@ namespace WebApi.Api.Controllers
         public PostController(IRepositoryManager repository, IMapper mapper) : base(repository, mapper)
         {
 
-        }
-
-        // GET: api/Post
+        }       
         [HttpGet]
         public async Task<ActionResult<ListPostDto>> GetPosts([FromQuery] int page = 1)
         {
@@ -45,7 +43,6 @@ namespace WebApi.Api.Controllers
             };
             return Ok(listPost);
         }
-
         [HttpGet("managergetposts")]
         [Authorize(Roles = "Admin,Moderator")]
         public async Task<ActionResult<ListPostDto>> ManagerGetPosts([FromQuery] int page = 1)
@@ -59,9 +56,7 @@ namespace WebApi.Api.Controllers
                 TotalPage = await _repository.Post.CountTotalPage(pageSize)
             };
             return Ok(listPost);
-        }
-
-        // GET: api/Post/5
+        }              
         [HttpGet("{id}")]
         public async Task<ActionResult<PostDto>> GetPost(int id, [FromQuery] bool countView = false)
         {
@@ -73,10 +68,7 @@ namespace WebApi.Api.Controllers
                 return BadRequest("Bài viết đã bị xóa");
             PostDto postDto = _mapper.Map<PostDto>(post);
             return Ok(postDto);
-        }
-
-        // PUT: api/Post/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        }      
         [HttpPut]
         [Authorize]
         public async Task<IActionResult> UpdatePost(Post post)
@@ -86,10 +78,7 @@ namespace WebApi.Api.Controllers
             _repository.Post.UpdatePost(post);
             await _repository.SaveChanges();
             return NoContent();
-        }
-
-        // POST: api/Post
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        }      
         [HttpPost]
         [Authorize]
         public async Task<ActionResult<int>> PostPost(Post post)
@@ -102,9 +91,7 @@ namespace WebApi.Api.Controllers
                 return await _repository.SaveChanges();
             }
             return BadRequest();
-        }
-
-        // DELETE: api/Post/5
+        }      
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<IActionResult> DeletePost(int id)
@@ -257,9 +244,6 @@ namespace WebApi.Api.Controllers
             };
             return Ok(listPost);
         }
-
-
-
         private List<PostDto> MapPosts(IEnumerable<Post> posts)
         {
             List<PostDto> postDtos = new List<PostDto>();

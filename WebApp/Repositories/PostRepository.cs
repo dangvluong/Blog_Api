@@ -14,14 +14,12 @@ namespace WebApp.Repositories
         }
 
         public async Task<ListPostDto> GetPosts(int page)
-        {
-            //return await Get<ListPostDto>($"/api/post?page={page}");
+        {            
             var response = await Send<ListPostDto>($"/api/post?page={page}", (client, url) => client.GetAsync(url), message => message.Content.ReadAsAsync<ListPostDto>());
             return (ListPostDto)response.Data;
         }
         public async Task<ListPostDto> ManagerGetPosts(int page, string token)
-        {
-            //return await Get<ListPostDto>($"/api/post/managergetposts?page={page}", token);
+        {            
             var response = await Send<ListPostDto>($"/api/post/managergetposts?page={page}", (client, url) => client.GetAsync(url), message => message.Content.ReadAsAsync<ListPostDto>(), token);
             return (ListPostDto)response.Data;
         }
@@ -31,99 +29,29 @@ namespace WebApp.Repositories
             if (countView)
                 countViewParam = "?countView=true";
             var response = await Send<Post>($"/api/post/{id}{countViewParam}", (client, url) => client.GetAsync(url), message => message.Content.ReadAsAsync<Post>());
-            return (Post)response.Data;
-            //return await Get<Post>($"/api/post/{id}{countViewParam}");
+            return (Post)response.Data;          
         }
 
         public async Task<ResponseModel> Create(Post obj, string token)
         {
-            return await Send<Post>("/api/post", obj, (client, url, obj) => client.PostAsJsonAsync<Post>(url, obj), token);
-            //return await PostJson<Post,int>("/api/post", post, token);
-            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            //HttpResponseMessage message = await client.PostAsJsonAsync<Post>("/api/post", obj);
-            //if (message.IsSuccessStatusCode)
-            //{
-            //    return new SuccessResponseModel
-            //    {
-            //        Status = (int)message.StatusCode
-            //    };
-            //}
-            //try
-            //{
-            //    return JsonConvert.DeserializeObject<ErrorValidationResponseModel>(await message.Content.ReadAsStringAsync());
-            //}
-            //catch (Exception)
-            //{
-            //    return new ErrorMessageResponseModel
-            //    {
-            //        Status = (int)message.StatusCode,
-            //        Data = await message.Content.ReadAsStringAsync()
-            //    };
-            //}
+            return await Send<Post>("/api/post", obj, (client, url, obj) => client.PostAsJsonAsync<Post>(url, obj), token);           
         }
         public async Task<ResponseModel> Edit(Post obj, string token)
         {
-            return await Send<Post>("/api/post", obj, (client, url, obj) => client.PutAsJsonAsync<Post>(url, obj), token);
-            //return await Put<Post>("/api/post", post, token);
-            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            //HttpResponseMessage message = await client.PutAsJsonAsync<Post>("/api/post", obj);
-            //if (message.IsSuccessStatusCode)
-            //{
-            //    return new SuccessResponseModel
-            //    {
-            //        Status = (int)message.StatusCode
-            //    };
-            //}
-            //try
-            //{
-            //    return JsonConvert.DeserializeObject<ErrorValidationResponseModel>(await message.Content.ReadAsStringAsync());
-            //}
-            //catch (Exception)
-            //{
-            //    return new ErrorMessageResponseModel
-            //    {
-            //        Status = (int)message.StatusCode,
-            //        Data = await message.Content.ReadAsStringAsync()
-            //    };
-            //}
+            return await Send<Post>("/api/post", obj, (client, url, obj) => client.PutAsJsonAsync<Post>(url, obj), token);           
         }
         public async Task<ResponseModel> Delete(int id, string token)
         {
-            return await Send($"/api/post/{id}", (client, url) => client.DeleteAsync(url), token);
-            //return await Delete($"/api/post/{id}", token);            
-            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            //HttpResponseMessage message = await client.DeleteAsync($"/api/post/{id}");
-            //if (message.IsSuccessStatusCode)
-            //{
-            //    return new SuccessResponseModel
-            //    {
-            //        Status = (int)message.StatusCode
-            //    };
-            //}
-            //try
-            //{
-            //    return JsonConvert.DeserializeObject<ErrorValidationResponseModel>(await message.Content.ReadAsStringAsync());
-            //}
-            //catch (Exception)
-            //{
-            //    return new ErrorMessageResponseModel
-            //    {
-            //        Status = (int)message.StatusCode,
-            //        Data = await message.Content.ReadAsStringAsync()
-            //    };
-            //}
+            return await Send($"/api/post/{id}", (client, url) => client.DeleteAsync(url), token);           
         }
         public async Task<List<Post>> GetPostsByMember(int id, string token = null)
-        {
-            //return await Get<List<Post>>($"/api/post/getpostsbymember/{id}",token);            
-
+        {           
             var response = await Send<List<Post>>($"/api/post/getpostsbymember/{id}", (client, url) => client.GetAsync(url), message => message.Content.ReadAsAsync<List<Post>>(), token);
             return (List<Post>)response.Data;
         }
 
         public async Task<IEnumerable<Post>> GetTrendingPost()
-        {
-            //return await Get<IEnumerable<Post>>("/api/post/gettrendingpost");
+        {            
             var response = await Send<IEnumerable<Post>>("/api/post/gettrendingpost", (client, url) => client.GetAsync(url), message => message.Content.ReadAsAsync<IEnumerable<Post>>());
             return (IEnumerable<Post>)response.Data;
         }
@@ -131,40 +59,34 @@ namespace WebApp.Repositories
         public async Task<IEnumerable<Post>> GetMostRecentPosts()
         {
             var response = await Send<IEnumerable<Post>>("/api/post/getmostrecentposts", (client, url) => client.GetAsync(url), message => message.Content.ReadAsAsync<IEnumerable<Post>>());
-            return (IEnumerable<Post>)response.Data;
-            //return await Get<IEnumerable<Post>>("/api/post/getmostrecentposts");
+            return (IEnumerable<Post>)response.Data;           
         }
 
         public async Task<IEnumerable<Post>> GetTodayHighlightPosts()
         {
             var response = await Send<IEnumerable<Post>>("/api/post/gettodayhighlightposts", (client, url) => client.GetAsync(url), message => message.Content.ReadAsAsync<IEnumerable<Post>>());
-            return (IEnumerable<Post>)response.Data;
-            //return await Get<IEnumerable<Post>>("/api/post/gettodayhighlightposts");
+            return (IEnumerable<Post>)response.Data;            
         }
 
         public async Task<List<Post>> GetFeaturedPosts()
         {
             var response = await Send<List<Post>>("/api/post/getfeaturedposts", (client, url) => client.GetAsync(url), message => message.Content.ReadAsAsync<List<Post>>());
-            return (List<Post>)response.Data;
-            //return await Get<List<Post>>("/api/post/getfeaturedposts");
+            return (List<Post>)response.Data;            
         }
 
         public async Task<ResponseModel> Approve(int postId, string token)
-        {
-            //return await Post<int>($"/api/post/approve/{postId}", token: token);
+        {            
             return await Send($"/api/post/approve/{postId}", (client, url) => client.PostAsync(url,null), token);
         }
         public async Task<ResponseModel> RemoveApproved(int postId, string token)
-        {
-            //return await Post<int>($"/api/post/approve/{postId}", token: token);
+        {           
             return await Send($"/api/post/removeapproved/{postId}", (client, url) => client.PostAsync(url, null), token);
         }
 
         public async Task<ListPostDto> SearchPost(string keyword, int id)
         {
             var response = await Send<ListPostDto>($"/api/post/search?keyword={keyword}&page={id}", (client, url) => client.GetAsync(url), message => message.Content.ReadAsAsync<ListPostDto>());
-            return (ListPostDto)response.Data;
-            //return await Get<ListPostDto>($"/api/post/search?keyword={keyword}&page={id}");
+            return (ListPostDto)response.Data;           
         }
 
         public async Task<ResponseModel> Restore(int id, string token)

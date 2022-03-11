@@ -1,8 +1,9 @@
 ﻿namespace WebApi.Helper
 {
-    public static class DefaultValue
+    public class DefaultValue
     {
-        public static string Avatar = "/images/avatar/default.jpg";
-        public static string About = "I am a writer";
+        public const string Avatar = "/images/avatar/default.jpg";
+        public const string Thumbnail = "/images/thumbnails/default.jpg";
+        public const string About = "I am a writer";
     }
 }

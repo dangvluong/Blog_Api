@@ -15,7 +15,6 @@ namespace WebApi.Repositories
         {
             Add(comment);
         }
-
         public void DeleteComment(Comment comment)
         {
             Delete(comment);
@@ -32,12 +31,10 @@ namespace WebApi.Repositories
         {
             return await FindByCondition(c => c.AuthorId == memberId, trackChanges).Include(comment => comment.Author).Include(c => c.Post).OrderByDescending(c => c.DateCreate).ToListAsync();
         }
-
         public void UpdateComment(Comment comment)
         {
             Update(comment);
         }
-
         public async Task<List<Comment>> GetComments()
         {
             return await FindAll(trackChanges: false).Include(comment => comment.Author).Include(c=>c.Post).OrderByDescending(c => c.DateCreate).ToListAsync();

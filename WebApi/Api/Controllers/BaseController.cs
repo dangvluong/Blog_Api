@@ -12,11 +12,9 @@ namespace WebApi.Api.Controllers
         {
             _mapper = mapper;
         }
-
         public BaseController(IRepositoryManager repository)
         {
             _repository = repository;
         }
-
     }
 }

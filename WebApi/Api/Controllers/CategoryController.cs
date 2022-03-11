@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Helper;
 using WebApi.Interfaces;
 using WebApi.Models;
 
@@ -12,12 +13,9 @@ namespace WebApi.Api.Controllers
         public CategoryController(IRepositoryManager repository) : base(repository)
         {
         }
-
-        // GET: api/Category
-        [HttpGet]      
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
         {
-            //throw new NotImplementedException();
             IEnumerable<Category> categories = await _repository.Category.GetCategories(trackChanges: false);
             if (categories == null)
                 return NotFound();
@@ -26,54 +24,42 @@ namespace WebApi.Api.Controllers
         [HttpGet("managergetcategories")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<Category>>> ManagerGetCategories()
-        {             
-            //throw new NotImplementedException();
+        {
             IEnumerable<Category> categories = await _repository.Category.ManagerGetCategories(trackChanges: false);
             if (categories == null)
                 return NotFound();
             return Ok(categories);
         }
-
-        // GET: api/Category/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
-            Category category  = await _repository.Category.GetCategory(id, trackChanges: false);
-            if(category == null)
+            Category category = await _repository.Category.GetCategory(id, trackChanges: false);
+            if (category == null)
                 return NotFound("Không tìm thấy danh mục!");
             return Ok(category);
         }
-
-        // PUT: api/Category/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
-        [Authorize(Roles ="Admin")]
-        public async Task<IActionResult> UpdateCategory( Category category)
-        {           
-            if(!ModelState.IsValid)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateCategory(Category category)
+        {
+            if (!ModelState.IsValid)
                 return BadRequest();
             _repository.Category.UpdateCategory(category);
             await _repository.SaveChanges();
             return Ok();
         }
-
-        // POST: api/Category
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-            if(string.IsNullOrEmpty(category.Thumbnail))
-                category.Thumbnail = "/images/thumbnails/default.jpg";
+            if (string.IsNullOrEmpty(category.Thumbnail))
+                category.Thumbnail = DefaultValue.Thumbnail;
             _repository.Category.AddCategory(category);
             await _repository.SaveChanges();
             return Ok();
-            //return CreatedAtAction("GetCategory", new { id = category.Id }, category);
         }
-
-        // DELETE: api/Category/5
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCategory(int id)
@@ -82,10 +68,10 @@ namespace WebApi.Api.Controllers
             if (category == null)
             {
                 return NotFound("Không tìm thấy danh mục.");
-            }            
+            }
             _repository.Category.DeleteCategory(category);
             await _repository.SaveChanges();
             return NoContent();
-        }       
+        }
     }
 }

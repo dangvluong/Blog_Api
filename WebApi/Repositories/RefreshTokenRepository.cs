@@ -31,9 +31,9 @@ namespace WebApi.Repositories
             return await FindByCondition(t => t.Token == token, trackChanges: trackChanges).FirstOrDefaultAsync();
         }
 
-        void IRefreshTokenRepository.DeleteTokens(IEnumerable<RefreshToken> tokens)
+        public void DeleteTokens(IEnumerable<RefreshToken> tokens)
         {
             DeleteRange(tokens);
-        }
+        }        
     }
 }

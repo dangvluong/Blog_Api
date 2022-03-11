@@ -56,17 +56,6 @@ namespace WebApp.Helper
             string uri = string.Format(Url, $"page={targetPage}");
             string direction = isNext ? "Next" : "Prev";
             sb.AppendFormat($"<li><a class=\"{direction} page-numbers\" href=\"{uri}\">{direction}</a></li>");
-        }
-
-        //private void AddPrevNagivation(StringBuilder sb, int targetPage)
-        //{
-        //    string uri = string.Format(Url, targetPage);
-        //    sb.AppendFormat("<li><a class=\"prev page-numbers\" href=\"{1}\">Prev</a></li>", uri);
-        //}
-        //private void AddNextNavigation(StringBuilder sb, int targetPage)
-        //{
-        //    string uri = string.Format(Url, targetPage);
-        //    sb.AppendFormat("<li><a class=\"next page-numbers\" href=\"{0}\">Next</a></li>", uri);
-        //}
+        }       
     }
 }

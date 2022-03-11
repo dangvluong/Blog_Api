@@ -13,8 +13,7 @@ namespace WebApi.Api.Controllers
     {
         public CommentController(IRepositoryManager repository, IMapper mapper) : base(repository, mapper)
         {
-        }
-        // GET: api/Comment
+        }       
         [HttpGet]
         [Authorize(Roles ="Admin,Moderator")]
         public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
@@ -23,9 +22,7 @@ namespace WebApi.Api.Controllers
             if(comments == null)
                 return NotFound();
             return Ok(MapComments(comments));
-        }
-
-        // GET: api/Comment/5
+        }      
         [HttpGet("{id}")]
         public async Task<ActionResult<CommentDto>> GetComment(int id)
         {
@@ -33,9 +30,7 @@ namespace WebApi.Api.Controllers
             if (comment == null)
                 return NotFound();
             return Ok(_mapper.Map<CommentDto>(comment));
-        }
-
-        // GET: api/GetCommentsByPost/5
+        }      
         [HttpGet]
         [Route("GetCommentsByPost/{id}")]
         public async Task<ActionResult<IEnumerable<CommentDto>>> GetCommentsByPost(int id)
@@ -44,9 +39,7 @@ namespace WebApi.Api.Controllers
             if (comments == null)
                 return NotFound();           
             return Ok(MapComments(comments));
-        }
-
-        // PUT: api/Comment/5
+        }     
         [HttpPut]
         [Authorize]        
         public async Task<IActionResult> UpdateComment(Comment comment)
@@ -56,9 +49,7 @@ namespace WebApi.Api.Controllers
             _repository.Comment.UpdateComment(comment);
             await _repository.SaveChanges();
             return NoContent();
-        }
-
-        // POST: api/Comment        
+        }     
         [HttpPost]
         [Authorize]
         public async Task<ActionResult> PostComment(Comment comment)
@@ -68,9 +59,7 @@ namespace WebApi.Api.Controllers
             _repository.Comment.AddComment(comment);
             await _repository.SaveChanges();
             return Ok();
-        }
-
-        // DELETE: api/Comment/5
+        }    
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<IActionResult> DeleteComment(int id)

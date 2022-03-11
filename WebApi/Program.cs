@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Text;
+using WebApi.Extensions;
 using WebApi.Interfaces;
 using WebApi.Models;
 using WebApi.Repositories;
@@ -17,8 +18,7 @@ try
     var builder = WebApplication.CreateBuilder(args);
     builder.Host.UseSerilog((ctx, lc) => lc
         .WriteTo.Console()
-        .ReadFrom.Configuration(ctx.Configuration));
-    // Add services to the container.
+        .ReadFrom.Configuration(ctx.Configuration));  
     builder.Services.AddControllers();
 
     builder.Services.AddAuthentication(option =>
@@ -80,13 +80,13 @@ try
         app.UseSwaggerUI();
     }
 
-    //using (var serviceScope = app.Services.CreateScope())
-    //{
-    //    var services = serviceScope.ServiceProvider;
+    using (var serviceScope = app.Services.CreateScope())
+    {
+        var services = serviceScope.ServiceProvider;
 
-    //    var logger = services.GetRequiredService<ILogger<Program>>();
-    //    app.ConfigureExceptionHandler(logger);        
-    //}   
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        app.ConfigureExceptionHandler(logger);
+    }
     app.UseStaticFiles();
     app.UseSerilogRequestLogging();
     app.UseHttpsRedirection();

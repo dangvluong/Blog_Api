@@ -39,8 +39,7 @@ namespace WebApi.Repositories
         }
 
         public void DeleteCategory(Category category)
-        {
-            //Delete(new Category { Id = categoryId });
+        {           
             category.IsDeleted = !category.IsDeleted;
         }
 

@@ -1,4 +1,4 @@
-﻿namespace WebApp.Data
+﻿namespace WebApp.Helper
 {
     public class ClaimTypes
     {
