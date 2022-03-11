@@ -156,6 +156,7 @@ namespace WebApi.Api.Controllers
             var fakerCategory = new Faker<Category>();
             int j = 1;
             fakerCategory.RuleFor(c => c.Name, name => $"Category {j++}: " + name.Lorem.Sentence(1, 2).Trim('.'));
+            fakerCategory.RuleFor(c => c.Thumbnail, thumbnail => "/images/thumbnails/default.jpg");
             var category1 = fakerCategory.Generate();
             var category11 = fakerCategory.Generate();
             var category2 = fakerCategory.Generate();
@@ -164,7 +165,8 @@ namespace WebApi.Api.Controllers
             var category4 = fakerCategory.Generate();
             category11.ParentCategory = category1;
             category31.ParentCategory = category3;
-            var categories = new Category[] { category1, category11, category2, category3, category31, category4 };
+            
+            var categories = new Category[] { category1, category11, category2, category3, category31, category4 };            
             _repository.Category.AddRange(categories);
             await _repository.SaveChanges();
             var fakerPost = new Faker<Post>();
