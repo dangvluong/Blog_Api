@@ -22,8 +22,8 @@ namespace WebApp.Controllers
                     accessToken = User.FindFirst(Data.ClaimTypes.AccessToken).Value;
                 return accessToken;
             }
-        }        
-        public BaseController(IRepositoryManager repository) 
+        }
+        public BaseController(IRepositoryManager repository)
         {
             _repository = repository;
         }
@@ -56,16 +56,17 @@ namespace WebApp.Controllers
         {
             if (response is ErrorMessageResponseModel)
             {
+                var error = response as ErrorMessageResponseModel;
                 PushNotification(new NotificationOptions
                 {
                     Type = "error",
-                    Message = (string)response.Data
+                    Message = (string)error.Errors
                 });
             }
             else
             {
-                var errorValidationResponse = (ErrorValidationResponseModel)response;
-                FetchValidationError(errorValidationResponse.Errors);                
+                var errorValidationResponse = response as ErrorValidationResponseModel;
+                FetchValidationError(errorValidationResponse.Errors);
             }
         }
         protected async Task<List<Category>> CreateSelectListCategory()

@@ -6,7 +6,7 @@ namespace WebApp.Interfaces
 {
     public interface IAuthRepository
     {
-        Task<Member> Login(LoginModel model);
+        Task<ResponseModel> Login(LoginModel model);
         Task<ResponseModel> Register(RegisterModel model);       
         Task<ResponseModel> ChangePassword(ChangePasswordModel obj, string token);
         Task<ResponseModel> ForgotPassword(ForgotPasswordModel obj);

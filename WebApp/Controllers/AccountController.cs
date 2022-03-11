@@ -2,16 +2,10 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Net;
-using System.Net.Mail;
 using System.Security.Claims;
-using WebApp.Data;
-using WebApp.DataTransferObject;
 using WebApp.Interfaces;
 using WebApp.Models;
 using WebApp.Models.Response;
-using WebApp.Services;
 
 namespace WebApp.Controllers
 {
@@ -33,16 +27,17 @@ namespace WebApp.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-            Member member = await _repository.Auth.Login(model);
-            if (member != null)
+            ResponseModel response = await _repository.Auth.Login(model);
+            if (response is SuccessResponseModel)
             {
+                Member member = response.Data as Member;
                 List<Claim> claims = new List<Claim>()
                 {
-                    new Claim(System.Security.Claims.ClaimTypes.NameIdentifier,member.Id.ToString()),
-                    new Claim(System.Security.Claims.ClaimTypes.Name, member.Username),
-                    new Claim(System.Security.Claims.ClaimTypes.GivenName, member.FullName),
-                    new Claim(System.Security.Claims.ClaimTypes.Email, member.Email),
-                    new Claim(System.Security.Claims.ClaimTypes.Gender, member.Gender ? "Nam" : "Nữ"),
+                    new Claim(ClaimTypes.NameIdentifier,member.Id.ToString()),
+                    new Claim(ClaimTypes.Name, member.Username),
+                    new Claim(ClaimTypes.GivenName, member.FullName),
+                    new Claim(ClaimTypes.Email, member.Email),
+                    new Claim(ClaimTypes.Gender, member.Gender ? "Nam" : "Nữ"),
                     //Save token to this claimtype
                     new Claim(Data.ClaimTypes.AccessToken, member.AccessToken),
                     new Claim(Data.ClaimTypes.RefreshToken, member.RefreshToken),
@@ -53,7 +48,7 @@ namespace WebApp.Controllers
                 {
                     foreach (var role in member.Roles)
                     {
-                        claims.Add(new Claim(System.Security.Claims.ClaimTypes.Role, role.Name));
+                        claims.Add(new Claim(ClaimTypes.Role, role.Name));
                     }
                 }
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -71,9 +66,8 @@ namespace WebApp.Controllers
                 if (!string.IsNullOrEmpty(returnUrl))
                     return Redirect(returnUrl);
                 return Redirect("/");
-
             }
-            ModelState.AddModelError(string.Empty, "Tài khoản hoặc mật khẩu không chính xác");
+            HandleErrors(response);
             return View();
         }
         public IActionResult Register()
@@ -85,8 +79,8 @@ namespace WebApp.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-            ResponseModel response =  await _repository.Auth.Register(model);
-            if(response is SuccessResponseModel)
+            ResponseModel response = await _repository.Auth.Register(model);
+            if (response is SuccessResponseModel)
             {
                 PushNotification(new NotificationOptions()
                 {
@@ -97,7 +91,7 @@ namespace WebApp.Controllers
             }
             HandleErrors(response);
             return View();
-            
+
         }
         [Authorize]
         public async Task<IActionResult> Logout()

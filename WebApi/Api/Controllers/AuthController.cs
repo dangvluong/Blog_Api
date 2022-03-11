@@ -18,7 +18,7 @@ namespace WebApi.Api.Controllers
         private readonly ITokenValidator _tokenValidator;
         private readonly IAuthenticator _authenticator;
         private ILogger<AuthController> _logger;
-        public AuthController(IRepositoryManager repository, IMapper mapper, IConfiguration configuration, ITokenGenerator tokenGenerator, ITokenValidator tokenValidator,IAuthenticator authenticator, ILogger<AuthController> logger) : base(repository, mapper)
+        public AuthController(IRepositoryManager repository, IMapper mapper, IConfiguration configuration, ITokenGenerator tokenGenerator, ITokenValidator tokenValidator, IAuthenticator authenticator, ILogger<AuthController> logger) : base(repository, mapper)
         {
             _configuration = configuration;
             _tokenGenerator = tokenGenerator;
@@ -30,11 +30,11 @@ namespace WebApi.Api.Controllers
         public async Task<IActionResult> Register(RegisterModel model)
         {
             if (!ModelState.IsValid)
-                return BadRequest();            
-            var existUsename = await _repository.Member.GetMemberByCondition(m => m.Username == model.Username,trackChanges: false);
+                return BadRequest();
+            var existUsename = await _repository.Member.GetMemberByCondition(m => m.Username == model.Username, trackChanges: false);
             if (existUsename != null)
             {
-                ModelState.AddModelError(nameof(model.Username),"Tên tài khoản này đã có người sử dụng.");
+                ModelState.AddModelError(nameof(model.Username), "Tên tài khoản này đã có người sử dụng.");
                 return ValidationProblem(ModelState);
             }
 
@@ -74,22 +74,27 @@ namespace WebApi.Api.Controllers
             Member member = await _repository.Member.GetMemberByCondition(member =>
                 member.Username == loginModel.Username && member.Password == SiteHelper.HashPassword(loginModel.Password)
             , trackChanges: false);
-
-            if (member != null)
+            if (member == null)
             {
-                MemberDto memberDto = _mapper.Map<MemberDto>(member);
-                memberDto.AccessToken = _tokenGenerator.CreateAccessToken(member);
-                memberDto.RefreshToken = _tokenGenerator.CreateRefreshToken();
-                RefreshToken refreshToken = new RefreshToken()
-                {
-                    MemberId = member.Id,
-                    Token = memberDto.RefreshToken
-                };
-                _repository.RefreshToken.AddToken(refreshToken);
-                await _repository.SaveChanges();
-                return Ok(memberDto);
-            }
-            return BadRequest();
+                ModelState.AddModelError(string.Empty, "Tài khoản hoặc mật khẩu không đúng!");
+                return ValidationProblem(ModelState);
+            }                
+            if (member.IsBanned)
+                return BadRequest("Tài khoản đã bị khóa!");
+
+            MemberDto memberDto = _mapper.Map<MemberDto>(member);
+            memberDto.AccessToken = _tokenGenerator.CreateAccessToken(member);
+            memberDto.RefreshToken = _tokenGenerator.CreateRefreshToken();
+            RefreshToken refreshToken = new RefreshToken()
+            {
+                MemberId = member.Id,
+                Token = memberDto.RefreshToken
+            };
+            _repository.RefreshToken.AddToken(refreshToken);
+            await _repository.SaveChanges();
+            return Ok(memberDto);
+
+
         }
 
         [HttpPost("changepassword")]
@@ -127,7 +132,7 @@ namespace WebApi.Api.Controllers
             if (member.IsBanned)
             {
                 ModelState.AddModelError(nameof(member.Username), "Tài khoản của bạn đã bị khóa.");
-                return ValidationProblem(ModelState);              
+                return ValidationProblem(ModelState);
             }
             else
             {
@@ -152,7 +157,7 @@ namespace WebApi.Api.Controllers
                 //ModelState.AddModelError(string.Empty, "Liên kết đã hết hạn.");
                 //return ValidationProblem(ModelState);
                 return BadRequest("Liên kết đã hết hạn.");
-            }                
+            }
             member.Password = SiteHelper.HashPassword(obj.NewPassword);
             member.ResetPasswordToken = null;
             await _repository.SaveChanges();
@@ -161,24 +166,24 @@ namespace WebApi.Api.Controllers
 
         [HttpPost("refreshtoken")]
         public async Task<IActionResult> RefreshToken(TokensDto tokensDto)
-        {            
+        {
             if (string.IsNullOrEmpty(tokensDto?.RefreshToken))
                 return BadRequest();
             bool isValidRefreshToken = _tokenValidator.ValidateRefreshToken(tokensDto.RefreshToken);
             if (!isValidRefreshToken)
                 return BadRequest("Invalid refresh token.");
-            RefreshToken refreshToken = await _repository.RefreshToken.GetByToken(tokensDto.RefreshToken, trackChanges:true);
+            RefreshToken refreshToken = await _repository.RefreshToken.GetByToken(tokensDto.RefreshToken, trackChanges: true);
             if (refreshToken == null)
             {
                 _logger.LogError("Khong tim thay refresh token trong Db");
                 return NotFound("Invalid refresh token");
-            }                
-            _repository.RefreshToken.DeleteToken(refreshToken);   
+            }
+            _repository.RefreshToken.DeleteToken(refreshToken);
             await _repository.SaveChanges();
             Member member = await _repository.Member.GetMemberByCondition(m => m.Id == refreshToken.MemberId, trackChanges: false);
             if (member == null)
                 return NotFound("Member not found");
-            TokensDto newTokens  = await _authenticator.RefreshAuthentication(member);
+            TokensDto newTokens = await _authenticator.RefreshAuthentication(member);
             _logger.LogInformation("Refreshed token");
             return Ok(newTokens);
         }
@@ -188,11 +193,11 @@ namespace WebApi.Api.Controllers
         {
             var memberId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var tokens = await _repository.RefreshToken.GetByMember(memberId, trackChanges: true);
-            if(tokens != null)
+            if (tokens != null)
             {
                 _repository.RefreshToken.DeleteTokens(tokens);
                 await _repository.SaveChanges();
-            }            
+            }
             return NoContent();
         }
     }

@@ -13,16 +13,16 @@ namespace WebApp.Repositories
         public AuthRepository(HttpClient client) : base(client)
         {
         }
-        public async Task<Member> Login(LoginModel obj)
+        public async Task<ResponseModel> Login(LoginModel obj)
         {
             //HttpResponseMessage message = await client.PostAsJsonAsync<LoginModel>("/api/auth/login", model);
             //if (message.IsSuccessStatusCode)
             //    return await message.Content.ReadAsAsync<Member>();
             //return null;
-            ResponseModel response = await Send<LoginModel, Member>("/api/auth/login", obj,
+            return await Send<LoginModel, Member>("/api/auth/login", obj,
                 (client, url, obj) => client.PostAsJsonAsync<LoginModel>(url, obj)
                 , message => message.Content.ReadAsAsync<Member>());
-            return (Member)response.Data;
+            //return (Member)response.Data;
         }
         public async Task<ResponseModel> Register(RegisterModel obj)
         {
