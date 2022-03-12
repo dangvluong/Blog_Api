@@ -129,10 +129,10 @@ namespace WebApp.Controllers
                     Type = "success",
                     Message = "Đường dẫn chứa liên kết đặt lại mật khẩu đã được gửi đến email của bạn"
                 });
+                return RedirectToAction(nameof(Login));
             }
-            else
-                HandleErrors(response);
-            return RedirectToAction(nameof(Login));
+            HandleErrors(response);
+            return View();
         }
         [HttpGet]
         public IActionResult ResetPassword(ResetPasswordModel obj)
