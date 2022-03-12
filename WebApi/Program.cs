@@ -70,7 +70,13 @@ try
     builder.Services.AddScoped<ITokenValidator, TokenValidator>();
     builder.Services.AddScoped<IAuthenticator, Authenticator>();
     builder.Services.AddAutoMapper(typeof(Program));
-
+    builder.Services.AddCors(p =>
+    {
+        p.AddDefaultPolicy(c =>
+        {
+            c.AllowAnyOrigin();
+        });
+    });
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
@@ -90,6 +96,7 @@ try
     app.UseStaticFiles();
     app.UseSerilogRequestLogging();
     app.UseHttpsRedirection();
+    app.UseCors();
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
