@@ -4,18 +4,6 @@
     {
         private HttpClient client;
         private IConfiguration configuration;
-        //private Uri apiServer;
-        //private Uri ApiServer
-        //{
-        //    get
-        //    {
-        //        if (apiServer == null)
-        //            apiServer = new Uri(configuration.GetSection("ApiServer").Value);
-        //        return apiServer;
-        //    }
-        //}
-
-        
         public RepositoryManagerBase(IConfiguration configuration)
         {
             this.configuration = configuration;

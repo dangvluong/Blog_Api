@@ -18,7 +18,7 @@ try
     var builder = WebApplication.CreateBuilder(args);
     builder.Host.UseSerilog((ctx, lc) => lc
         .WriteTo.Console()
-        .ReadFrom.Configuration(ctx.Configuration));  
+        .ReadFrom.Configuration(ctx.Configuration));
     builder.Services.AddControllers();
 
     builder.Services.AddAuthentication(option =>
@@ -74,11 +74,11 @@ try
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
+    //if (app.Environment.IsDevelopment())
+    //{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    //}
 
     using (var serviceScope = app.Services.CreateScope())
     {
@@ -91,7 +91,7 @@ try
     app.UseSerilogRequestLogging();
     app.UseHttpsRedirection();
     app.UseAuthentication();
-    app.UseAuthorization();    
+    app.UseAuthorization();
     app.MapControllers();
 
     app.Run();
@@ -105,7 +105,7 @@ catch (Exception ex)
         throw;
     }
 
-    Log.Fatal(ex, "Unhandled exception");    
+    Log.Fatal(ex, "Unhandled exception");
 }
 finally
 {
