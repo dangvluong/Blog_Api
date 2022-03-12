@@ -74,7 +74,7 @@ try
     {
         p.AddDefaultPolicy(c =>
         {
-            c.AllowAnyOrigin();
+            c.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();                    
         });
     });
     var app = builder.Build();
