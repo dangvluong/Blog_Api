@@ -14,6 +14,11 @@ namespace WebApp.Repositories
         private IRoleRepository role;
         private IFileUploadRepository fileUpload;
         private IStatisticRepository statistic;
+
+        public RepositoryManager(IConfiguration configuration) : base(configuration)
+        {
+        }
+
         public IStatisticRepository Statistic
         {
             get

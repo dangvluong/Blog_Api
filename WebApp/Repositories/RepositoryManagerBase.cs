@@ -3,7 +3,23 @@
     public abstract class RepositoryManagerBase : IDisposable
     {
         private HttpClient client;
-        protected readonly Uri ApiServer = new Uri("https://localhost:7207/");
+        private IConfiguration configuration;
+        //private Uri apiServer;
+        //private Uri ApiServer
+        //{
+        //    get
+        //    {
+        //        if (apiServer == null)
+        //            apiServer = new Uri(configuration.GetSection("ApiServer").Value);
+        //        return apiServer;
+        //    }
+        //}
+
+        
+        public RepositoryManagerBase(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
         protected HttpClient Client
         {
             get
@@ -11,7 +27,7 @@
                 if (client == null)
                 {
                     client = new HttpClient();
-                    client.BaseAddress = ApiServer;
+                    client.BaseAddress = new Uri(configuration.GetSection("ApiServer").Value);
                 }
                 return client;
             }

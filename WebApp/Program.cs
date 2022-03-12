@@ -25,8 +25,8 @@ try
     });
 
     var app = builder.Build();
-    //app.UseExceptionHandler("/Error");
-    //app.UseStatusCodePagesWithRedirects("/Error/{0}");
+    app.UseExceptionHandler("/Error");
+    app.UseStatusCodePagesWithRedirects("/Error/{0}");
     app.UseRouting();
     app.UseStaticFiles();
     app.UseSerilogRequestLogging();

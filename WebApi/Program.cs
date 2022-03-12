@@ -63,7 +63,7 @@ try
     });
     builder.Services.AddDbContext<AppDbContext>(option =>
     {
-        option.UseSqlServer(builder.Configuration.GetConnectionString("blog"));
+        option.UseSqlServer(builder.Configuration.GetConnectionString("azure"));
     });
     builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
     builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
