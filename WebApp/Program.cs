@@ -17,6 +17,7 @@ try
     builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
     builder.Services.AddScoped<IMailServices,MailServices>();
     builder.Services.AddScoped<TokenValidator>();
+    builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
     {
         option.LoginPath = "/account/login";
