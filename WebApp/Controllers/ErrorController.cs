@@ -14,17 +14,8 @@ namespace WebApp.Controllers
 
         [Route("Error/{statusCode}")]
         public IActionResult HttpStatusCodeHandler(int statusCode)
-        {
-            switch (statusCode)
-            {
-                case 404:
-                    ViewBag.ErrorMessage = "Xin lỗi, trang bạn tìm không có";
-                    break;
-                default:
-                    ViewBag.ErrorMessage = "Đã có lỗi xảy ra.";
-                    break;
-            }
-            return View("NotFound",statusCode);
+        {            
+            return View("Error",statusCode);
                 
         }   
         [Route("Error")]
@@ -36,7 +27,7 @@ namespace WebApp.Controllers
                 _logger.LogError("Unhandle exception.");
                 _logger.LogError(exceptionDetails.Error.StackTrace);
             }
-            return View("Error");
+            return View();
         }
     }
 }
