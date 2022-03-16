@@ -13,6 +13,8 @@
             <div asp-validation-summary="All"></div>
             <input asp-for="AuthorId" type="hidden" />
             <input asp-for="DateCreated" type="hidden" />
+            <input type="hidden" asp-for="IsActive" />
+            <input type="hidden" asp-for="IsDeleted" />
             <div class="input-grids">
                 <label asp-for="Title"></label>
                 <input type="text" class="contact-input" asp-for="Title" />
