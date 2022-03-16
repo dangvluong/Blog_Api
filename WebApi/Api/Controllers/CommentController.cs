@@ -40,11 +40,13 @@ namespace WebApi.Api.Controllers
                 return NotFound();           
             return Ok(MapComments(comments));
         }     
-        [HttpPut]
+        [HttpPut("{id}")]
         [Authorize]        
-        public async Task<IActionResult> UpdateComment(Comment comment)
+        public async Task<IActionResult> UpdateComment(int id, Comment comment)
         {
             if (!ModelState.IsValid)
+                return BadRequest();
+            if(comment.Id != id)
                 return BadRequest();
             _repository.Comment.UpdateComment(comment);
             await _repository.SaveChanges();

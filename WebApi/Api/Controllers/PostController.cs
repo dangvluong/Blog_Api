@@ -69,11 +69,13 @@ namespace WebApi.Api.Controllers
             PostDto postDto = _mapper.Map<PostDto>(post);
             return Ok(postDto);
         }      
-        [HttpPut]
+        [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> UpdatePost(Post post)
+        public async Task<IActionResult> UpdatePost(int id, Post post)
         {
             if (!ModelState.IsValid)
+                return BadRequest();
+            if (post.Id != id)
                 return BadRequest();
             _repository.Post.UpdatePost(post);
             await _repository.SaveChanges();

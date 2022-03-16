@@ -38,11 +38,13 @@ namespace WebApi.Api.Controllers
                 return NotFound("Không tìm thấy danh mục!");
             return Ok(category);
         }
-        [HttpPut]
+        [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateCategory(Category category)
-        {
+        public async Task<IActionResult> UpdateCategory(int id,Category category)
+        {           
             if (!ModelState.IsValid)
+                return BadRequest();
+            if (category.Id != id)
                 return BadRequest();
             _repository.Category.UpdateCategory(category);
             await _repository.SaveChanges();

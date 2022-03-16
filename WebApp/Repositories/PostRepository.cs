@@ -38,7 +38,7 @@ namespace WebApp.Repositories
         }
         public async Task<ResponseModel> Edit(Post obj, string token)
         {
-            return await Send<Post>("/api/post", obj, (client, url, obj) => client.PutAsJsonAsync<Post>(url, obj), token);           
+            return await Send<Post>($"/api/post/{obj.Id}", obj, (client, url, obj) => client.PutAsJsonAsync<Post>(url, obj), token);           
         }
         public async Task<ResponseModel> Delete(int id, string token)
         {

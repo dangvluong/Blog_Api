@@ -38,7 +38,7 @@ namespace WebApp.Repositories
 
         public async Task<ResponseModel> UpdateRole(Role obj, string token)
         {           
-            return await Send<Role>("/api/role", obj, (client, url, obj) => client.PutAsJsonAsync(url, obj), token);
+            return await Send<Role>($"/api/role/{obj.Id}", obj, (client, url, obj) => client.PutAsJsonAsync(url, obj), token);
         }
     }
 }

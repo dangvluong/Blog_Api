@@ -48,7 +48,7 @@ namespace WebApp.Repositories
         }
         public async Task<ResponseModel> EditComment(Comment obj, string token)
         {           
-            return await Send<Comment>("/api/comment", obj,
+            return await Send<Comment>($"/api/comment/{obj.Id}", obj,
                 (client, url, obj) => client.PutAsJsonAsync<Comment>(url, obj),
                 token);
         }
@@ -66,12 +66,6 @@ namespace WebApp.Repositories
             if (response is SuccessResponseModel)
                 return (List<Comment>)response.Data;
             return null;
-        }
-        public async Task<ResponseModel> UpdateComment(Comment obj, string accessToken)
-        {
-            return await Send<Comment>("/api/comment", obj,
-               (client, url, obj) => client.PutAsJsonAsync<Comment>(url, obj),
-               accessToken);
-        }
+        }        
     }
 }

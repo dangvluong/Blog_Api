@@ -11,28 +11,30 @@ namespace WebApi.Api.Controllers
     {
         public RoleController(IRepositoryManager repository) : base(repository)
         {
-        }       
+        }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Role>>> GetRoles()
         {
             IEnumerable<Role> roles = await _repository.Role.GetRoles(trackChanges: false);
-            if(roles == null)
+            if (roles == null)
                 return NotFound();
             return Ok(roles);
-        }       
+        }
         [HttpGet("{id}")]
         public async Task<ActionResult<Role>> GetRole(int id)
         {
-            Role role = await _repository.Role.GetRole(id,trackChanges: false);
+            Role role = await _repository.Role.GetRole(id, trackChanges: false);
             if (role == null)
                 return NotFound();
             return Ok(role);
-        }      
-        [HttpPut]
+        }
+        [HttpPut("{id}")]
         [Authorize(Roles ="Admin")]
-        public async Task<IActionResult> UpdateRole(Role role)
+        public async Task<IActionResult> UpdateRole(int id,Role role)
         {
             if (!ModelState.IsValid)
+                return BadRequest();
+            if(role.Id != id)
                 return BadRequest();
             _repository.Role.UpdateRole(role);           
             await _repository.SaveChanges();

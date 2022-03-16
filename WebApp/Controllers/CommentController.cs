@@ -44,7 +44,7 @@ namespace WebApp.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-            ResponseModel response = await _repository.Comment.UpdateComment(comment, AccessToken);
+            ResponseModel response = await _repository.Comment.EditComment(comment, AccessToken);
             if (response is SuccessResponseModel)
             {
                 PushNotification(new NotificationOptions
