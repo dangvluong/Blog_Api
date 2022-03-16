@@ -9,7 +9,7 @@
         <section class="w3l-blog-block2 mt-md-5">
             <div class="container py-lg-5 mb-lg-4 BlogHomeLayout">
                 @*<div class="row img-block-mobile">
-                    <div class="col-lg-12 most-recent">*@
+        <div class="col-lg-12 most-recent">*@
                 <header class="page-header">
                     <h3 class="section-title-left mb-5">
                         Search Results for : <span>@Context.Request.Query["keyword"]</span>
@@ -24,7 +24,7 @@
                                 <div class="card">
                                     <div class="card-header p-0 position-relative blog-post-thumb">
                                         <a class="post-thumbnail"
-                                            asp-action="Detail" asp-controller="Post" asp-route-id="@post.Id"
+                                           asp-action="Detail" asp-controller="Post" asp-route-id="@post.Id"
                                            aria-hidden="true" tabindex="-1">
                                             <img width="560" height="370"
                                                  src="@(hostAddress + "/" + post.Thumbnail)"
@@ -44,8 +44,8 @@
 
                                         <div class="author align-items-center mt-3 mb-1">
                                             <a class="url fn n"
-                                              asp-action="Detail" asp-controller="Member" asp-route-id="@post.Author.Id">@post.Author.Username</a>
-                                            in<a  asp-action="Detail" asp-controller="Category" asp-route-id="@post.CategoryId" rel="category tag">@post.Category.Name</a>
+                                               asp-action="Detail" asp-controller="Member" asp-route-id="@post.Author.Id">@post.Author.Username</a>
+                                            in<a asp-action="Detail" asp-controller="Category" asp-route-id="@post.CategoryId" rel="category tag">@post.Category.Name</a>
                                         </div>
 
 
@@ -66,9 +66,12 @@
                     }
                 </div>
                 <!-- pagination -->
-                <div class="text-center">
-                    <pagination total-page="@Model.TotalPage" current-page="@Context.Request.Query["page"].FirstOrDefault()" url="/post/search?keyword=@Context.Request.Query["keyword"]&{0}"></pagination>
-                </div>
+                @if (Model.TotalPage > 1)
+                {
+                    <div class="text-center">
+                        <pagination total-page="@Model.TotalPage" current-page="@Context.Request.Query["page"].FirstOrDefault()" url="/post/search?keyword=@Context.Request.Query["keyword"]&{0}"></pagination>
+                    </div>
+                }
                 <!-- //pagination -->
             </div>
 

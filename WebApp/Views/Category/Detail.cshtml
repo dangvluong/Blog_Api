@@ -72,7 +72,7 @@
 
         @if (Model?.TotalPage > 1)
         {<div class="text-center">
-                <pagination total-page="@Model.TotalPage" current-page="@Context.Request.Query["page"].FirstOrDefault()" url="/category/index/@Model.Category.Id?{0}"></pagination>
+                <pagination total-page="@Model.TotalPage" current-page="@Context.Request.Query["page"].FirstOrDefault()" url="/category/detail/@Model.Category.Id?{0}"></pagination>
             </div>
         }
     </div>
