@@ -3,6 +3,7 @@ A simple blog app created with ASP.NET WebAPI and Entity Framework Core.
 ## Demo:
 - API Server: http://dangvluongblogapi.azurewebsites.net/swagger/index.html
 - Client: http://dangvluongblog.azurewebsites.net/
+- Admin user: superadmin/superadmin
 ## Technology Stack
 - API Server: ASP.NET 6 WebAPI with Entity Framework Core 6 (SQL Server).
 - Client: ASP.NET 6 MVC, using HttpClient to request to API Server.
