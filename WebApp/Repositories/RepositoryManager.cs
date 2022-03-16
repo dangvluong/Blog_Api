@@ -9,8 +9,7 @@ namespace WebApp.Repositories
         private IPostRepository post;
         private IMemberRepository member;
         private ICommentRepository comment;
-        private IAuthRepository auth;
-        private ISeedDataRepository seedData;
+        private IAuthRepository auth;        
         private IRoleRepository role;
         private IFileUploadRepository fileUpload;
         private IStatisticRepository statistic;
@@ -72,16 +71,7 @@ namespace WebApp.Repositories
             }
         }
 
-        public ISeedDataRepository SeedData
-        {
-            get
-            {
-                if (seedData is null)
-                    seedData = new SeedDataRepository(Client);
-                return seedData;
-            }
-        }
-
+        
         public ICommentRepository Comment
         {
             get
