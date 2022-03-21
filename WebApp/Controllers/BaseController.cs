@@ -68,15 +68,7 @@ namespace WebApp.Controllers
                 var errorValidationResponse = response as ErrorValidationResponseModel;
                 FetchValidationError(errorValidationResponse.Errors);
             }
-        }
-        protected async Task<List<Category>> CreateSelectListCategory()
-        {
-            List<Category> sourceCategories = await _repository.Category.GetCategories();
-            sourceCategories = CategoryHelper.CreateTreeLevelCategory(sourceCategories);
-            List<Category> selectListCategory = new List<Category>();
-            CategoryHelper.CreateSelectListCategory(sourceCategories, selectListCategory, 0);
-            return selectListCategory;
-        }
+        }        
 
         protected async Task<string> UploadThumbnail(IFormFile thumbnailImage)
         {

@@ -42,8 +42,9 @@ namespace WebApp.Controllers
         [Authorize]
         public async Task<ActionResult> Create()
         {
-            List<Category> selectListCategories = await CreateSelectListCategory();
-            ViewBag.categories = new SelectList(selectListCategories, "Id", "Name");
+            var categories = await _repository.Category.GetCategories();
+            var selectListCategory = CategoryHelper.CreateSelectListCategory(categories);
+            ViewBag.categories = new SelectList(selectListCategory, "Id", "Name");
             return View();
         }
       
@@ -54,7 +55,8 @@ namespace WebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                List<Category> selectListCategory = await CreateSelectListCategory();
+                var categories = await _repository.Category.GetCategories();
+                var selectListCategory = CategoryHelper.CreateSelectListCategory(categories);
                 ViewBag.categories = new SelectList(selectListCategory, "Id", "Name");
                 return View(post);
             }
@@ -86,7 +88,8 @@ namespace WebApp.Controllers
                 return NotFound();                
             if (post.Author.Id == int.Parse(User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier)) || User.IsInRole("Admin") || User.IsInRole("Moderator"))
             {
-                List<Category> selectListCategory = await CreateSelectListCategory();
+                var categories = await _repository.Category.GetCategories();
+                var selectListCategory = CategoryHelper.CreateSelectListCategory(categories);
                 ViewBag.categories = new SelectList(selectListCategory, "Id", "Name");
                 return View(post);
             }

@@ -26,7 +26,8 @@ namespace WebApp.Areas.Dashboard.Controllers
         }
         public async Task<IActionResult> Create()
         {
-            var selectListCategory = await CreateSelectListCategory();
+            var categories= await _repository.Category.GetCategories();
+            var selectListCategory = CategoryHelper.CreateSelectListCategory(categories);
             ViewBag.categories = new SelectList(selectListCategory, "Id", "Name");
             return View();
         }
@@ -36,7 +37,8 @@ namespace WebApp.Areas.Dashboard.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var selectListCategory = await CreateSelectListCategory();
+                var categories = await _repository.Category.GetCategories();
+                var selectListCategory = CategoryHelper.CreateSelectListCategory(categories);                
                 ViewBag.categories = new SelectList(selectListCategory, "Id", "Name");
                 return View();
             }

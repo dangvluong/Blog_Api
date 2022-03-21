@@ -45,5 +45,12 @@ namespace WebApp.Helper
                 }
             }
         }
+        public static List<Category> CreateSelectListCategory(List<Category> sourceCategories)
+        {           
+            sourceCategories = CreateTreeLevelCategory(sourceCategories);
+            List<Category> selectListCategory = new List<Category>();
+            CreateSelectListCategory(sourceCategories, selectListCategory, 0);
+            return selectListCategory;
+        }
     }
 }
