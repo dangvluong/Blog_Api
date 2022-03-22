@@ -60,7 +60,7 @@ namespace WebApi.Repositories
         //Get posts have most views within 30 days
         public async Task<IEnumerable<Post>> GetTrendingPost(bool trackChanges = false)
         {
-            return await FindByCondition(p => p.IsActive == true && p.IsDeleted == false,trackChanges).Where(p => p.DateCreated >= DateTime.Today.AddDays(-30)).Include(post => post.Author).Include(post => post.Category).OrderByDescending(post => post.CountView).Take(10).ToListAsync();
+            return await FindByCondition(p => p.IsActive == true && p.IsDeleted == false && p.DateCreated >= DateTime.Today.AddDays(-30), trackChanges).Include(post => post.Author).Include(post => post.Category).OrderByDescending(post => post.CountView).Take(10).ToListAsync();
         }
         //Get most recent posts (order by descending of date created)
         public async Task<IEnumerable<Post>> GetMostRecentPosts(bool trackChanges = false)
